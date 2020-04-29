@@ -45,5 +45,36 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             return _device
         }
     }
+    var _queue: MTLCommandQueue?
+    
+    var queue: MTLCommandQueue! {
+        get {
+            // try to unwrap the private queue instance
+            if let queue = _queue {
+                return queue
+            }
+            _queue = device.makeCommandQueue()
+            return _queue
+        }
+    }
 
+    /// the model for the view controller to apss camera data through
+    private var _model: VNCoreMLModel?
+    /// the model for the view controller to apss camera data through
+    var model: VNCoreMLModel! {
+        get {
+            // try to unwrap the private model instance
+            if let model = _model {
+                return model
+            }
+            // try to create a new model and fail gracefully
+            do {
+                _model = try VNCoreMLModel(for: Tiramisu45().model)
+            } catch let error {
+                let message = "failed to load model: \(error.localizedDescription)"
+                popup_alert(self, title: "Model Error", message: message)
+            }
+            return _model
+        }
+    }
 }
