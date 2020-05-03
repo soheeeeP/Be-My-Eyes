@@ -155,6 +155,71 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             // of the image
             _request?.imageCropAndScaleOption = .scaleFill
             return _request
+
         }
     }
+  
+    /// Respond to a memory warning from the OS
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        popup_alert(self, title: "Memory Warning", message: "received memory warning")
+    }
+          
+    /// Handle the view appearing
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // setup the AV session
+        captureSession = AVCaptureSession()
+        captureSession.sessionPreset = .hd1280x720
+        // get a handle on the back camera
+        guard let camera = AVCaptureDevice.default(for: AVMediaType.video) else {
+            let message = "Unable to access the back camera!"
+            popup_alert(self, title: "Camera Error", message: message)
+            return
+        }
+        // create an input device from the back camera and handle
+        // any errors (i.e., privacy request denied)
+        do {
+            // setup the camera input and video output
+            let input = try AVCaptureDeviceInput(device: camera)
+            let videoOutput = AVCaptureVideoDataOutput()
+            videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
+            // add the inputs and ouptuts to the sessionr and start the preview
+            if captureSession.canAddInput(input) && captureSession.canAddOutput(videoOutput) {
+                captureSession.addInput(input)
+                captureSession.addOutput(videoOutput)
+                setupCameraPreview()
+            }
+        }
+        catch let error  {
+            let message = "failed to intialize camera: \(error.localizedDescription)"
+            popup_alert(self, title: "Camera Error", message: message)
+            return     
+        }
+    }
+          
+    /// Setup the live preview from the camera
+    func setupCameraPreview() {
+        // create a video preview layer for the view controller
+        videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        // set the metadata of the video preview
+        videoPreviewLayer.videoGravity = .resizeAspect
+        videoPreviewLayer.connection?.videoOrientation = .landscapeRight
+        // add the preview layer as a sublayer of the preview view
+        preview.layer.addSublayer(videoPreviewLayer)
+        // start the capture session asyncrhonously
+        DispatchQueue.global(qos: .userInitiated).async {
+            // start the capture session in the background thread
+            self.captureSession.startRunning()
+            // set the frame of the video preview to the bounds of the
+            // preview view
+            DispatchQueue.main.async {
+                self.videoPreviewLayer.frame = self.preview.bounds
+            }
+        }
+    }
+          
+          
+          
+          
 }
