@@ -77,4 +77,24 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             return _model
         }
     }
+    /// Setup the live preview from the camera
+    func setupCameraPreview() {
+        // create a video preview layer for the view controller
+        videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        // set the metadata of the video preview
+        videoPreviewLayer.videoGravity = .resizeAspect
+        videoPreviewLayer.connection?.videoOrientation = .landscapeRight
+        // add the preview layer as a sublayer of the preview view
+        preview.layer.addSublayer(videoPreviewLayer)
+        // start the capture session asyncrhonously
+        DispatchQueue.global(qos: .userInitiated).async {
+            // start the capture session in the background thread
+            self.captureSession.startRunning()
+            // set the frame of the video preview to the bounds of the
+            // preview view
+            DispatchQueue.main.async {
+                self.videoPreviewLayer.frame = self.preview.bounds
+            }
+        }
+    }
 }
