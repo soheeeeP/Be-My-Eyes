@@ -118,7 +118,19 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                                  dataLayout: .featureChannelsxHeightxWidth,
                                  imageIndex: 0)
                 
-                //
+                // create an output image for the Arg Max output
+                let desc1 = MPSImageDescriptor(channelFormat: .float32,
+                                               width: width,
+                                               height: height,
+                                               featureChannels: 1)
+                let classes = MPSImage(device: self.device, imageDescriptor: desc1)
+
+                // create a buffer and pass the inputs through the filter to the outputs
+                let buffer = self.queue.makeCommandBuffer()
+                let filter = MPSNNReduceFeatureChannelsArgumentMax(device: self.device)
+                filter.encode(commandBuffer: buffer!, sourceImage: probs, destinationImage: classes)
+
+                // add a callback to handle the buffer's completion and commit the buffer
             }
             // set the input image size to be a scaled version
             // of the image
