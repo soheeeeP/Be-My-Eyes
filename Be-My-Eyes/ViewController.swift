@@ -97,4 +97,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             }
         }
     }
+    /// Respond to a memory warning from the OS
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        popup_alert(self, title: "Memory Warning", message: "received memory warning")
+    }
 }
