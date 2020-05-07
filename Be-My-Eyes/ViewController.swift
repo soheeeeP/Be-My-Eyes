@@ -153,7 +153,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 buffer?.commit()
             }
             // set the input image size to be a scaled version of the image
-            _request?.imageCropAndScaleOption = .scaleFit //centerCrop scaleFill scaleFit
+            _request?.imageCropAndScaleOption = .scaleFill //centerCrop scaleFill scaleFit
             return _request
 
         }
@@ -203,8 +203,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // create a video preview layer for the view controller
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         // set the metadata of the video preview
-        videoPreviewLayer.videoGravity = .resizeAspectFill
-        videoPreviewLayer.connection?.videoOrientation = .portrait //== landscapeRight
+        videoPreviewLayer.videoGravity = .resizeAspect
+        videoPreviewLayer.connection?.videoOrientation = .landscapeRight //==.portrait
         // add the preview layer as a sublayer of the preview view
         preview.layer.addSublayer(videoPreviewLayer)
         // start the capture session asyncrhonously
