@@ -153,7 +153,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 buffer?.commit()
             }
             // set the input image size to be a scaled version of the image
-            _request?.imageCropAndScaleOption = .centerCrop //scaleFill scaleFit
+            _request?.imageCropAndScaleOption = .scaleFit //centerCrop scaleFill scaleFit
             return _request
 
         }
