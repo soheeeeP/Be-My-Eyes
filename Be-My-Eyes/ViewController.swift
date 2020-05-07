@@ -96,6 +96,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 }
                 // make sure the UI is ready for another frame
                 guard self.ready else { return }
+                
                 // get the outputs from the model
                 let outputs = finishedRequest.results as? [VNCoreMLFeatureValueObservation]
                 // get the probabilities as the first output of the model
@@ -151,9 +152,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 self.ready = false
                 buffer?.commit()
             }
-            // set the input image size to be a scaled version
-            // of the image
-            _request?.imageCropAndScaleOption = .scaleFill
+            // set the input image size to be a scaled version of the image
+            _request?.imageCropAndScaleOption = .centerCrop //scaleFill scaleFit
             return _request
 
         }
@@ -203,8 +203,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // create a video preview layer for the view controller
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         // set the metadata of the video preview
-        videoPreviewLayer.videoGravity = .resizeAspect
-        videoPreviewLayer.connection?.videoOrientation = .landscapeRight
+        videoPreviewLayer.videoGravity = .resizeAspectFill
+        videoPreviewLayer.connection?.videoOrientation = .portrait //== landscapeRight
         // add the preview layer as a sublayer of the preview view
         preview.layer.addSublayer(videoPreviewLayer)
         // start the capture session asyncrhonously
