@@ -96,6 +96,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 }
                 // make sure the UI is ready for another frame
                 guard self.ready else { return }
+                
                 // get the outputs from the model
                 let outputs = finishedRequest.results as? [VNCoreMLFeatureValueObservation]
                 // get the probabilities as the first output of the model
@@ -151,9 +152,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 self.ready = false
                 buffer?.commit()
             }
-            // set the input image size to be a scaled version
-            // of the image
-            _request?.imageCropAndScaleOption = .scaleFill
+            // set the input image size to be a scaled version of the image
+            _request?.imageCropAndScaleOption = .scaleFit //centerCrop scaleFill scaleFit
             return _request
 
         }
@@ -203,8 +203,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // create a video preview layer for the view controller
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         // set the metadata of the video preview
-        videoPreviewLayer.videoGravity = .resizeAspect
-        videoPreviewLayer.connection?.videoOrientation = .landscapeRight
+        videoPreviewLayer.videoGravity = .resizeAspectFill
+        videoPreviewLayer.connection?.videoOrientation = .portrait //== landscapeRight
         // add the preview layer as a sublayer of the preview view
         preview.layer.addSublayer(videoPreviewLayer)
         // start the capture session asyncrhonously
@@ -218,8 +218,23 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             }
         }
     }
-          
-          
-          
-          
+    
+    /// Handle a frame from the camera video stream
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        // create a Core Video pixel buffer which is an image buffer that holds pixels in main memory
+        // Applications generating frames, compressing or decompressing video, or using Core Image
+        // can all make use of Core Video pixel buffers
+        guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            let message = "failed to create pixel buffer from video input"
+            popup_alert(self, title: "Inference Error", message: message)
+            return
+        }
+        // execute the request
+        do {
+            try VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform([request])
+        } catch let error {
+            let message = "failed to perform inference: \(error.localizedDescription)"
+            popup_alert(self, title: "Inference Error", message: message)
+        }
+    }
 }
