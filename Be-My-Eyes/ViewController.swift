@@ -218,8 +218,23 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             }
         }
     }
-          
-          
-          
-          
+    
+    /// Handle a frame from the camera video stream
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        // create a Core Video pixel buffer which is an image buffer that holds pixels in main memory
+        // Applications generating frames, compressing or decompressing video, or using Core Image
+        // can all make use of Core Video pixel buffers
+        guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            let message = "failed to create pixel buffer from video input"
+            popup_alert(self, title: "Inference Error", message: message)
+            return
+        }
+        // execute the request
+        do {
+            try VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform([request])
+        } catch let error {
+            let message = "failed to perform inference: \(error.localizedDescription)"
+            popup_alert(self, title: "Inference Error", message: message)
+        }
+    }
 }
