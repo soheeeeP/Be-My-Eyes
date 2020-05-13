@@ -63,7 +63,7 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
                                  alphaInfo: .premultipliedLast)
 }
 
-func FindObject(_ _probs: MLMultiArray) -> UIImage? {
+func FindObject(_ _probs: MLMultiArray) -> String {
     // TODO: dynamically load a label map instead of hard coding
     // can this bonus data be included in the model file?
     let label_map = [
@@ -99,7 +99,7 @@ func FindObject(_ _probs: MLMultiArray) -> UIImage? {
         text = "There is a car. Move to left"
     }
     
-    
+    /*
     // initialize some bytes to store the image in
     var bytes = [UInt8](repeating: 255, count: height * width * 4)
     // iterate over the pixels in the output probs
@@ -115,10 +115,8 @@ func FindObject(_ _probs: MLMultiArray) -> UIImage? {
             bytes[offset + 2] = UInt8(rgb![2])
         }
     }
-    // create a UIImage from the byte array
-    return UIImage.fromByteArray(bytes, width: width, height: height,
-                                 scale: 0, orientation: .up,
-                                 bytesPerRow: width * 4,
-                                 colorSpace: CGColorSpaceCreateDeviceRGB(),
-                                 alphaInfo: .premultipliedLast)
+ */
+    
+    // return text to make TTS
+    return text
 }
