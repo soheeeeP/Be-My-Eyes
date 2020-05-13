@@ -40,9 +40,10 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
     // initialize some bytes to store the image in
     var bytes = [UInt8](repeating: 255, count: height * width * 4)
     // iterate over the pixels in the output probs
+
     
     //print(label_map[Int(codes[0, 20, 20])]) //출력 형식 : Optional([128, 64, 128])
-    // print(Int(codes[0, 20, 20])) //출력 형식 : key값 int 숫자
+    //print(Int(codes[0, 20, 20])) //출력 형식 : key값 int 숫자
     for h in 0 ..< height {
         for w in 0 ..< width {
             // get the array offset for this word
@@ -62,6 +63,7 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
                                  colorSpace: CGColorSpaceCreateDeviceRGB(),
                                  alphaInfo: .premultipliedLast)
 }
+
 
 func FindObject(_ _probs: MLMultiArray) -> String {
     // TODO: dynamically load a label map instead of hard coding
