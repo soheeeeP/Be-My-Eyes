@@ -26,6 +26,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @IBOutlet weak var segmentation: UIImageView!
     /// a label to show the framerate of the model
     @IBOutlet weak var framerate: UILabel!
+    /// a text that will be changed to speech
+    @IBOutlet weak var textforspeech: UILabel!
     
     /// the camera session for streaming data from the camera
     var captureSession: AVCaptureSession!
@@ -146,6 +148,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         let fps = -1 / self.time.timeIntervalSinceNow
                         self.time = Date()
                         self.framerate.text = "\(fps)"
+                        self.textforspeech.text = "\(FindObject(argmax))"
                     }
                     self.ready = true
                 })
