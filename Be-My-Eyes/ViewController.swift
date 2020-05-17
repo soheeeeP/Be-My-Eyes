@@ -11,10 +11,10 @@ import AVFoundation
 import Vision
 import Metal
 import MetalPerformanceShaders
+import CoreMotion
 
 /// A view controller to pass camera inputs through a vision model
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
-    
     /// a local reference to time to update the framerate
     var time = Date()
     
@@ -33,6 +33,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var captureSession: AVCaptureSession!
     /// the video preview layer
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
+    
+    // Implement TTS
+    private var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
+    
+    //Check Horzion
+    private var motionManager: CMMotionManager?
+    private var isFacingHorzion: Bool = false
+    private let GravityCheckInterval: TimeInterval = 1.0
     
     /// TODO:
     private var _device: MTLDevice?
@@ -60,6 +68,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
 
+    
     /// the model for the view controller to apss camera data through
     private var _model: VNCoreMLModel?
     /// the model for the view controller to apss camera data through
@@ -69,7 +78,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             if let model = _model {
                 return model
             }
-            // try to create a new model and fail gracefully
+            
             do {
                 _model = try VNCoreMLModel(for: Tiramisu45().model)
             } catch let error {
@@ -84,6 +93,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     private var _request: VNCoreMLRequest?
     /// the request and handler for the model
     var request: VNCoreMLRequest! {
+        
         get {
             // try to unwrap the private request instance
             if let request = _request {
@@ -96,6 +106,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                     print("inference error: \(error.localizedDescription)")
                     return
                 }
+                
                 // make sure the UI is ready for another frame
                 guard self.ready else { return }
                 
@@ -149,6 +160,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         self.time = Date()
                         self.framerate.text = "\(fps)"
                         self.textforspeech.text = "\(FindObject(argmax))"
+                        self.speak("\(FindObject(argmax))")
                     }
                     self.ready = true
                 })
@@ -220,6 +232,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 self.videoPreviewLayer.frame = self.preview.bounds
             }
         }
+        // A function that verifies that the camera is vertical.
+        motionManager = CMMotionManager()
+        motionManager?.deviceMotionUpdateInterval = TimeInterval(GravityCheckInterval)
+        
+        if let queue = OperationQueue.current {
+            motionManager!.startDeviceMotionUpdates(to: queue, withHandler: { motionData, error in
+                self.handleGravity(motionData!.gravity)
+            })
+        }
     }
     
     /// Handle a frame from the camera video stream
@@ -238,6 +259,23 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         } catch let error {
             let message = "failed to perform inference: \(error.localizedDescription)"
             popup_alert(self, title: "Inference Error", message: message)
+        }
+    }
+    
+    // Implement TTS
+    func speak(_ string: String) {
+        let utterance = AVSpeechUtterance(string: string)
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        utterance.rate = AVSpeechUtteranceMaximumSpeechRate * 0.60
+        tts.speak(utterance)
+    }
+    
+    // Check camera horizon
+    func handleGravity(_ gravity: CMAcceleration) {
+        isFacingHorzion = gravity.x <= -0.97 && gravity.x <= 1.0
+        if (!isFacingHorzion) {
+            // TODO: Make some beep for this
+            speak("Make sure the camera is vertical.")
         }
     }
 }
