@@ -332,13 +332,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = F75BY86293;
+				DEVELOPMENT_TEAM = PYD56G8J2V;
 				INFOPLIST_FILE = "Be-My-Eyes/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = hangil.segmentation;
+				PRODUCT_BUNDLE_IDENTIFIER = yoon.segmentation;
 				PRODUCT_NAME = "Be-My-Eyes";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -350,13 +350,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = F75BY86293;
+				DEVELOPMENT_TEAM = PYD56G8J2V;
 				INFOPLIST_FILE = "Be-My-Eyes/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = hangil.segmentation;
+				PRODUCT_BUNDLE_IDENTIFIER = yoon.segmentation;
 				PRODUCT_NAME = "Be-My-Eyes";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
