@@ -15,18 +15,18 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
     // TODO: dynamically load a label map instead of hard coding
     // can this bonus data be included in the model file?
     let label_map = [
-        0:  [255, 0, 0],
-        1:  [70, 70, 70],
-        2:  [0, 0, 142],
-        3:  [153, 153, 153],
-        4:  [190, 153, 153],
-        5:  [220, 20, 60],
-        6:  [128, 64, 128],
-        7:  [244, 35, 232],
-        8:  [220, 220, 0],
-        9:  [70, 130, 180],
-        10: [107, 142, 35],
-        11: [0, 0, 0]
+        0:  [255, 0, 0],        //0 : rider
+        1:  [70, 70, 70],       //1 : building
+        2:  [0, 0, 142],        //2 : car
+        3:  [153, 153, 153],    //3 : pole
+        4:  [190, 153, 153],    //4 : fence
+        5:  [220, 20, 60],      //5 : person
+        6:  [128, 64, 128],     //6 : road
+        7:  [244, 35, 232],     //7 : sidewalk
+        8:  [220, 220, 0],      //8 : traffic sign
+        9:  [70, 130, 180],     //9 : sky
+        10: [107, 142, 35],     //10 : vegetation
+        11: [0, 0, 0]           //11 :
     ]
     //5 : 빨강
     //6 : 도로
@@ -69,22 +69,20 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     // TODO: dynamically load a label map instead of hard coding
     // can this bonus data be included in the model file?
     let label_map = [
-        0:  [255, 0, 0],
-        1:  [70, 70, 70],
-        2:  [0, 0, 142],
-        3:  [153, 153, 153],
-        4:  [190, 153, 153],
-        5:  [220, 20, 60],
-        6:  [128, 64, 128],
-        7:  [244, 35, 232],
-        8:  [220, 220, 0],
-        9:  [70, 130, 180],
-        10: [107, 142, 35],
-        11: [0, 0, 0]
+        0:  [255, 0, 0],        //0 : rider
+        1:  [70, 70, 70],       //1 : building
+        2:  [0, 0, 142],        //2 : car
+        3:  [153, 153, 153],    //3 : pole
+        4:  [190, 153, 153],    //4 : fence
+        5:  [220, 20, 60],      //5 : person
+        6:  [128, 64, 128],     //6 : road
+        7:  [244, 35, 232],     //7 : sidewalk
+        8:  [220, 220, 0],      //8 : traffic sign
+        9:  [70, 130, 180],     //9 : sky
+        10: [107, 142, 35],     //10 : vegetation
+        11: [0, 0, 0]           //11 :
     ]
-    //5 : 빨강
-    //6 : 도로
-    //7 : 인도
+  
     
     // convert the MLMultiArray to a MultiArray
     let codes = MultiArray<Float32>(_probs)
