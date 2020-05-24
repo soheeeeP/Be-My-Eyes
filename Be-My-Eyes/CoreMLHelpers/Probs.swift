@@ -65,29 +65,28 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
 func FindObject(_ _probs: MLMultiArray) -> String {
     // TODO: dynamically load a label map instead of hard coding
     // can this bonus data be included in the model file?
-
-    /* Label map
-     0: rider        orange
-     1: building     gray
-     2: car          blue
-     3: polegroup    white gray
-     4: fence        beige
-     5: person       red
-     6: road         purple
-     7: sidewalk     pink
-     8: trafficsign  yellow
-     9: sky          sky
-     10: vegetation  green
-     11: unlabeled   black
-    */
-
+    let label_map = [
+        0:  [255, 0, 0],        //0 : rider 완전빨강색
+        1:  [70, 70, 70],       //1 : building 진한 회색
+        2:  [0, 0, 142],        //2 : car 샛파랑색
+        3:  [153, 153, 153],    //3 : pole 연한 회색
+        4:  [190, 153, 153],    //4 : fence 칙칙한 핑크색
+        5:  [220, 20, 60],      //5 : person 빨강색
+        6:  [128, 64, 128],     //6 : road 연보라색
+        7:  [244, 35, 232],     //7 : sidewalk 핑크색
+        8:  [220, 220, 0],      //8 : traffic sign 노랑색
+        9:  [70, 130, 180],     //9 : sky 탁탁한 파랑색
+        10: [107, 142, 35],     //10 : vegetation 탁탁한 연두색
+        11: [0, 0, 0]           //11 :
+    ]
+  
+    
     // convert the MLMultiArray to a MultiArray
     let codes = MultiArray<Float32>(_probs)
     // get the shape information from the probs
     let height = codes.shape[1]
     let width = codes.shape[2]
     
-    let key = Int(codes[0, height/2, width/2])
     var text = ""
     /*
     if key == 5 {
