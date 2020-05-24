@@ -272,9 +272,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     // Check camera horizon
     func handleGravity(_ gravity: CMAcceleration) {
-        isFacingHorzion = gravity.x <= -0.97 && gravity.x <= 1.0
+        isFacingHorzion = gravity.x <= -0.8 && gravity.x <= 1.0
         if (!isFacingHorzion) {
-            // TODO: Make some beep for this
             speak("Make sure the camera is vertical.")
         }
     }
