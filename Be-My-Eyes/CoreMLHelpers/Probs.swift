@@ -28,9 +28,6 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
         10: [107, 142, 35],     //10 : vegetation
         11: [0, 0, 0]           //11 :
     ]
-    //5 : 빨강
-    //6 : 도로
-    //7 : 인도
     
     // convert the MLMultiArray to a MultiArray
     let codes = MultiArray<Float32>(_probs)
