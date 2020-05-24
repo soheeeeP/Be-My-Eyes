@@ -65,49 +65,40 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
 func FindObject(_ _probs: MLMultiArray) -> String {
     // TODO: dynamically load a label map instead of hard coding
     // can this bonus data be included in the model file?
-    let label_map = [
-        0:  [255, 0, 0],        //0 : rider 완전빨강색
-        1:  [70, 70, 70],       //1 : building 진한 회색
-        2:  [0, 0, 142],        //2 : car 샛파랑색
-        3:  [153, 153, 153],    //3 : pole 연한 회색
-        4:  [190, 153, 153],    //4 : fence 칙칙한 핑크색
-        5:  [220, 20, 60],      //5 : person 빨강색
-        6:  [128, 64, 128],     //6 : road 연보라색
-        7:  [244, 35, 232],     //7 : sidewalk 핑크색
-        8:  [220, 220, 0],      //8 : traffic sign 노랑색
-        9:  [70, 130, 180],     //9 : sky 탁탁한 파랑색
-        10: [107, 142, 35],     //10 : vegetation 탁탁한 연두색
-        11: [0, 0, 0]           //11 :
-    ]
-  
+    
+    /* Label map
+     0: rider        orange
+     1: building     gray
+     2: car          blue
+     3: polegroup    white gray
+     4: fence        beige
+     5: person       red
+     6: road         purple
+     7: sidewalk     pink
+     8: trafficsign  yellow
+     9: sky          sky
+     10: vegetation  green
+     11: unlabeled   black
+    */
     
     // convert the MLMultiArray to a MultiArray
     let codes = MultiArray<Float32>(_probs)
     // get the shape information from the probs
     let height = codes.shape[1]
     let width = codes.shape[2]
-    
     var text = ""
-    /*
-    if key == 5 {
-        text = "There is a person. Move to right"
-    } else if key == 1 {
-        text = "There is a car. Move to left"
-    }*/
     
     //00 is Left Up
     let ww = Int(width/16)
-    var cell : Array<Int> = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
-    //var tan : Array<Int> = [0,0,0,0,0,0,0,0]  //각 cell의 장애물 위치 기울기(Tangent value) 저장
-    //let mid = width/2
-    var min = 350  //cell 중 가장 높은 위치를 갖는 index 저장
-    var min_key = 0;
+    var cell = Array(repeating: 0, count: 16)  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
+    var min = 352  //장애물이 가장 멀리 있는 cell 장애물 높이 저장
+    var min_key = 0  //장애물이 가장 멀리 있는 cell index 저장
     
     for i in 0...15 {
         for h in 0 ..< height {
             if Int(codes[0, height-1-h, ww*i]) != 6 {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
-                print("cell[\(i)] = \(cell[i]), codes=\(Int(codes[0, height-1-h, ww*i]))")
+                print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
                 break
             }
         }
@@ -116,24 +107,18 @@ func FindObject(_ _probs: MLMultiArray) -> String {
             min_key = i
         }
     }
-    print("\(min_key), \(min)")
-    
+    print("index:\(min_key), height:\(min)")
 
-    if min > height - 35{
+    if min > height-35 {
         text = "It's blocked. Go back"
-    }
-    else{
-        if min_key < 5{
-            text = "move left"
-        }
-        else if min_key > 10{
-            text = "move right"
-        }
-        else{
-            text = "Go straight"
-        }
+    } else if min_key < 5 {
+        text = "move left"
+    } else if min_key > 10 {
+        text = "move right"
+    } else{
+        text = "Go straight"
     }
     
-    // return text to make TTS
+    // return text to print and make TTS
     return text
 }
