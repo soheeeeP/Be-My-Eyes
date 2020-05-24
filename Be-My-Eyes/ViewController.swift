@@ -36,6 +36,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     // Implement TTS
     private var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
+    private var lastPredictionTime: Double = 0
+    private let PredictionInterval: TimeInterval = 5.0
     
     //Check Horzion
     private var motionManager: CMMotionManager?
@@ -160,7 +162,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         self.time = Date()
                         self.framerate.text = "\(fps)"
                         self.textforspeech.text = "\(FindObject(argmax))"
-                        self.speak("\(FindObject(argmax))")
+                        if self.handlePrediction() == 0{
+                            self.speak("\(FindObject(argmax))")
+                        }
                     }
                     self.ready = true
                 })
@@ -266,16 +270,32 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     func speak(_ string: String) {
         let utterance = AVSpeechUtterance(string: string)
         utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-        utterance.rate = AVSpeechUtteranceMaximumSpeechRate * 0.60
+        utterance.rate = 0.5
         tts.speak(utterance)
     }
     
     // Check camera horizon
     func handleGravity(_ gravity: CMAcceleration) {
-        isFacingHorzion = gravity.x <= -0.97 && gravity.x <= 1.0
+        isFacingHorzion = gravity.x <= -0.30 && gravity.x <= 1.7
         if (!isFacingHorzion) {
             // TODO: Make some beep for this
             speak("Make sure the camera is vertical.")
+        }
+    }
+    func handlePrediction() -> Int{
+        if (!isFacingHorzion) {
+            return -1
+        }
+        let currentTime = Date().timeIntervalSince1970
+        
+        if (lastPredictionTime == 0 || (currentTime - lastPredictionTime) > PredictionInterval) {
+            // Clear tts queue
+            tts.stopSpeaking(at: .word)
+            lastPredictionTime = Date().timeIntervalSince1970
+            return 0
+        }
+        else{
+            return -1
         }
     }
 }

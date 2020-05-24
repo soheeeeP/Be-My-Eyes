@@ -69,17 +69,17 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     // TODO: dynamically load a label map instead of hard coding
     // can this bonus data be included in the model file?
     let label_map = [
-        0:  [255, 0, 0],        //0 : rider
-        1:  [70, 70, 70],       //1 : building
-        2:  [0, 0, 142],        //2 : car
-        3:  [153, 153, 153],    //3 : pole
-        4:  [190, 153, 153],    //4 : fence
-        5:  [220, 20, 60],      //5 : person
-        6:  [128, 64, 128],     //6 : road
-        7:  [244, 35, 232],     //7 : sidewalk
-        8:  [220, 220, 0],      //8 : traffic sign
-        9:  [70, 130, 180],     //9 : sky
-        10: [107, 142, 35],     //10 : vegetation
+        0:  [255, 0, 0],        //0 : rider 완전빨강색
+        1:  [70, 70, 70],       //1 : building 진한 회색
+        2:  [0, 0, 142],        //2 : car 샛파랑색
+        3:  [153, 153, 153],    //3 : pole 연한 회색
+        4:  [190, 153, 153],    //4 : fence 칙칙한 핑크색
+        5:  [220, 20, 60],      //5 : person 빨강색
+        6:  [128, 64, 128],     //6 : road 연보라색
+        7:  [244, 35, 232],     //7 : sidewalk 핑크색
+        8:  [220, 220, 0],      //8 : traffic sign 노랑색
+        9:  [70, 130, 180],     //9 : sky 탁탁한 파랑색
+        10: [107, 142, 35],     //10 : vegetation 탁탁한 연두색
         11: [0, 0, 0]           //11 :
     ]
   
@@ -90,13 +90,59 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     let height = codes.shape[1]
     let width = codes.shape[2]
     
-    let key = Int(codes[0, height/2, width/2])
     var text = ""
+    let temp:Int = ((height/2) * (width/3))/3
     
-    if key == 5 {
-        text = "There is a person. Move to right"
-    } else if key == 1 {
-        text = "There is a car. Move to left"
+    var left = 1
+    for h in height/2..<height {
+        for w in 0..<width/3{
+            if Int(codes[0, h, w]) == 6 || Int(codes[0, h, w]) == 7{
+                left += 1
+            }
+        }
+    }
+    
+    var center = 1
+    for h in height/2..<height {
+        for w in width/3..<width/3*2{
+            if Int(codes[0, h, w]) == 6 || Int(codes[0, h, w]) == 7{
+                center += 1
+            }
+        }
+    }
+    
+    var right = 1
+    for h in height/2..<height {
+        for w in width/3*2..<width{
+            if Int(codes[0, h, w]) == 6 || Int(codes[0, h, w]) == 7{
+                right += 1
+            }
+        }
+    }
+    print("\(temp), \(left), \(center), \(right)")
+    if left > temp{
+        left = 0
+    }
+    if center > temp{
+        center = 0
+    }
+    if right > temp{
+        right = 0
+    }
+    if left * center * right != 0{
+        text = "There is no way to go"
+    }
+    else if left == 0 && center * right != 0{
+        text = "move left"
+    }
+    else if right == 0 && center * left != 0{
+        text = "move right"
+    }
+    else if center != 0 && left == 0 && right == 0{
+        text = "move left or right"
+    }
+    else{
+        text = "go straight"
     }
     
     /*
