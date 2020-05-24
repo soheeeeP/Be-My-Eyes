@@ -89,12 +89,50 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     
     let key = Int(codes[0, height/2, width/2])
     var text = ""
-    
+    /*
     if key == 5 {
         text = "There is a person. Move to right"
     } else if key == 1 {
         text = "There is a car. Move to left"
+    }*/
+    
+    //00 is Left Up
+    let ww = Int(width/8)
+    var cell : Array<Int> = [0,0,0,0,0,0,0,0]  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
+    //var tan : Array<Int> = [0,0,0,0,0,0,0,0]  //각 cell의 장애물 위치 기울기(Tangent value) 저장
+    //let mid = width/2
+    var max = 0  //cell 중 가장 높은 위치를 갖는 index 저장
+    var max_key = 0;
+    
+    for i in 0...7 {
+        for h in 0 ..< height {
+            if Int(codes[0, height-1-h, ww*i]) != 6 {
+                cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
+                print("cell[\(i)] = \(cell[i]), codes=\(Int(codes[0, height-1-h, ww*i]))")
+                break
+            }
+        }
+        if max < cell[i] {
+            max = cell[i]
+            max_key = i
+        }
     }
+    print("\(max_key)")
+    
+    /*
+    for i in 0...8 {
+        tan[i] = cell[i] / ww*i - mid
+        if tan[i] < 0 {
+            tan[i] = -tan[i]
+        }
+        if max < tan[i]{
+            max = i
+        }
+    }*/
+    
+    
+    text = "\(max_key)cell is highest"
+    
     
     /*
     // initialize some bytes to store the image in
