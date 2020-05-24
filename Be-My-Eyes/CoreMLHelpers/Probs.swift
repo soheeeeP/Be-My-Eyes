@@ -97,14 +97,14 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     }*/
     
     //00 is Left Up
-    let ww = Int(width/8)
-    var cell : Array<Int> = [0,0,0,0,0,0,0,0]  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
+    let ww = Int(width/16)
+    var cell : Array<Int> = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
     //var tan : Array<Int> = [0,0,0,0,0,0,0,0]  //각 cell의 장애물 위치 기울기(Tangent value) 저장
     //let mid = width/2
-    var max = 0  //cell 중 가장 높은 위치를 갖는 index 저장
-    var max_key = 0;
+    var min = 350  //cell 중 가장 높은 위치를 갖는 index 저장
+    var min_key = 0;
     
-    for i in 0...7 {
+    for i in 0...15 {
         for h in 0 ..< height {
             if Int(codes[0, height-1-h, ww*i]) != 6 {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
@@ -112,45 +112,28 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 break
             }
         }
-        if max < cell[i] {
-            max = cell[i]
-            max_key = i
+        if min > cell[i] {
+            min = cell[i]
+            min_key = i
         }
     }
-    print("\(max_key)")
+    print("\(min_key), \(min)")
     
-    /*
-    for i in 0...8 {
-        tan[i] = cell[i] / ww*i - mid
-        if tan[i] < 0 {
-            tan[i] = -tan[i]
+
+    if min > height - 35{
+        text = "It's blocked. Go back"
+    }
+    else{
+        if min_key < 5{
+            text = "move left"
         }
-        if max < tan[i]{
-            max = i
+        else if min_key > 10{
+            text = "move right"
         }
-    }*/
-    
-    
-    text = "\(max_key)cell is highest"
-    
-    
-    /*
-    // initialize some bytes to store the image in
-    var bytes = [UInt8](repeating: 255, count: height * width * 4)
-    // iterate over the pixels in the output probs
-    for h in 0 ..< height {
-        for w in 0 ..< width {
-            // get the array offset for this word
-            let offset = h * width * 4 + w * 4
-            // get the RGB value for the highest probability class
-            let rgb = label_map[Int(codes[0, h, w])]
-            // set the bytes to the RGB value and alpha of 1.0 (255)
-            bytes[offset + 0] = UInt8(rgb![0])
-            bytes[offset + 1] = UInt8(rgb![1])
-            bytes[offset + 2] = UInt8(rgb![2])
+        else{
+            text = "Go straight"
         }
     }
- */
     
     // return text to make TTS
     return text
