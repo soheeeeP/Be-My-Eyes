@@ -107,7 +107,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         for h in 0 ..< height {
             if Int(codes[0, height-1-h, ww*i]) != 6 {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
-                print("cell[\(i)] = \(cell[i]), codes=\(Int(codes[0, height-1-h, ww*i]))")
+                //print("cell[\(i)] = \(cell[i]), codes=\(Int(codes[0, height-1-h, ww*i]))")
                 break
             }
         }
@@ -116,7 +116,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
             min_key = i
         }
     }
-    print("\(min_key), \(min)")
+   // print("\(min_key), \(min)")
     
 
     if min > height - 35{
