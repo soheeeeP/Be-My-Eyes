@@ -104,7 +104,9 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         for h in 0 ..< height {
             if Int(codes[0, height-1-h, ww*i]) != 6 {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
+
                 //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
+
                 break
             }
         }
@@ -127,7 +129,9 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         }
 
     }
+
     print("cell index:\(min_key), distance:\(minDistance)")
+
 
     if minDistance > Int(pow(Double(height-35),2)) {
         text = "It's blocked. Go back"
