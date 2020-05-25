@@ -91,25 +91,45 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     //00 is Left Up
     let ww = Int(width/16)
     var cell = Array(repeating: 0, count: 16)  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
-    var min = 352  //장애물이 가장 멀리 있는 cell 장애물 높이 저장
+    //var min = 352  //장애물이 가장 멀리 있는 cell 장애물 높이 저장
     var min_key = 0  //장애물이 가장 멀리 있는 cell index 저장
     
+    var heightDistance = 0
+    var widthDistance = 0
+    var cellDistance = 0  //distance between each cell's obstacle and the user
+    var minDistance = Int(pow(352,2) + pow(Double(width/2), 2)) //default distance
+        
     for i in 0...15 {
+        //initializing distance for each cell
         for h in 0 ..< height {
             if Int(codes[0, height-1-h, ww*i]) != 6 {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
-                print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
+                //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
                 break
             }
         }
-        if min > cell[i] {
-            min = cell[i]
+            // find a distance between each cell's obstacle and the user
+            // user location :       (0,width/2)
+            // obstacle location:    (cell[i],ww*i)
+            
+        heightDistance = cell[i]
+        widthDistance = ((ww*i)-(width/2))
+        cellDistance = Int((pow(Double(heightDistance), 2) + pow(Double(widthDistance),2)))
+            
+    //        if min > cell[i]{
+    //            min = cell[i]
+    //            min_key = i
+    //        }
+            
+        if(minDistance > cellDistance){
+            minDistance = cellDistance
             min_key = i
         }
-    }
-    print("index:\(min_key), height:\(min)")
 
-    if min > height-35 {
+    }
+    print("cell index:\(min_key), distance:\(minDistance)")
+
+    if minDistance > Int(pow(Double(height-35),2)) {
         text = "It's blocked. Go back"
     } else if min_key < 5 {
         text = "move left"
@@ -121,4 +141,5 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     
     // return text to print and make TTS
     return text
+
 }
