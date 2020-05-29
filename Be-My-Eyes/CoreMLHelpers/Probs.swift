@@ -97,8 +97,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     var heightDistance = 0
     var widthDistance = 0
     var cellDistance = 0  //distance between each cell's obstacle and the user
-    var minDistance = Int(pow(352,2) + pow(Double(width/2), 2)) //default distance
-        
+    var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2)))) //default distance
+
+    let limit = Int(height/4*3)
+
     for i in 0...15 {
         //initializing distance for each cell
         for h in 0 ..< height {
@@ -116,8 +118,8 @@ func FindObject(_ _probs: MLMultiArray) -> String {
             
         heightDistance = cell[i]
         widthDistance = ((ww*i)-(width/2))
-        cellDistance = Int((pow(Double(heightDistance), 2) + pow(Double(widthDistance),2)))
-            
+        cellDistance = Int(sqrt((pow(Double(heightDistance), 2) + pow(Double(widthDistance),2))))
+
     //        if min > cell[i]{
     //            min = cell[i]
     //            min_key = i
@@ -129,6 +131,27 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         }
 
     }
+       var cnt = 0
+       //장애물이 limit영역밖에 위치하는 경우
+       for i in 0...15 {
+           //print("\(cell[i]), \(limit)")
+           if(cell[i] < limit){
+               break
+           }
+           cnt += 1
+           /*
+           if(cell[i] > limit){
+               text = "Go straight"
+               print("safe area")
+               return text
+           }
+    */
+       }
+       if(cnt == 16){
+           text = "Go straight"
+           print("safe area")
+           return text
+       }
 
     print("cell index:\(min_key), distance:\(minDistance)")
 
