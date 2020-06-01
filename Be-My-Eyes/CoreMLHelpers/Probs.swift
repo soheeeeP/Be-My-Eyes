@@ -10,6 +10,12 @@ import Foundation
 import UIKit
 import CoreML
 
+// Obstacle information of previous frame
+struct PrevFrameObstacles{
+    static var obstacle = Array(repeating: 6, count: 16)
+    static var totalCnt = Array(repeating: 0, count: 16)
+}
+
 /// Convert probability tensor into an image
 func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
     // TODO: dynamically load a label map instead of hard coding
@@ -99,8 +105,9 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     var cellDistance = 0  //distance between each cell's obstacle and the user
     var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2)))) //default distance
 
-    //detecting obstacles in each frame
-    var obstacle = Array(repeating: 6, count: 16)
+    //obstacles information in current frame
+    var CurFrameObstacles = Array(repeating: 6, count: 16)
+    var obstacleFlag : Bool = false
     
     let limit = Int(height/4*3)
 
@@ -109,12 +116,20 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         for h in 0 ..< height {
             if Int(codes[0, height-1-h, ww*i]) != 6 {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
-                obstacle[i] = Int(codes[0,height-1-h,ww*i])
+                CurFrameObstacles[i] = Int(codes[0,height-1-h,ww*i]) //현재 frame의 장애물 정보 저장
                 //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
 
                 break
             }
         }
+        //현재 frame의 장애물과 이전 frame의 장애물이 동일하다면, cnt++
+        if(CurFrameObstacles[i] == PrevFrameObstacles.obstacle[i]){
+            PrevFrameObstacles.totalCnt[i]+=1
+        }
+        //frame의 장애물 정보 reset
+        PrevFrameObstacles.obstacle[i] = CurFrameObstacles[i]
+        
+        
             // find a distance between each cell's obstacle and the user
             // user location :       (0,width/2)
             // obstacle location:    (cell[i],ww*i)
@@ -134,12 +149,25 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         }
 
     }
+
+//    for i in 0...15{
+//        print("\(obstacle[i])",terminator:" ")
+//    }
+//    print("\n")
     
+    //동일한 장애물이 연속으로 5개 이상의 frame에서 등장한다면, 장애물 정보를 알림
     for i in 0...15{
-        print("\(obstacle[i])",terminator:" ")
+        if(PrevFrameObstacles.totalCnt[i] > 5){
+            print("you are in danger. \(PrevFrameObstacles.obstacle[i]) is coming")
+            //장애물 정보 알림 flag를 true로 set
+            obstacleFlag = true
+        }
     }
-    print("\n")
-    
+    if(obstacleFlag){
+        //장애물 갯수 totalCnt값을 초기화
+        PrevFrameObstacles.totalCnt=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    }
+
     var cnt = 0
        //장애물이 limit영역밖에 위치하는 경우
        for i in 0...15 {
@@ -148,13 +176,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                break
            }
            cnt += 1
-           /*
-           if(cell[i] > limit){
-               text = "Go straight"
-               print("safe area")
-               return text
-           }
-    */
        }
        if(cnt == 16){
            text = "Go straight"
