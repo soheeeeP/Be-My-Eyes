@@ -108,20 +108,13 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // default distance
     var min_key = 0  // 장애물이 가장 멀리 있는 cell index 저장
 
-    // obstacle information of current frame
-    var CurFrameObstacles = Array(repeating: 6, count: 16)
-    /// var obstacleFlag : Bool = false
-
     // calculate obstacle distance for each cell
     for i in 0...15 {
         for h in 0 ..< height {
             if Int(codes[0, height-1-h, ww*i]) != 6 {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
-                CurFrameObstacles[i] = Int(codes[0,height-1-h,ww*i]) //현재 frame의 장애물 정보 저장
-                
                 CurFrame.obstacle[i] = Int(codes[0,height-1-h,ww*i])
                 CurFrame.height[i] = height-1-h
-                
                 // print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
                 break
             }
