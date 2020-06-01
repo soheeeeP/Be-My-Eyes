@@ -107,6 +107,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     var cellDistance = 0  //distance between each cell's obstacle and the user
     var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // default distance
     var min_key = 0  // 장애물이 가장 멀리 있는 cell index 저장
+    var obstacleFlag = false
 
     // calculate obstacle distance for each cell
     for i in 0...15 {
@@ -151,8 +152,12 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         // 동일한 장애물이 5 frame 연속으로 다가오는 경우 경보
         if PrevFrame.totalCnt[i] > 4 {
             print("You are in danger. \(PrevFrame.obstacle[i]) is coming")
-            PrevFrame.totalCnt = Array(repeating: 0, count: 16)  // initialize totalCnt
+            obstacleFlag = true
         }
+    }
+    
+    if obstacleFlag {
+        PrevFrame.totalCnt = Array(repeating: 0, count: 16)  // initialize totalCnt
     }
 
     print("cell index:\(min_key), distance:\(minDistance)")
