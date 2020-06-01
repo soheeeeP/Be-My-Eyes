@@ -10,12 +10,6 @@ import Foundation
 import UIKit
 import CoreML
 
-/// Obstacle information of previous frame
-struct PrevFrameObstacles{
-    static var obstacle = Array(repeating: 6, count: 16)
-    static var totalCnt = Array(repeating: 0, count: 16)
-}
-
 /// Convert probability tensor into an image
 func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
     // TODO: dynamically load a label map instead of hard coding
@@ -67,7 +61,20 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
                                  alphaInfo: .premultipliedLast)
 }
 
+/// Obstacle information of previous frame
+struct PrevFrame{
+    static var obstacle = Array(repeating: 6, count: 16)  //initialize to road (no obstacle)
+    static var height = Array(repeating: 0, count: 16)
+    static var totalCnt = Array(repeating: 0, count: 16)
+}
 
+/// Obstacle information of current frame
+struct CurFrame{
+    static var obstacle = Array(repeating: 6, count: 16)  //initialize to road (no obstacle)
+    static var height = Array(repeating: 0, count: 16)
+}
+
+/// Locate the obstacle & Return in text
 func FindObject(_ _probs: MLMultiArray) -> String {
     /* Label map
      0: rider        orange
@@ -103,7 +110,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
 
     // obstacle information of current frame
     var CurFrameObstacles = Array(repeating: 6, count: 16)
-    var obstacleFlag : Bool = false
+    /// var obstacleFlag : Bool = false
 
     // calculate obstacle distance for each cell
     for i in 0...15 {
@@ -111,6 +118,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
             if Int(codes[0, height-1-h, ww*i]) != 6 {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
                 CurFrameObstacles[i] = Int(codes[0,height-1-h,ww*i]) //현재 frame의 장애물 정보 저장
+                
+                CurFrame.obstacle[i] = Int(codes[0,height-1-h,ww*i])
+                CurFrame.height[i] = height-1-h
+                
                 // print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
                 break
             }
@@ -132,23 +143,23 @@ func FindObject(_ _probs: MLMultiArray) -> String {
             }
         }
         
-        // Compare current frame & prev frame. If EQ, +1
-        if CurFrameObstacles[i] == PrevFrameObstacles.obstacle[i] {
-            PrevFrameObstacles.totalCnt[i]+=1
+        if CurFrame.obstacle[i] == PrevFrame.obstacle[i] {
+            if CurFrame.height[i] > PrevFrame.height[i] {  // 장애물이 다가오는 경우
+                PrevFrame.totalCnt[i]+=1
+            } else if CurFrame.height[i] < PrevFrame.height[i] { // 장애물이 멀어지는 경우
+                PrevFrame.totalCnt[i]-=1
+            }
         }
-        // frame의 장애물 정보 reset
-        PrevFrameObstacles.obstacle[i] = CurFrameObstacles[i]
+        
+        // info of prev frame obstacle
+        PrevFrame.obstacle[i] = CurFrame.obstacle[i]
+        PrevFrame.height[i] = CurFrame.height[i]
 
-        // 동일한 장애물이 연속으로 5개 이상의 frame에서 등장한다면, 장애물 정보를 알림
-        if PrevFrameObstacles.totalCnt[i] > 5 {
-            print("you are in danger. \(PrevFrameObstacles.obstacle[i]) is coming")
-            obstacleFlag = true
+        // 동일한 장애물이 5 frame 연속으로 다가오는 경우 경보
+        if PrevFrame.totalCnt[i] > 4 {
+            print("You are in danger. \(PrevFrame.obstacle[i]) is coming")
+            PrevFrame.totalCnt = Array(repeating: 0, count: 16)  // initialize totalCnt
         }
-    }
-    
-    // initialize obstacle totalCnt
-    if obstacleFlag {
-        PrevFrameObstacles.totalCnt = Array(repeating: 0, count: 16)
     }
 
     print("cell index:\(min_key), distance:\(minDistance)")
