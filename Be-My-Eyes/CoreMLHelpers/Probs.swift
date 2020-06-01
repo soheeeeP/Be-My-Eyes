@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import CoreML
 
-// Obstacle information of previous frame
+/// Obstacle information of previous frame
 struct PrevFrameObstacles{
     static var obstacle = Array(repeating: 6, count: 16)
     static var totalCnt = Array(repeating: 0, count: 16)
@@ -45,8 +45,8 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
     // iterate over the pixels in the output probs
 
     
-    //print(label_map[Int(codes[0, 20, 20])]) //출력 형식 : Optional([128, 64, 128])
-    //print(Int(codes[0, 20, 20])) //출력 형식 : key값 int 숫자
+    // print(label_map[Int(codes[0, 20, 20])]) //출력 형식 : Optional([128, 64, 128])
+    // print(Int(codes[0, 20, 20])) //출력 형식 : key값 int 숫자
     for h in 0 ..< height {
         for w in 0 ..< width {
             // get the array offset for this word
@@ -69,9 +69,6 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
 
 
 func FindObject(_ _probs: MLMultiArray) -> String {
-    // TODO: dynamically load a label map instead of hard coding
-    // can this bonus data be included in the model file?
-    
     /* Label map
      0: rider        orange
      1: building     gray
@@ -94,87 +91,81 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     let width = codes.shape[2]
     var text = ""
     
-    //00 is Left Up
+    // 00 is Left Up
     let ww = Int(width/16)
     var cell = Array(repeating: 0, count: 16)  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
     
     var heightDistance = 0
     var widthDistance = 0
     var cellDistance = 0  //distance between each cell's obstacle and the user
-    var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2)))) //default distance
-    var min_key = 0  //장애물이 가장 멀리 있는 cell index 저장
+    var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // default distance
+    var min_key = 0  // 장애물이 가장 멀리 있는 cell index 저장
 
-    //obstacles information in current frame
+    // obstacle information of current frame
     var CurFrameObstacles = Array(repeating: 6, count: 16)
     var obstacleFlag : Bool = false
-    
-    let limit = Int(height/4*3)
 
+    // calculate obstacle distance for each cell
     for i in 0...15 {
-        //initializing distance for each cell
         for h in 0 ..< height {
             if Int(codes[0, height-1-h, ww*i]) != 6 {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
                 CurFrameObstacles[i] = Int(codes[0,height-1-h,ww*i]) //현재 frame의 장애물 정보 저장
-                //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
+                // print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
                 break
             }
         }
     }
+    
+    // find a distance between each cell's obstacle and user
+    // user location :       (0,width/2)
+    // obstacle location:    (cell[i],ww*i)
     for i in 0...15 {
-        //현재 frame의 장애물과 이전 frame의 장애물이 동일하다면, cnt++
-        if(CurFrameObstacles[i] == PrevFrameObstacles.obstacle[i]){
-            PrevFrameObstacles.totalCnt[i]+=1
-        }
-        //frame의 장애물 정보 reset
-        PrevFrameObstacles.obstacle[i] = CurFrameObstacles[i]
-        
-        //find a distance between each cell's obstacle and the user
-        //user location :       (0,width/2)
-        //obstacle location:    (cell[i],ww*i)
         heightDistance = cell[i]
         widthDistance = ((ww*i)-(width/2))
         cellDistance = Int(sqrt((pow(Double(heightDistance), 2) + pow(Double(widthDistance),2))))
-            
-        if(minDistance > cellDistance){
+        
+        if minDistance > cellDistance {
             if (i>0 && cell[i-1] <= height*3/4) || (i<15 && cell[i+1] <= height*3/4) {
                 minDistance = cellDistance
                 min_key = i
             }
         }
-    }
-    
-    //동일한 장애물이 연속으로 5개 이상의 frame에서 등장한다면, 장애물 정보를 알림
-    for i in 0...15{
-        if(PrevFrameObstacles.totalCnt[i] > 5){
+        
+        // Compare current frame & prev frame. If EQ, +1
+        if CurFrameObstacles[i] == PrevFrameObstacles.obstacle[i] {
+            PrevFrameObstacles.totalCnt[i]+=1
+        }
+        // frame의 장애물 정보 reset
+        PrevFrameObstacles.obstacle[i] = CurFrameObstacles[i]
+
+        // 동일한 장애물이 연속으로 5개 이상의 frame에서 등장한다면, 장애물 정보를 알림
+        if PrevFrameObstacles.totalCnt[i] > 5 {
             print("you are in danger. \(PrevFrameObstacles.obstacle[i]) is coming")
-            //장애물 정보 알림 flag를 true로 set
             obstacleFlag = true
         }
     }
-    if(obstacleFlag){
-        //장애물 갯수 totalCnt값을 초기화
-        PrevFrameObstacles.totalCnt=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    }
-
-    var cnt = 0
-    //장애물이 limit영역밖에 위치하는 경우
-    for i in 0...15 {
-       //print("\(cell[i]), \(limit)")
-       if(cell[i] < limit){
-           break
-       }
-       cnt += 1
-    }
-    if(cnt == 16){
-       text = "Go straight"
-       print("safe area")
-       return text
+    
+    // initialize obstacle totalCnt
+    if obstacleFlag {
+        PrevFrameObstacles.totalCnt = Array(repeating: 0, count: 16)
     }
 
     print("cell index:\(min_key), distance:\(minDistance)")
+    
+    // straight 영역의 장애물이 limit보다 멀리 있는 경우 straight부터 가도록 알림
+    for i in 5...10 {
+        if cell[i] > height/4 {  // limit == height/4
+            break
+        }
+        if i == 10 {
+            text = "Go straight"
+            print("Safe Area")
+            return text
+        }
+    }
 
-    if minDistance > Int(pow(Double(height-35),2)) {
+    if minDistance > Int(sqrt(pow(Double(height-35),2))) {
         text = "It's blocked. Go back"
     } else if min_key < 5 {
         text = "move left"
