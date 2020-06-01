@@ -99,6 +99,9 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     var cellDistance = 0  //distance between each cell's obstacle and the user
     var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2)))) //default distance
 
+    //detecting obstacles in each frame
+    var obstacle = Array(repeating: 6, count: 16)
+    
     let limit = Int(height/4*3)
 
     for i in 0...15 {
@@ -106,7 +109,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         for h in 0 ..< height {
             if Int(codes[0, height-1-h, ww*i]) != 6 {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
-
+                obstacle[i] = Int(codes[0,height-1-h,ww*i])
                 //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
 
                 break
@@ -131,7 +134,13 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         }
 
     }
-       var cnt = 0
+    
+    for i in 0...15{
+        print("\(obstacle[i])",terminator:" ")
+    }
+    print("\n")
+    
+    var cnt = 0
        //장애물이 limit영역밖에 위치하는 경우
        for i in 0...15 {
            //print("\(cell[i]), \(limit)")
