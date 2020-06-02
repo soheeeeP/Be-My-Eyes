@@ -110,6 +110,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     
     var obstacleFlag = false
     var obstacleText = "And Be Careful. "
+    var didAppeared = Array(repeating: 0, count: 16)
 
     // calculate obstacle distance for each cell
     for i in 0...15 {
@@ -154,7 +155,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         // 동일한 장애물이 5 frame 연속으로 다가오는 경우 경보
         if PrevFrame.totalCnt[i] > 4 {
             //print("You are in danger. \(PrevFrame.obstacle[i]) is coming")
-            obstacleText += "\(FindObstacle(code: PrevFrame.obstacle[i])) "
+            if(didAppeared[PrevFrame.totalCnt[i]] == 0){
+                didAppeared[PrevFrame.totalCnt[i]] = 1
+                obstacleText += "\(FindObstacle(code: PrevFrame.obstacle[i])) "
+            }
             obstacleFlag = true
         }
     }
