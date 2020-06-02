@@ -107,7 +107,9 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     var cellDistance = 0  //distance between each cell's obstacle and the user
     var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // default distance
     var min_key = 0  // 장애물이 가장 멀리 있는 cell index 저장
+    
     var obstacleFlag = false
+    var obstacleText = "And Be Careful. "
 
     // calculate obstacle distance for each cell
     for i in 0...15 {
@@ -151,16 +153,18 @@ func FindObject(_ _probs: MLMultiArray) -> String {
 
         // 동일한 장애물이 5 frame 연속으로 다가오는 경우 경보
         if PrevFrame.totalCnt[i] > 4 {
-            print("You are in danger. \(PrevFrame.obstacle[i]) is coming")
+            //print("You are in danger. \(PrevFrame.obstacle[i]) is coming")
+            obstacleText += "\(FindObstacle(code: PrevFrame.obstacle[i])) "
             obstacleFlag = true
         }
     }
-    
-    if obstacleFlag {
-        PrevFrame.totalCnt = Array(repeating: 0, count: 16)  // initialize totalCnt
-    }
+//
+//    if obstacleFlag {
+//        PrevFrame.totalCnt = Array(repeating: 0, count: 16)  // initialize totalCnt
+//    }
 
-    print("cell index:\(min_key), distance:\(minDistance)")
+//    print("cell index:\(min_key), distance:\(minDistance)")
+
     
     // straight 영역의 장애물이 limit보다 멀리 있는 경우 straight부터 가도록 알림
     for i in 5...10 {
@@ -175,15 +179,55 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     }
 
     if minDistance > Int(sqrt(pow(Double(height-35),2))) {
-        text = "It's blocked. Go back"
+        text = "It's blocked. Go back. "
     } else if min_key < 5 {
-        text = "move left"
+        text = "move left. "
     } else if min_key > 10 {
-        text = "move right"
+        text = "move right. "
     } else{
-        text = "Go straight"
+        text = "Go straight. "
     }
     
+    if obstacleFlag {
+        PrevFrame.totalCnt = Array(repeating: 0, count: 16)  // initialize totalCnt
+        text = text + obstacleText + "is in front of you."
+        
+    }
+    print(text)
     // return text to print and make TTS
     return text
+}
+
+func FindObstacle(code: Int) -> String{
+    
+    var obstacle = ""
+    
+    switch code {
+        case 0:
+            obstacle = "rider"
+        case 1:
+            obstacle = "building"
+        case 2:
+            obstacle = "car"
+        case 3:
+            obstacle = "polegroup"
+        case 4:
+            obstacle = "fence"
+        case 5:
+            obstacle = "person"
+        case 7:
+            obstacle = "sidewalk"
+        case 8:
+            obstacle = "trafficsign"
+        case 9:
+            obstacle = "sky"
+        case 10:
+            obstacle = "vegetation"
+        case 11:
+            obstacle = "unlabeled obstacle"
+        default:
+            obstacle = ""
+    }
+    
+    return obstacle
 }
