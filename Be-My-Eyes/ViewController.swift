@@ -12,9 +12,10 @@ import Vision
 import Metal
 import MetalPerformanceShaders
 import CoreMotion
+import CoreLocation
 
 /// A view controller to pass camera inputs through a vision model
-class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, CLLocationManagerDelegate {
     /// a local reference to time to update the framerate
     var time = Date()
     
@@ -36,13 +37,22 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     // Implement TTS
     private var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
-    private var lastPredictionTime: Double = 0
+    private var lastPredictionTime: Double = 5.0
     private let PredictionInterval: TimeInterval = 5.0
     
     //Check Horzion
     private var motionManager: CMMotionManager?
     private var isFacingHorzion: Bool = false
     private let GravityCheckInterval: TimeInterval = 1.0
+    
+    //Current Location
+    var locationManager: CLLocationManager!
+    var administrativeArea = ""
+    var locality = ""
+    var thoroughfare = ""
+    var subLocality = ""
+    var CurrentLocation = ""
+    var LastLocation = ""
     
     /// TODO:
     private var _device: MTLDevice?
@@ -196,6 +206,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             popup_alert(self, title: "Camera Error", message: message)
             return
         }
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+        
         // create an input device from the back camera and handle
         // any errors (i.e., privacy request denied)
         do {
@@ -274,6 +290,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         tts.speak(utterance)
     }
     
+    func speak2(_ string: String) {
+        let utterance = AVSpeechUtterance(string: string)
+        utterance.voice = AVSpeechSynthesisVoice(language: "ko-KR")
+        utterance.rate = 0.5
+        tts.speak(utterance)
+    }
+    
     // Check camera horizon
     func handleGravity(_ gravity: CMAcceleration) {
         isFacingHorzion = gravity.x <= -0.8 && gravity.x <= 1.0
@@ -296,6 +319,33 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
         else{
             return -1
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        //print("locations = \(locValue.latitude) \(locValue.longitude)")
+        
+        let findLocation = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
+        let geocoder = CLGeocoder()
+        let locale = Locale(identifier: "Ko-kr") //원하는 언어의 나라 코드를 넣어주시면 됩니다.'
+        
+        geocoder.reverseGeocodeLocation(findLocation, preferredLocale: locale, completionHandler: {(placemarks, error) in
+            if let address: [CLPlacemark] = placemarks {
+                if let administrativeArea: String = address.last?.administrativeArea { self.administrativeArea = administrativeArea }
+                if let locality: String = address.last?.locality { self.locality = locality }
+                if let thoroughfare: String = address.last?.thoroughfare { self.thoroughfare = thoroughfare }
+                if let subLocality: String = address.last?.subLocality { self.subLocality = subLocality }
+            }
+        })
+
+        CurrentLocation = administrativeArea + " " + locality + " " + thoroughfare
+        if CurrentLocation != LastLocation && thoroughfare != subLocality{
+            speak("Your are now in")
+            speak2(CurrentLocation)
+            LastLocation = CurrentLocation
+            print(LastLocation)
+            print(CurrentLocation)
         }
     }
 }
