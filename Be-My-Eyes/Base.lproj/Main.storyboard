@@ -44,22 +44,64 @@
                 <swipeGestureRecognizer direction="right" id="hvv-r7-RCe">
                     <connections>
                         <action selector="Swipe2:" destination="5ok-ST-3X4" id="HbW-bV-2w4"/>
-                        <segue destination="muv-iN-7Kq" kind="show" id="nuO-yR-cxV"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-384" y="-237"/>
+            <point key="canvasLocation" x="-2101" y="-237"/>
+        </scene>
+        <!--Info View Controller-->
+        <scene sceneID="gcA-YJ-er6">
+            <objects>
+                <viewController storyboardIdentifier="Info" useStoryboardIdentifierAsRestorationIdentifier="YES" id="JU7-aH-ivT" customClass="InfoViewController" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="bx2-rO-2lf">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="Yda-SQ-FQg">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Be-My-Eyes-Info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DrW-40-8au">
+                                        <rect key="frame" x="110.5" y="433.5" width="193" height="29"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="24"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstItem="DrW-40-8au" firstAttribute="centerX" secondItem="77d-Ee-vRX" secondAttribute="centerX" id="gcT-ke-4xD"/>
+                                    <constraint firstItem="DrW-40-8au" firstAttribute="centerY" secondItem="Yda-SQ-FQg" secondAttribute="centerY" id="u4U-Hf-qNX"/>
+                                </constraints>
+                                <viewLayoutGuide key="safeArea" id="77d-Ee-vRX"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Bjw-bq-fvx" appends="YES" id="HdG-bw-yDm"/>
+                                    <outletCollection property="gestureRecognizers" destination="ydc-R3-jq5" appends="YES" id="CmT-hF-y0P"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="Xss-9w-XTz"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="2z0-tp-B5z"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eDq-8m-Zix" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="left" id="Bjw-bq-fvx"/>
+                <swipeGestureRecognizer direction="right" id="ydc-R3-jq5"/>
+            </objects>
+            <point key="canvasLocation" x="-1229" y="-237"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="xH9-bj-AVy">
             <objects>
                 <viewController storyboardIdentifier="Show" useStoryboardIdentifierAsRestorationIdentifier="YES" id="muv-iN-7Kq" customClass="ViewController" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8ML-f3-CRY">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cVb-RM-mR6">
-                                <rect key="frame" x="36" y="245" width="171" height="216"/>
+                                <rect key="frame" x="36" y="266" width="171" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
@@ -78,13 +120,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="53w-Sg-PWT">
-                                <rect key="frame" x="36" y="677" width="346" height="34"/>
+                                <rect key="frame" x="36" y="722" width="346" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="een-F0-TQU">
-                                <rect key="frame" x="210" y="245" width="172" height="216"/>
+                                <rect key="frame" x="210" y="266" width="172" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
@@ -105,7 +147,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNs-fm-J2r" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="583" y="-237"/>
+            <point key="canvasLocation" x="-338" y="-237"/>
         </scene>
     </scenes>
     <color key="tintColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
