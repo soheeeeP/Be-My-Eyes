@@ -114,7 +114,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     
     //var obstacle = ""
     //var obstacleFlag = false
-    var obstacleText = ""
+    //var obstacleText = ""
     //var obstacleDistance = 0
     var didAppeared = Array(repeating: 0, count: 16)
 
@@ -167,7 +167,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 
                 // 장애물이 존재하는 경우 메세지 추가 & 장애물 flag 설정
                 if obstacle != "" {
-                    //obstacleText = "\(FindObstacle(code: PrevFrame.obstacle[i])) is \(obstacleDistance) steps ahead."
                     obstacleFlag = true
                 }
             }
@@ -201,8 +200,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     // Obstacle detecting message
     if obstacleFlag {
         PrevFrame.totalCnt = Array(repeating: 0, count: 16)  // initialize totalCnt
-        //text = text + obstacleText
-        
+        didAppeared = Array(repeating: 0, count: 16)  // initialize didAppeared
     }
         
     // debugging TTS message
@@ -216,21 +214,19 @@ func FindObstacle(code: Int) -> String{
     var obstacle = ""
     switch code {
         case 0:
-            obstacle = "rider"
+            obstacle = "Rider"
         case 1:
-            obstacle = "building"
+            obstacle = "Building"
         case 2:
-            obstacle = "car"
+            obstacle = "Car"
         case 3:
-            obstacle = "polegroup"
+            obstacle = "Polegroup"
         case 4:
-            obstacle = "fence"
+            obstacle = "Fence"
         case 5:
-            obstacle = "person"
-        case 7:
-            obstacle = "sidewalk"
+            obstacle = "Person"
         case 10:
-            obstacle = "vegetation"
+            obstacle = "Vegetation"
         default:
             obstacle = ""
     }
