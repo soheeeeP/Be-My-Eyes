@@ -19,7 +19,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     /// a local reference to time to update the framerate
     var time = Date()
     
-    var ready: Bool = true
+    var ready = true
+    var islocation = false
 
     /// the view to preview raw RGB data from the camera
     @IBOutlet weak var preview: UIView!
@@ -297,10 +298,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     // Implement TTS
     func speak(_ string: String) {
-        let utterance = AVSpeechUtterance(string: string)
-        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-        utterance.rate = 0.5
-        tts.speak(utterance)
+        if islocation == false {
+            let utterance = AVSpeechUtterance(string: string)
+            utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+            utterance.rate = 0.5
+            tts.speak(utterance)
+        }
     }
     
     func speak2(_ string: String) {
@@ -308,6 +311,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         utterance.voice = AVSpeechSynthesisVoice(language: "ko-KR")
         utterance.rate = 0.5
         tts.speak(utterance)
+        islocation = false
     }
     
     // Check camera horizon
@@ -356,8 +360,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
         if Count == 0{
             Count += 1
+            islocation = true
             speak2(CurrentLocation)
             print(CurrentLocation)
+            islocation = false
         }
     }
 }
