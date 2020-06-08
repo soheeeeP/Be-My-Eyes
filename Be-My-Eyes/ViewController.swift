@@ -70,7 +70,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var _queue: MTLCommandQueue?
     
     @IBAction func asdasd(_ sender: Any) {
-        print("dslkfjdf")
         Count = 0
         locationManager = CLLocationManager()
         locationManager.delegate = self
@@ -354,7 +353,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
         if Count == 0{
             Count += 1
-            speak("Your are now in")
             speak2(CurrentLocation)
             print(CurrentLocation)
         }

@@ -33,6 +33,7 @@ class StartViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         speak("Swipe the app to the left if you want to start it, or to the right if you want to close it.")
+        speak("Tap once to find out where you are.")
         // Do any additional setup after loading the view.
     }
     
