@@ -130,7 +130,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     // find a distance between each cell's obstacle and user
     // user location :       (0,width/2)
     // obstacle location:    (cell[i],ww*i)
-    
     for i in 0...15 {
         heightDistance = cell[i]
         widthDistance = ((ww*i)-(width/2))
@@ -155,23 +154,23 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         PrevFrame.obstacle[i] = CurFrame.obstacle[i]
         PrevFrame.height[i] = CurFrame.height[i]
 
-        // 동일한 장애물이 5 frame 연속으로 다가오는 경우 경보
-        if PrevFrame.totalCnt[i] > 4 {
-            if(didAppeared[PrevFrame.totalCnt[i]] == 0){
+        // 동일한 장애물이 4 frame 연속으로 다가오는 경우 경보
+        if PrevFrame.totalCnt[i] > 3 {
+            if didAppeared[PrevFrame.totalCnt[i]] == 0 {
                 didAppeared[PrevFrame.totalCnt[i]] = 1
-                obstacleDistance = PrevFrame.height[i] / 35;
+                obstacleDistance = 10 - PrevFrame.height[i] / 35
+                obstacleDistance *= obstacleDistance
                 obstacle = FindObstacle(code: PrevFrame.obstacle[i])
                 
-                if obstacle == "" {
-                    continue
+                // 장애물이 존재하는 경우 메세지 추가 & 장애물 flag 설정
+                if obstacle != "" {
+                    obstacleText = "\(FindObstacle(code: PrevFrame.obstacle[i])) is \(obstacleDistance) steps ahead."
+                    obstacleFlag = true
                 }
-                obstacleText += "\(FindObstacle(code: PrevFrame.obstacle[i])) is \(10 - obstacleDistance) steps ahead. "
             }
-            obstacleFlag = true
         }
     }
-
-//    print("cell index:\(min_key), distance:\(minDistance)")
+    //print("cell index:\(min_key), distance:\(minDistance)")
 
     
     // straight 영역의 장애물이 limit보다 멀리 있는 경우 straight부터 가도록 알림
@@ -188,13 +187,13 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     
     // Navigation message
     if minDistance > Int(sqrt(pow(Double(height-35),2))) {
-        text = "It's blocked. Go back. "
+        text = "It's blocked. Go back."
     } else if min_key < 5 {
-        text = "Move left. "
+        text = "Move left."
     } else if min_key > 10 {
-        text = "Move right. "
+        text = "Move right."
     } else{
-        text = "Go straight. "
+        text = "Go straight."
     }
     
     // Obstacle detecting message
@@ -203,6 +202,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         text = text + obstacleText
         
     }
+    
     // debugging TTS message
     print(text)
     
@@ -211,9 +211,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
 }
 
 func FindObstacle(code: Int) -> String{
-    
     var obstacle = ""
-    
     switch code {
         case 0:
             obstacle = "rider"
@@ -234,6 +232,5 @@ func FindObstacle(code: Int) -> String{
         default:
             obstacle = ""
     }
-    
     return obstacle
 }
