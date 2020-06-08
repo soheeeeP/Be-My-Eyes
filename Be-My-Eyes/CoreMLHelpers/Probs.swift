@@ -80,6 +80,7 @@ var obstacleDistance = 0
 var obstacle_idx = 6;
 var didAppeared = Array(repeating: 0, count: 16)
 var idxAppeared = Array(repeating: 0, count: 12)
+var moveFlag = false
 
 /// Locate the obstacle & Return in text
 func FindObject(_ _probs: MLMultiArray) -> String {
@@ -112,12 +113,12 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     var heightDistance = 0
     var widthDistance = 0
     var cellDistance = 0  //distance between each cell's obstacle and the user
-    var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // default distance
+    var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // most far distance
     var min_key = 0  // 장애물이 가장 멀리 있는 cell index 저장
 
     // calculate obstacle distance for each cell
     for i in 0...15 {
-        for h in 0 ..< height {
+        for h in 50 ..< height {
             if Int(codes[0, height-1-h, ww*i]) != 6 && Int(codes[0, height-1-h, ww*i]) != 7 {  //인도 또는 도로가 아닌 경우
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
                 CurFrame.obstacle[i] = Int(codes[0,height-1-h,ww*i])
@@ -173,11 +174,11 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     //print("cell index:\(min_key), distance:\(minDistance)")
     
     // straight 영역의 장애물이 limit보다 멀리 있는 경우 straight부터 가도록 알림
-    for i in 5...10 {
+    for i in 6...9 {
         if cell[i] > height/4 {  // limit == height/4
             break
         }
-        if i == 10 {
+        if i == 9 {
             text = "Go straight"
             print("Safe Area")
             return text
@@ -185,14 +186,18 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     }
     
     // Navigation message
-    if minDistance > Int(sqrt(pow(Double(height-35),2))) {
+    if minDistance > Int(height-40) {
         text = "It's blocked. Go back."
-    } else if min_key < 5 {
+        moveFlag = false
+    } else if min_key < 6 {
         text = "Move left."
-    } else if min_key > 10 {
+        moveFlag = true
+    } else if min_key > 9 {
         text = "Move right."
-    } else{
+        moveFlag = true
+    } else {
         text = "Go straight."
+        moveFlag = false
     }
     
     // Obstacle detecting message
