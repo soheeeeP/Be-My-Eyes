@@ -190,7 +190,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                             if (obstacleFlag && idxAppeared[obstacle_idx] == 0){
                                 idxAppeared[obstacle_idx] = 1
                                 print(obstacle)
-                                self.speak("\(obstacle) is \(obstacleDistance) steps ahead.")
+                                if obstacleDistance == 0 {
+                                    self.speak("\(obstacle) is in front of you.")
+                                }
+                                else {
+                                    self.speak("\(obstacle) is \(obstacleDistance) steps ahead.")
+                                }
                                 obstacleFlag = false
                                 obstacleDistance = 0
                             }

@@ -114,12 +114,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     var cellDistance = 0  //distance between each cell's obstacle and the user
     var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // default distance
     var min_key = 0  // 장애물이 가장 멀리 있는 cell index 저장
-    
-    //var obstacle = ""
-    //var obstacleFlag = false
-    //var obstacleText = ""
-    //var obstacleDistance = 0
-    //var didAppeared = Array(repeating: 0, count: 16)
 
     // calculate obstacle distance for each cell
     for i in 0...15 {
