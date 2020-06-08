@@ -77,6 +77,9 @@ struct CurFrame{
 var obstacle = ""
 var obstacleFlag = false
 var obstacleDistance = 0
+var obstacle_idx = 7;
+var didAppeared = Array(repeating: 0, count: 16)
+var idxAppeared = Array(repeating: 0, count: 12)
 
 /// Locate the obstacle & Return in text
 func FindObject(_ _probs: MLMultiArray) -> String {
@@ -116,7 +119,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     //var obstacleFlag = false
     //var obstacleText = ""
     //var obstacleDistance = 0
-    var didAppeared = Array(repeating: 0, count: 16)
+    //var didAppeared = Array(repeating: 0, count: 16)
 
     // calculate obstacle distance for each cell
     for i in 0...15 {
@@ -164,6 +167,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 didAppeared[PrevFrame.totalCnt[i]] = 1
                 obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
                 obstacle = FindObstacle(code: PrevFrame.obstacle[i])
+                obstacle_idx = PrevFrame.obstacle[i];
                 
                 // 장애물이 존재하는 경우 메세지 추가 & 장애물 flag 설정
                 if obstacle != "" {
