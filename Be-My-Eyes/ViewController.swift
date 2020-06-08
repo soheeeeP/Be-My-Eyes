@@ -52,7 +52,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var thoroughfare = ""
     var subLocality = ""
     var CurrentLocation = ""
-    var LastLocation = ""
+    var Count = 0
     
     /// TODO:
     private var _device: MTLDevice?
@@ -69,6 +69,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     var _queue: MTLCommandQueue?
     
+    @IBAction func asdasd(_ sender: Any) {
+        print("dslkfjdf")
+        Count = 0
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+    }
     var queue: MTLCommandQueue! {
         get {
             // try to unwrap the private queue instance
@@ -191,6 +200,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     /// Respond to a memory warning from the OS
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        
         popup_alert(self, title: "Memory Warning", message: "received memory warning")
     }
           
@@ -206,11 +216,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             popup_alert(self, title: "Camera Error", message: message)
             return
         }
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
+        /*locationManager = CLLocationManager()
+        locationManager.delegate = self*/
+       /* locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
+        locationManager.startUpdatingLocation()*/
         
         // create an input device from the back camera and handle
         // any errors (i.e., privacy request denied)
@@ -281,6 +291,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             popup_alert(self, title: "Inference Error", message: message)
         }
     }
+
     
     // Implement TTS
     func speak(_ string: String) {
@@ -340,11 +351,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         })
 
         CurrentLocation = administrativeArea + " " + locality + " " + thoroughfare
-        if CurrentLocation != LastLocation && thoroughfare != subLocality{
+
+        if Count == 0{
+            Count += 1
             speak("Your are now in")
             speak2(CurrentLocation)
-            LastLocation = CurrentLocation
-            print(LastLocation)
             print(CurrentLocation)
         }
     }
