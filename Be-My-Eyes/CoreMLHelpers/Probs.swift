@@ -77,7 +77,7 @@ struct CurFrame{
 var obstacle = ""
 var obstacleFlag = false
 var obstacleDistance = 0
-var obstacle_idx = 7;
+var obstacle_idx = 6;
 var didAppeared = Array(repeating: 0, count: 16)
 var idxAppeared = Array(repeating: 0, count: 12)
 
@@ -124,7 +124,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     // calculate obstacle distance for each cell
     for i in 0...15 {
         for h in 0 ..< height {
-            if Int(codes[0, height-1-h, ww*i]) != 6 {
+            if Int(codes[0, height-1-h, ww*i]) != 6 && Int(codes[0, height-1-h, ww*i]) != 7 {  //인도 또는 도로가 아닌 경우
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
                 CurFrame.obstacle[i] = Int(codes[0,height-1-h,ww*i])
                 CurFrame.height[i] = height-1-h
@@ -229,6 +229,8 @@ func FindObstacle(code: Int) -> String{
             obstacle = "Fence"
         case 5:
             obstacle = "Person"
+        case 8:
+            obstacle = "trafficsign"
         case 10:
             obstacle = "Vegetation"
         default:

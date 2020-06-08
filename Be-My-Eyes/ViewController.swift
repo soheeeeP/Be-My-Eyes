@@ -39,7 +39,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     // Implement TTS
     private var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
     private var lastPredictionTime: Double = 0.0
-    private let PredictionInterval: TimeInterval = 7.0
+    private let PredictionInterval: TimeInterval = 5.0
     
     //Check Horzion
     private var motionManager: CMMotionManager?
