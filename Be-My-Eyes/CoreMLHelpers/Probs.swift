@@ -74,6 +74,10 @@ struct CurFrame{
     static var height = Array(repeating: 0, count: 16)
 }
 
+var obstacle = ""
+var obstacleFlag = false
+var obstacleDistance = 0
+
 /// Locate the obstacle & Return in text
 func FindObject(_ _probs: MLMultiArray) -> String {
     /* Label map
@@ -108,10 +112,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // default distance
     var min_key = 0  // 장애물이 가장 멀리 있는 cell index 저장
     
-    var obstacle = ""
-    var obstacleFlag = false
+    //var obstacle = ""
+    //var obstacleFlag = false
     var obstacleText = ""
-    var obstacleDistance = 0
+    //var obstacleDistance = 0
     var didAppeared = Array(repeating: 0, count: 16)
 
     // calculate obstacle distance for each cell
@@ -163,7 +167,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 
                 // 장애물이 존재하는 경우 메세지 추가 & 장애물 flag 설정
                 if obstacle != "" {
-                    obstacleText = "\(FindObstacle(code: PrevFrame.obstacle[i])) is \(obstacleDistance) steps ahead."
+                    //obstacleText = "\(FindObstacle(code: PrevFrame.obstacle[i])) is \(obstacleDistance) steps ahead."
                     obstacleFlag = true
                 }
             }
@@ -197,10 +201,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     // Obstacle detecting message
     if obstacleFlag {
         PrevFrame.totalCnt = Array(repeating: 0, count: 16)  // initialize totalCnt
-        text = text + obstacleText
+        //text = text + obstacleText
         
     }
-    
+        
     // debugging TTS message
     print(text)
     

@@ -39,7 +39,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     // Implement TTS
     private var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
     private var lastPredictionTime: Double = 0.0
-    private let PredictionInterval: TimeInterval = 5.0
+    private let PredictionInterval: TimeInterval = 10.0
     
     //Check Horzion
     private var motionManager: CMMotionManager?
@@ -182,8 +182,19 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         self.time = Date()
                         self.framerate.text = "\(fps)"
                         self.textforspeech.text = "\(FindObject(argmax))"
+                        
                         if self.handlePrediction() == 0{
                             self.speak("\(FindObject(argmax))")
+                        }
+                        else {
+                            if (obstacleFlag){
+                                print(obstacle)
+
+                                self.speak("\(obstacle) is \(obstacleDistance) steps ahead.")
+                                
+                                obstacleFlag = false
+                                obstacleDistance = 0
+                            }
                         }
                     }
                     self.ready = true
