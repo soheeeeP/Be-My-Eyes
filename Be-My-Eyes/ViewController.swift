@@ -345,7 +345,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         let findLocation = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
         let geocoder = CLGeocoder()
-        let locale = Locale(identifier: "Ko-kr") //원하는 언어의 나라 코드를 넣어주시면 됩니다.'
+        let locale = Locale(identifier: "Ko-kr") //원하는 언어의 나라 코드를 넣어주시면 됩니다.
         
         geocoder.reverseGeocodeLocation(findLocation, preferredLocale: locale, completionHandler: {(placemarks, error) in
             if let address: [CLPlacemark] = placemarks {

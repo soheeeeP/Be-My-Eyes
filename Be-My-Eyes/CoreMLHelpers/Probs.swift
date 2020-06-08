@@ -158,8 +158,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         if PrevFrame.totalCnt[i] > 3 {
             if didAppeared[PrevFrame.totalCnt[i]] == 0 {
                 didAppeared[PrevFrame.totalCnt[i]] = 1
-                obstacleDistance = 10 - PrevFrame.height[i] / 35
-                obstacleDistance *= obstacleDistance
+                obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
                 obstacle = FindObstacle(code: PrevFrame.obstacle[i])
                 
                 // 장애물이 존재하는 경우 메세지 추가 & 장애물 flag 설정
@@ -171,7 +170,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         }
     }
     //print("cell index:\(min_key), distance:\(minDistance)")
-
     
     // straight 영역의 장애물이 limit보다 멀리 있는 경우 straight부터 가도록 알림
     for i in 5...10 {
