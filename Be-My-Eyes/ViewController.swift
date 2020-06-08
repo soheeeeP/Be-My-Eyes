@@ -188,8 +188,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         }
                         else {
                             if (obstacleFlag){
-                                print(obstacle)
-
+                                //print(obstacle)
                                 self.speak("\(obstacle) is \(obstacleDistance) steps ahead.")
                                 
                                 obstacleFlag = false

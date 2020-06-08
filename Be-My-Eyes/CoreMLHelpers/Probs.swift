@@ -159,7 +159,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         PrevFrame.height[i] = CurFrame.height[i]
 
         // 동일한 장애물이 4 frame 연속으로 다가오는 경우 경보
-        if PrevFrame.totalCnt[i] > 3 {
+        if (PrevFrame.totalCnt[i] > 3 && (i>5 && i<10)) {
             if didAppeared[PrevFrame.totalCnt[i]] == 0 {
                 didAppeared[PrevFrame.totalCnt[i]] = 1
                 obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
