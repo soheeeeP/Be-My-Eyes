@@ -37,7 +37,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     // Implement TTS
     private var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
-    private var lastPredictionTime: Double = 5.0
+    private var lastPredictionTime: Double = 0.0
     private let PredictionInterval: TimeInterval = 5.0
     
     //Check Horzion
@@ -53,6 +53,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var subLocality = ""
     var CurrentLocation = ""
     var Count = 0
+    var Check = 0
     
     /// TODO:
     private var _device: MTLDevice?
@@ -215,12 +216,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             popup_alert(self, title: "Camera Error", message: message)
             return
         }
-        /*locationManager = CLLocationManager()
-        locationManager.delegate = self*/
-       /* locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()*/
-        
+        if Check == 0{
+            locationManager = CLLocationManager()
+            locationManager.delegate = self
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingLocation()
+            Check = 1
+        }
         // create an input device from the back camera and handle
         // any errors (i.e., privacy request denied)
         do {
