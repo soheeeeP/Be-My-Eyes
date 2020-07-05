@@ -18,9 +18,26 @@
 		09A102052176932300220459 /* Tiramisu45.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 09A102042176932300220459 /* Tiramisu45.mlmodel */; };
 		09DC0B562175B4090044D811 /* Probs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DC0B552175B4090044D811 /* Probs.swift */; };
 		09DC0B592175B5690044D811 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DC0B582175B5690044D811 /* Popup.swift */; };
+		40576AB624B1F4770046EBF4 /* mapContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40576AB524B1F4770046EBF4 /* mapContainerView.swift */; };
+		40576AB924B1F6280046EBF4 /* TMapSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40576AB724B1F5800046EBF4 /* TMapSDK.framework */; };
+		40576ABA24B1F6280046EBF4 /* TMapSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40576AB724B1F5800046EBF4 /* TMapSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E8223AAF247C152100755C43 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8223AAE247C152100755C43 /* StartViewController.swift */; };
 		E84E11FB2488E0D200B7AFE0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E84E11FA2488E0D200B7AFE0 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		40576ABB24B1F6280046EBF4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				40576ABA24B1F6280046EBF4 /* TMapSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0945E3A621755E6300B2AB60 /* Be-My-Eyes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Be-My-Eyes.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -36,6 +53,8 @@
 		09A102042176932300220459 /* Tiramisu45.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = Tiramisu45.mlmodel; sourceTree = "<group>"; };
 		09DC0B552175B4090044D811 /* Probs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Probs.swift; sourceTree = "<group>"; };
 		09DC0B582175B5690044D811 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
+		40576AB524B1F4770046EBF4 /* mapContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mapContainerView.swift; sourceTree = "<group>"; };
+		40576AB724B1F5800046EBF4 /* TMapSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TMapSDK.framework; path = "Be-My-Eyes/TMapSDK.framework"; sourceTree = "<group>"; };
 		E8223AAE247C152100755C43 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		E84E11FA2488E0D200B7AFE0 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -46,6 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E84E11FB2488E0D200B7AFE0 /* CoreLocation.framework in Frameworks */,
+				40576AB924B1F6280046EBF4 /* TMapSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +98,7 @@
 				0945E3A921755E6300B2AB60 /* AppDelegate.swift */,
 				0945E3AB21755E6300B2AB60 /* ViewController.swift */,
 				E8223AAE247C152100755C43 /* StartViewController.swift */,
+				40576AB524B1F4770046EBF4 /* mapContainerView.swift */,
 				0945E3AD21755E6300B2AB60 /* Main.storyboard */,
 				0945E3B021755E6400B2AB60 /* Assets.xcassets */,
 				0945E3B221755E6400B2AB60 /* LaunchScreen.storyboard */,
@@ -116,6 +137,7 @@
 		E84E11F92488E0D200B7AFE0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				40576AB724B1F5800046EBF4 /* TMapSDK.framework */,
 				E84E11FA2488E0D200B7AFE0 /* CoreLocation.framework */,
 			);
 			name = Frameworks;
@@ -131,6 +153,7 @@
 				0945E3A221755E6300B2AB60 /* Sources */,
 				0945E3A321755E6300B2AB60 /* Frameworks */,
 				0945E3A421755E6300B2AB60 /* Resources */,
+				40576ABB24B1F6280046EBF4 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,6 +219,7 @@
 				0945E3AC21755E6300B2AB60 /* ViewController.swift in Sources */,
 				09A102052176932300220459 /* Tiramisu45.mlmodel in Sources */,
 				0945E4182175811C00B2AB60 /* UIImage+CVPixelBuffer.swift in Sources */,
+				40576AB624B1F4770046EBF4 /* mapContainerView.swift in Sources */,
 				09DC0B592175B5690044D811 /* Popup.swift in Sources */,
 				0945E41B2175811C00B2AB60 /* MultiArray.swift in Sources */,
 				E8223AAF247C152100755C43 /* StartViewController.swift in Sources */,
@@ -350,6 +374,10 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PYD56G8J2V;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Be-My-Eyes",
+				);
 				INFOPLIST_FILE = "Be-My-Eyes/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -371,6 +399,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = PYD56G8J2V;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Be-My-Eyes",
+				);
 				INFOPLIST_FILE = "Be-My-Eyes/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
