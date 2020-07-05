@@ -336,7 +336,7 @@ extension mapContainerView {
         let position = self.mapView?.getCenter()
         if let position = position {
             let marker = TMapMarker(position: position)
-            marker.title = "제목없음"
+            marker.title = "My Car"
             marker.subTitle = "내용없음"
             marker.draggable = true
             let label = UILabel(frame: CGRect(x: 0, y: 0, width: 30, height: 50))
@@ -783,6 +783,7 @@ extension mapContainerView {
         self.mapView?.fitBounds(bounds)
     }
     
+    // TMapApp 연동 길안내
     public func objFunc74() {
         TMapApi.invokeRoute("sample", coordinate: mPosition)
     }
