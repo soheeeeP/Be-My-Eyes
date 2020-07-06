@@ -591,8 +591,8 @@ extension mapContainerView {
         self.clearPolylines()
         
         let pathData = TMapPathData()
-        let startPoint = CLLocationCoordinate2D(latitude: 37.566567, longitude: 126.985038)
-        let endPoint = CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318)
+        let startPoint = CLLocationCoordinate2D(latitude: 37.5562607, longitude: 127.0432408) //한양대
+        let endPoint = CLLocationCoordinate2D(latitude: 37.5061729, longitude: 127.06173) //오토웨이타워
 
         pathData.findPathData(startPoint: startPoint, endPoint: endPoint) { (result, error)->Void in
             if let polyline = result {
@@ -721,8 +721,8 @@ extension mapContainerView {
         }
 
         let pathData = TMapPathData()
-        let startPoint = CLLocationCoordinate2D(latitude: 37.566567, longitude: 126.985038)
-        let endPoint = CLLocationCoordinate2D(latitude: 37.403049, longitude: 127.103318)
+        let startPoint = CLLocationCoordinate2D(latitude: 37.5562607, longitude: 127.0432408) //한양대
+        let endPoint = CLLocationCoordinate2D(latitude: 37.5061729, longitude: 127.06173) //오토웨이타워
         let via1Point = CLLocationCoordinate2D(latitude: 37.557822, longitude: 126.925119)
         let via2Point = CLLocationCoordinate2D(latitude: 37.510537, longitude: 127.062002)
 
