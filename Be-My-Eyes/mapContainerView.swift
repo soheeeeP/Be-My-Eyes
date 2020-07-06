@@ -49,24 +49,10 @@ class mapContainerView: UIViewController, TMapViewDelegate {
     }
 
     @IBAction func touchMenuButton(_ sender:AnyObject) {
-        if menuConstraints?.constant == 0 {
-            menuConstraints?.constant = -300
-        }else {
-            menuConstraints?.constant = 0
-            self.initTableViewData()
-        }
-        UIView.animate(withDuration: 0.4) {
-            self.view.layoutIfNeeded()
-        }
+        menuConstraints?.constant = 0
+        self.initTableViewData()
     }
 
-    public func closeMenu(){
-        menuConstraints?.constant = -300
-        UIView.animate(withDuration: 0.4) {
-            self.view.layoutIfNeeded()
-        }
-    }
-    
     //alert view
     public func simpleAlertView(_ message: String, title: String, view:UIViewController) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
@@ -187,7 +173,6 @@ extension mapContainerView:UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        closeMenu()
         let data: LeftMenuData = (leftArray?[indexPath.row])!
         data.onClick()
     }
@@ -211,7 +196,6 @@ extension mapContainerView {
     
     func mapView(_ mapView: TMapView, singleTapOnMap location: CLLocationCoordinate2D) {
         self.logLabel.text = "지도 싱글탭"
-        self.closeMenu()
         
         if isPublicTrasit {
             let pathData = TMapPathData()
