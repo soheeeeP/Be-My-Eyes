@@ -161,6 +161,7 @@
                                                 <connections>
                                                     <action selector="buttonDown:" destination="paf-hF-LS3" eventType="touchDown" id="PCF-sy-PSy"/>
                                                     <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpInside" id="JHn-fB-wc7"/>
+                                                    <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpOutside" id="whq-Os-zwR"/>
                                                 </connections>
                                             </button>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="70" translatesAutoresizingMaskIntoConstraints="NO" id="WwZ-uR-HVW">
@@ -172,6 +173,7 @@
                                                         <state key="normal" title="⬅️"/>
                                                         <connections>
                                                             <action selector="buttonDown:" destination="paf-hF-LS3" eventType="touchDown" id="NPe-zQ-EJP"/>
+                                                            <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpOutside" id="Ceo-jY-UjV"/>
                                                             <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpInside" id="oS3-Wg-401"/>
                                                         </connections>
                                                     </button>
@@ -182,6 +184,7 @@
                                                         <connections>
                                                             <action selector="buttonDown:" destination="paf-hF-LS3" eventType="touchDown" id="CBI-d2-ok2"/>
                                                             <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpInside" id="F3j-xo-9Dv"/>
+                                                            <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpOutside" id="RYC-0k-71R"/>
                                                         </connections>
                                                     </button>
                                                 </subviews>
@@ -194,6 +197,7 @@
                                                 </state>
                                                 <connections>
                                                     <action selector="buttonDown:" destination="paf-hF-LS3" eventType="touchDown" id="f3C-h7-YkY"/>
+                                                    <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpOutside" id="V4B-tp-2BJ"/>
                                                     <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpInside" id="yx5-2s-How"/>
                                                 </connections>
                                             </button>
