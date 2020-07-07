@@ -15,7 +15,7 @@ import CoreMotion
 import CoreLocation
 
 /// A view controller to pass camera inputs through a vision model
-class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, CLLocationManagerDelegate {
+class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, CLLocationManagerDelegate, MTMapViewDelegate {
     /// a local reference to time to update the framerate
     var time = Date()
     
@@ -260,7 +260,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             return
         }
     }
-          
     /// Setup the live preview from the camera
     func setupCameraPreview() {
         // create a video preview layer for the view controller
