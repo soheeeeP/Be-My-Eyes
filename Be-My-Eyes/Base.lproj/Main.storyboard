@@ -65,14 +65,14 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FPS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="9JZ-wq-5Ld">
                                 <rect key="frame" x="20" y="14" width="33" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ItP-uR-dE2">
                                 <rect key="frame" x="61" y="16" width="308" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -90,8 +90,19 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="keyPath" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aPx-tz-QXZ">
+                                <rect key="frame" x="532" y="9" width="46" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="AUTO">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <segue destination="paf-hF-LS3" kind="show" id="Xyf-m3-YYP"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ov6-6X-Mam">
-                                <rect key="frame" x="605" y="9" width="42" height="36"/>
+                                <rect key="frame" x="605" y="8" width="42" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="MAP">
@@ -126,6 +137,103 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1879.0178571428571" y="-446.37681159420293"/>
+        </scene>
+        <!--Robot Control View-->
+        <scene sceneID="TSR-7i-vgh">
+            <objects>
+                <viewController id="paf-hF-LS3" customClass="RobotControlView" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3op-J5-wtu">
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="7so-Jg-QCA">
+                                <rect key="frame" x="244.5" y="30" width="178" height="218"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="fJP-tZ-sNc">
+                                        <rect key="frame" x="0.0" y="0.0" width="178" height="218"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Cv-GR-KfK">
+                                                <rect key="frame" x="0.0" y="0.0" width="178" height="72"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="50"/>
+                                                <state key="normal" title="⬆️">
+                                                    <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="buttonDown:" destination="paf-hF-LS3" eventType="touchDown" id="PCF-sy-PSy"/>
+                                                    <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpInside" id="JHn-fB-wc7"/>
+                                                </connections>
+                                            </button>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="70" translatesAutoresizingMaskIntoConstraints="NO" id="WwZ-uR-HVW">
+                                                <rect key="frame" x="0.0" y="73" width="178" height="72"/>
+                                                <subviews>
+                                                    <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y6p-2c-fjm">
+                                                        <rect key="frame" x="0.0" y="0.0" width="54" height="72"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="50"/>
+                                                        <state key="normal" title="⬅️"/>
+                                                        <connections>
+                                                            <action selector="buttonDown:" destination="paf-hF-LS3" eventType="touchDown" id="NPe-zQ-EJP"/>
+                                                            <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpInside" id="oS3-Wg-401"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KOj-UD-99a">
+                                                        <rect key="frame" x="124" y="0.0" width="54" height="72"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="50"/>
+                                                        <state key="normal" title="➡️"/>
+                                                        <connections>
+                                                            <action selector="buttonDown:" destination="paf-hF-LS3" eventType="touchDown" id="CBI-d2-ok2"/>
+                                                            <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpInside" id="F3j-xo-9Dv"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                            </stackView>
+                                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YjE-Yg-hO2">
+                                                <rect key="frame" x="0.0" y="146" width="178" height="72"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="50"/>
+                                                <state key="normal" title="⬇️">
+                                                    <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="buttonDown:" destination="paf-hF-LS3" eventType="touchDown" id="f3C-h7-YkY"/>
+                                                    <action selector="buttonUp:" destination="paf-hF-LS3" eventType="touchUpInside" id="yx5-2s-How"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="178" id="720-oG-9KE"/>
+                                    <constraint firstAttribute="height" constant="218" id="hwQ-Ab-cYe"/>
+                                </constraints>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4dW-4j-Qrd">
+                                <rect key="frame" x="266" y="298" width="135" height="33"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="135" id="Uyv-ET-QD1"/>
+                                    <constraint firstAttribute="height" constant="33" id="jaU-Gd-Trb"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Connect to Robot">
+                                    <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="connectButtonPressed:" destination="paf-hF-LS3" eventType="touchUpInside" id="7fA-n9-G9j"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="7so-Jg-QCA" firstAttribute="centerX" secondItem="3op-J5-wtu" secondAttribute="centerX" id="BcV-m1-Qny"/>
+                            <constraint firstItem="4dW-4j-Qrd" firstAttribute="top" secondItem="7so-Jg-QCA" secondAttribute="bottom" constant="50" id="MNp-fZ-nhw"/>
+                            <constraint firstItem="7so-Jg-QCA" firstAttribute="top" secondItem="8jQ-If-Qv4" secondAttribute="top" constant="30" id="cY5-VA-4az"/>
+                            <constraint firstItem="4dW-4j-Qrd" firstAttribute="centerX" secondItem="3op-J5-wtu" secondAttribute="centerX" id="qD7-mJ-WSo"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="8jQ-If-Qv4"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="RoW-VN-osa"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f0P-Cr-2SM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2203.4482758620693" y="461.60000000000002"/>
         </scene>
         <!--Map Container View-->
         <scene sceneID="kfZ-ly-lCm">
@@ -254,7 +362,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gG6-kK-Wdx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1880" y="358"/>
+            <point key="canvasLocation" x="-1556" y="462"/>
         </scene>
     </scenes>
     <color key="tintColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
