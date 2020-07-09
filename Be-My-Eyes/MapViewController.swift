@@ -58,20 +58,13 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
         
         return circ
     }
-    @IBAction func onClick(_ sender: Any) {
-
-        
-        let coordinate = CLLocationCoordinate2D()
-        markerList.append(poiItem(name: "Location", latitude: coordinate.latitude, longitude: coordinate.longitude))
-        
-        mapView?.addPOIItems(markerList)
-        mapView?.fitAreaToShowAllPOIItems()
-    }
     
     @IBAction func onCurrentLocationClick(_ sender: Any) {
         print("current location button")
     }
-    
+    @IBAction func goToTTS(_ sender: UIButton){
+        performSegue(withIdentifier: "unwindToVC1", sender: self)
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         // 여기서 map view가 고쳐질 때마다 새로 화면 load

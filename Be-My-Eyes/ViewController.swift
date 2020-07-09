@@ -354,6 +354,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
+    @IBAction func onClick(_ sender: Any) {
+        print("navigation view")
+        self.performSegue(withIdentifier: "navigationSegue", sender: self)
+    }
+    @IBAction func unwindVC1 (segue: UIStoryboardSegue){}
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         //print("locations = \(locValue.latitude) \(locValue.longitude)")

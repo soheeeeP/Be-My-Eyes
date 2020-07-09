@@ -77,7 +77,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="53w-Sg-PWT">
-                                <rect key="frame" x="36" y="721" width="346" height="34"/>
+                                <rect key="frame" x="36" y="720" width="346" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -98,7 +98,8 @@
                                     <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                                 </state>
                                 <connections>
-                                    <segue destination="qaE-9L-XpS" kind="show" id="4wW-qe-es1"/>
+                                    <action selector="onClick:" destination="muv-iN-7Kq" eventType="touchUpInside" id="sCI-QX-c1w"/>
+                                    <segue destination="qaE-9L-XpS" kind="show" identifier="navigationSegue" id="4wW-qe-es1"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -118,6 +119,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNs-fm-J2r" sceneMemberID="firstResponder"/>
+                <exit id="9o1-y3-gvS" userLabel="Exit" sceneMemberID="exit"/>
                 <tapGestureRecognizer id="LTo-4Q-Z2t">
                     <connections>
                         <action selector="asdasd:" destination="muv-iN-7Kq" id="fGT-FA-wGh"/>
@@ -133,6 +135,17 @@
                     <view key="view" contentMode="scaleToFill" id="5SN-8X-UjV">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gGN-wb-wY0">
+                                <rect key="frame" x="183" y="46" width="55" height="38"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <state key="normal" title="BACK"/>
+                                <connections>
+                                    <segue destination="9o1-y3-gvS" kind="unwind" identifier="unwindVC1" unwindAction="unwindVC1WithSegue:" id="J8S-PI-9iM"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="HPY-go-XDu"/>
                     </view>
@@ -140,7 +153,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="76T-aN-aC5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="10" y="-237"/>
+            <point key="canvasLocation" x="-55" y="-237"/>
         </scene>
     </scenes>
     <color key="tintColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
