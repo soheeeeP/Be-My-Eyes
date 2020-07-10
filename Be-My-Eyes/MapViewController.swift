@@ -13,6 +13,7 @@ import Speech
 import CoreAudio
 
 var markerList = [MTMapPOIItem] ()
+var recognizedLocation = ""
 
 class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerDelegate, SFSpeechRecognizerDelegate {
 
@@ -42,11 +43,9 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
         mapView?.setMapCenter(mapPoint, animated: true)
         
         markerList.append(poiItem(name: "Start", latitude: 37.550950, longitude: 126.941017))
-        
+        //appendMarketList()
         mapView?.addPOIItems(markerList)
         mapView?.fitAreaToShowAllPOIItems()
-
-        appendMarkerList()
         
         if let mapView = mapView {
             mapView.delegate = self
@@ -79,10 +78,14 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
             
             speakButton.isEnabled = false
             speakButton.setTitle("SPEAK", for: .normal)
+            
+            print(recognizedLocation)   //입력받은 목적지 정보 debug
+            convertToCoordinate(address: recognizedLocation)
+            
         } else {
             //start recording function
             startRecording()
-            speakButton.setTitle("SEARCHING..", for: .normal)
+            speakButton.setTitle("STOP", for: .normal)
         }
         
     }
@@ -129,9 +132,7 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
         markerList.append(poiItem(name: "station", latitude: 37.547674, longitude: 126.9401487))
         markerList.append(poiItem(name: "cafe", latitude: 37.5481577, longitude: 126.9328022))
         markerList.append(poiItem(name: "bank", latitude: 37.5479142, longitude: 126.93233))
-        
-        mapView?.addPOIItems(markerList)
-        mapView?.fitAreaToShowAllPOIItems()
+
     }
 
     //check if the recognization task is running or not
@@ -172,6 +173,10 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
             //인식 결과가 nil이 아니면, textview의 속성을 최상의 텍스트로 설정
             if result != nil{
                 self.setDestination.text = result?.bestTranscription.formattedString
+                
+                //좌표로 변환할, 입력받은 destionation 위치를 저장
+                recognizedLocation = self.setDestination.text
+                
                 isFinal = (result?.isFinal)!
             }
             //오류가 없거나, 최종 결과가 나오면 audioEngine과 인식 작업을 중지
@@ -209,6 +214,22 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
             speakButton.isEnabled = true
         } else {
             speakButton.isEnabled = false
+        }
+    }
+    
+    func convertToCoordinate(address: String) {
+        
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(address) { (placemarks, error) in
+            if error != nil{
+                //NSLog("\(error)")
+                return
+            }
+            guard let placemarks = placemarks,
+                let location = placemarks.first?.location else {
+                    return
+            }
+            print(location)
         }
     }
 }
