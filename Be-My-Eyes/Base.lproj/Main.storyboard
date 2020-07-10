@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5ok-ST-3X4">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -12,11 +12,11 @@
             <objects>
                 <viewController storyboardIdentifier="Start" useStoryboardIdentifierAsRestorationIdentifier="YES" id="5ok-ST-3X4" customClass="StartViewController" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="evM-1a-svs">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Be-My-Eyes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lpc-NU-ejq">
-                                <rect key="frame" x="137.5" y="433.5" width="139.5" height="29"/>
+                                <rect key="frame" x="378.5" y="192.5" width="139.5" height="29"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="24"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -54,11 +54,11 @@
             <objects>
                 <viewController storyboardIdentifier="Show" useStoryboardIdentifierAsRestorationIdentifier="YES" id="muv-iN-7Kq" customClass="ViewController" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8ML-f3-CRY">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cVb-RM-mR6">
-                                <rect key="frame" x="36" y="265" width="171" height="216"/>
+                                <rect key="frame" x="78" y="77" width="370" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
@@ -77,25 +77,24 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="53w-Sg-PWT">
-                                <rect key="frame" x="36" y="720" width="346" height="34"/>
+                                <rect key="frame" x="78" y="316" width="749" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="een-F0-TQU">
-                                <rect key="frame" x="210" y="265" width="172" height="216"/>
+                                <rect key="frame" x="454" y="77" width="373" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="keyPath" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q6X-wb-j4P">
-                                <rect key="frame" x="128" y="214" width="159" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q6X-wb-j4P">
+                                <rect key="frame" x="721" y="20" width="115" height="35"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
                                 <state key="normal" title="NAVIGATION">
-                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="onClick:" destination="muv-iN-7Kq" eventType="touchUpInside" id="sCI-QX-c1w"/>
@@ -105,6 +104,10 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="QVD-Hp-wKi" firstAttribute="trailing" secondItem="q6X-wb-j4P" secondAttribute="trailing" constant="16" id="ipL-a5-1EQ"/>
+                            <constraint firstItem="q6X-wb-j4P" firstAttribute="top" secondItem="QVD-Hp-wKi" secondAttribute="top" constant="20" id="kcf-N5-QlF"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="QVD-Hp-wKi"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="LTo-4Q-Z2t" appends="YES" id="tU7-0n-PVd"/>
@@ -126,34 +129,63 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-755.07246376811599" y="-237.05357142857142"/>
+            <point key="canvasLocation" x="-755.35714285714278" y="-237.68115942028987"/>
         </scene>
         <!--Map View Controller-->
         <scene sceneID="hzK-Cu-IVE">
             <objects>
                 <viewController id="qaE-9L-XpS" customClass="MapViewController" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5SN-8X-UjV">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gGN-wb-wY0">
-                                <rect key="frame" x="183" y="46" width="55" height="38"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                <state key="normal" title="BACK"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gGN-wb-wY0">
+                                <rect key="frame" x="86" y="20" width="51" height="35"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
+                                <state key="normal" title="BACK">
+                                    <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
                                     <segue destination="9o1-y3-gvS" kind="unwind" identifier="unwindVC1" unwindAction="unwindVC1WithSegue:" id="J8S-PI-9iM"/>
                                 </connections>
                             </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="BZz-6t-LUn">
+                                <rect key="frame" x="190" y="20" width="409" height="36.5"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="obi-Vn-69k">
+                                <rect key="frame" x="739" y="20" width="83" height="35"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
+                                <state key="normal" title="SPEAK">
+                                    <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="speechToText:" destination="qaE-9L-XpS" eventType="touchUpInside" id="2jH-gR-03h"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="obi-Vn-69k" firstAttribute="top" secondItem="HPY-go-XDu" secondAttribute="top" constant="20" id="4lb-8P-Tlv"/>
+                            <constraint firstItem="gGN-wb-wY0" firstAttribute="leading" secondItem="HPY-go-XDu" secondAttribute="leading" constant="42" id="Yew-4x-TsN"/>
+                            <constraint firstItem="gGN-wb-wY0" firstAttribute="top" secondItem="HPY-go-XDu" secondAttribute="top" constant="20" id="faH-yH-LQA"/>
+                            <constraint firstItem="HPY-go-XDu" firstAttribute="trailing" secondItem="obi-Vn-69k" secondAttribute="trailing" constant="30" id="v3s-ze-n7r"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="HPY-go-XDu"/>
                     </view>
                     <navigationItem key="navigationItem" id="rbX-18-QRv"/>
+                    <connections>
+                        <outlet property="setDestination" destination="BZz-6t-LUn" id="xYf-ex-cQb"/>
+                        <outlet property="speakButton" destination="obi-Vn-69k" id="vw0-tx-ofi"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="76T-aN-aC5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-55" y="-237"/>
+            <point key="canvasLocation" x="-55.580357142857139" y="-237.68115942028987"/>
         </scene>
     </scenes>
     <color key="tintColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
