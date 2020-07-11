@@ -17,6 +17,8 @@ var recognizedLocation = ""
 
 class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerDelegate, SFSpeechRecognizerDelegate {
 
+    private var ttsMap: AVSpeechSynthesizer = AVSpeechSynthesizer()
+    
     var mapView: MTMapView?
     var mapPoint: MTMapPoint?
     var mapLine: MTMapPolyline?
@@ -35,6 +37,9 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        tts.pauseSpeaking(at: .immediate)
+        speak("Press the SPEAK button on the top right and Please tell me your destination.")
         // Do any additional setup after loading the view.
         speechRecognizer?.delegate = self
         
@@ -96,6 +101,13 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
         // 여기서 map view가 고쳐질 때마다 새로 화면 load
     }
     
+    /// resume TTS on the ViewController
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tts.continueSpeaking()
+        print("resume TTS on ViewController")
+    }
+    
     func poiItem(name: String, latitude: Double, longitude: Double) -> MTMapPOIItem {
          let item = MTMapPOIItem()
          item.itemName = name
@@ -148,6 +160,7 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
         let audioSession = AVAudioSession.sharedInstance()
         do{
             try audioSession.setCategory(AVAudioSession.Category.record)
+            //try audioSession.setMode(AVAudioSession.Category.playAndRecord)
             try audioSession.setMode(AVAudioSession.Mode.measurement)
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
@@ -272,7 +285,14 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
         self.mapView?.addPolyline(line)
         self.mapView?.fitAreaToShowAllPolylines()
         
+    }
+    
+    func speak(_ string: String){
+        let utterance = AVSpeechUtterance(string: string)
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        utterance.rate = 0.5
         
+        ttsMap.speak(utterance)
     }
 }
 
