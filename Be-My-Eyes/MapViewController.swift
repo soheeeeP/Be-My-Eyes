@@ -19,6 +19,7 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
 
     var mapView: MTMapView?
     var mapPoint: MTMapPoint?
+    var mapLine: MTMapPolyline?
     
     ///STT button
     @IBOutlet var speakButton: UIButton!
@@ -43,10 +44,11 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
         mapView?.setMapCenter(mapPoint, animated: true)
         
         markerList.append(poiItem(name: "Start", latitude: 37.550950, longitude: 126.941017))
-        //appendMarketList()
-        mapView?.addPOIItems(markerList)
-        mapView?.fitAreaToShowAllPOIItems()
+        appendMarkerList()
         
+        mapView?.addPOIItems(markerList)
+        //mapView?.fitAreaToShowAllPOIItems()
+                
         if let mapView = mapView {
             mapView.delegate = self
             mapView.baseMapType = .standard
@@ -80,7 +82,7 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
             speakButton.setTitle("SPEAK", for: .normal)
             
             print(recognizedLocation)   //입력받은 목적지 정보 debug
-            convertToCoordinate(address: recognizedLocation)
+            convertAddrtoCoordinate(address: recognizedLocation)
             
         } else {
             //start recording function
@@ -217,7 +219,15 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
         }
     }
     
-    func convertToCoordinate(address: String) {
+    func genertateMapPoint(coordinate: CLLocationCoordinate2D) -> MTMapPoint {
+        
+        var point = MTMapPoint()
+        point = MTMapPoint.init(geoCoord: MTMapPointGeo.init(latitude: coordinate.latitude, longitude: coordinate.longitude))
+
+        return point
+    }
+    
+    func convertAddrtoCoordinate(address: String) {
         
         let geoCoder = CLGeocoder()
         geoCoder.geocodeAddressString(address) { (placemarks, error) in
@@ -229,8 +239,40 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
                 let location = placemarks.first?.location else {
                     return
             }
-            print(location)
+            print(location.coordinate)
+            
+            //STT로 입력받은 coordinate를 marker list에 추가
+            markerList.append(self.poiItem(name: "destination", latitude: location.coordinate.latitude, longitude: location.coordinate.longitude))
+            self.mapView?.removeAllPOIItems()
+            self.mapView?.addPOIItems(markerList)
+            self.mapView?.fitAreaToShowAllPOIItems()
+            print(markerList)       //debug
+            
+            let mapPoint2 = self.genertateMapPoint(coordinate: location.coordinate)   //coordinate를 MTMapPoint로 변환
+            self.drawPolyLine(point1: self.mapPoint!, point2: mapPoint2)                  //출발지-목적지 간의 polyline 그리기
+
         }
+        
+    }
+    
+    func drawPolyLine(point1: MTMapPoint, point2: MTMapPoint) {
+        let line = MTMapPolyline()
+        
+        line.add(point1)
+        //line.add(point2)
+        
+        var testPoint = MTMapPoint()
+        testPoint = MTMapPoint.init(geoCoord: MTMapPointGeo.init(latitude: 37.547674, longitude: 126.9401487))
+        line.add(testPoint)
+                
+        line.polylineColor = UIColor.blue
+        line.tag = 2000
+        
+        self.mapView?.removeAllPolylines()
+        self.mapView?.addPolyline(line)
+        self.mapView?.fitAreaToShowAllPolylines()
+        
+        
     }
 }
 
