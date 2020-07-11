@@ -326,7 +326,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             let utterance = AVSpeechUtterance(string: string)
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
             utterance.rate = 0.5
-            tts.speak(utterance)
+            
+            if (mapOn == true){
+                tts.stopSpeaking(at: .word)
+            }
+            else{
+                tts.speak(utterance)
+            }
         }
     }
     

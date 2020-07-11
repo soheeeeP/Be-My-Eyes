@@ -15,6 +15,8 @@ import CoreAudio
 var markerList = [MTMapPOIItem] ()
 var recognizedLocation = ""
 
+var mapOn = false
+
 class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerDelegate, SFSpeechRecognizerDelegate {
 
     private var ttsMap: AVSpeechSynthesizer = AVSpeechSynthesizer()
@@ -38,6 +40,7 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        mapOn = true
         tts.pauseSpeaking(at: .immediate)
         speak("Press the SPEAK button on the top right and Please tell me your destination.")
         // Do any additional setup after loading the view.
@@ -64,8 +67,6 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
             
             self.view.addSubview(mapView)
             self.view.sendSubviewToBack(mapView)
-            print("map view")
-            
         }
         
     }
@@ -105,6 +106,7 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         tts.continueSpeaking()
+        mapOn = false
         print("resume TTS on ViewController")
     }
     
@@ -254,12 +256,11 @@ class MapViewController: UIViewController, MTMapViewDelegate, CLLocationManagerD
             }
             print(location.coordinate)
             
-            //STT로 입력받은 coordinate를 marker list에 추가
-            markerList.append(self.poiItem(name: "destination", latitude: location.coordinate.latitude, longitude: location.coordinate.longitude))
+            //STT로 입력받은 coordinate를 marker로 표시
             self.mapView?.removeAllPOIItems()
             self.mapView?.addPOIItems(markerList)
+            self.mapView?.add(self.poiItem(name: "destination", latitude: location.coordinate.latitude, longitude: location.coordinate.longitude))
             self.mapView?.fitAreaToShowAllPOIItems()
-            print(markerList)       //debug
             
             let mapPoint2 = self.genertateMapPoint(coordinate: location.coordinate)   //coordinate를 MTMapPoint로 변환
             self.drawPolyLine(point1: self.mapPoint!, point2: mapPoint2)                  //출발지-목적지 간의 polyline 그리기
