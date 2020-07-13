@@ -14,8 +14,10 @@ import MetalPerformanceShaders
 import CoreMotion
 import CoreLocation
 
+var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
+
 /// A view controller to pass camera inputs through a vision model
-class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, CLLocationManagerDelegate {
+class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, CLLocationManagerDelegate, MTMapViewDelegate {
     /// a local reference to time to update the framerate
     var time = Date()
     
@@ -37,7 +39,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
     
     // Implement TTS
-    private var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
+    //private var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
     private var lastPredictionTime: Double = 0.0
     private let PredictionInterval: TimeInterval = 5.0
     
@@ -260,7 +262,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             return
         }
     }
-          
+
+    /// stop speaking TTS message before the current view disappears
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tts.stopSpeaking(at: .immediate)
+        print("stop TTS on ViewController")
+    }
+    
     /// Setup the live preview from the camera
     func setupCameraPreview() {
         // create a video preview layer for the view controller
@@ -317,7 +326,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             let utterance = AVSpeechUtterance(string: string)
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
             utterance.rate = 0.5
-            tts.speak(utterance)
+            
+            if (mapOn == true){
+                tts.stopSpeaking(at: .word)
+            }
+            else{
+                tts.speak(utterance)
+            }
         }
     }
     
@@ -354,6 +369,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             return -1
         }
     }
+    
+    @IBAction func onClick(_ sender: Any) {
+        print("navigation view")
+        self.performSegue(withIdentifier: "navigationSegue", sender: self)
+    }
+    @IBAction func unwindVC1 (segue: UIStoryboardSegue){}
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
