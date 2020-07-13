@@ -54,9 +54,28 @@
 		8DD0C08724B2FCD900A53B01 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DD0C08624B2FBA300A53B01 /* libsqlite3.tbd */; };
 		8DD0C08824B2FCDE00A53B01 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DD0C07C24B2EFAD00A53B01 /* libxml2.tbd */; };
 		8DD0C08924B2FCE400A53B01 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DD0C07B24B2EFA400A53B01 /* libc++.tbd */; };
+		40576AB624B1F4770046EBF4 /* mapContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40576AB524B1F4770046EBF4 /* mapContainerView.swift */; };
+		40576AB924B1F6280046EBF4 /* TMapSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40576AB724B1F5800046EBF4 /* TMapSDK.framework */; };
+		40576ABA24B1F6280046EBF4 /* TMapSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40576AB724B1F5800046EBF4 /* TMapSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		40A3DD7824B4B542006FAB1C /* RobotControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A3DD7724B4B542006FAB1C /* RobotControlView.swift */; };
 		E8223AAF247C152100755C43 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8223AAE247C152100755C43 /* StartViewController.swift */; };
 		E84E11FB2488E0D200B7AFE0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E84E11FA2488E0D200B7AFE0 /* CoreLocation.framework */; };
+		EC5DE2A224B49AE6C22F1390 /* Pods_Be_My_Eyes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D37EAB4A6D6287B5F0652C4A /* Pods_Be_My_Eyes.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		40576ABB24B1F6280046EBF4 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				40576ABA24B1F6280046EBF4 /* TMapSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0945E3A621755E6300B2AB60 /* Be-My-Eyes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Be-My-Eyes.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,8 +135,14 @@
 		8DD0C08124B2F34200A53B01 /* Bridging_Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Bridging_Header.h; sourceTree = "<group>"; };
 		8DD0C08424B2F6F200A53B01 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		8DD0C08624B2FBA300A53B01 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		40576AB524B1F4770046EBF4 /* mapContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mapContainerView.swift; sourceTree = "<group>"; };
+		40576AB724B1F5800046EBF4 /* TMapSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TMapSDK.framework; path = "Be-My-Eyes/TMapSDK.framework"; sourceTree = "<group>"; };
+		40A3DD7724B4B542006FAB1C /* RobotControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotControlView.swift; sourceTree = "<group>"; };
+		7FDE922ADB7604E1008AFA8B /* Pods-Be-My-Eyes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Be-My-Eyes.release.xcconfig"; path = "Target Support Files/Pods-Be-My-Eyes/Pods-Be-My-Eyes.release.xcconfig"; sourceTree = "<group>"; };
+		D37EAB4A6D6287B5F0652C4A /* Pods_Be_My_Eyes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Be_My_Eyes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8223AAE247C152100755C43 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		E84E11FA2488E0D200B7AFE0 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		FB8630E8846C2BB42DD305AE /* Pods-Be-My-Eyes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Be-My-Eyes.debug.xcconfig"; path = "Target Support Files/Pods-Be-My-Eyes/Pods-Be-My-Eyes.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +159,8 @@
 				8DD0C07724B2EF8D00A53B01 /* SystemConfiguration.framework in Frameworks */,
 				8D0FE2DD24B6D9A300FA99DC /* DaumMap.framework in Frameworks */,
 				8DD0C07524B2EF3600A53B01 /* OpenGLES.framework in Frameworks */,
+				40576AB924B1F6280046EBF4 /* TMapSDK.framework in Frameworks */,
+				EC5DE2A224B49AE6C22F1390 /* Pods_Be_My_Eyes.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,6 +173,7 @@
 				0945E3A821755E6300B2AB60 /* Be-My-Eyes */,
 				0945E3A721755E6300B2AB60 /* Products */,
 				E84E11F92488E0D200B7AFE0 /* Frameworks */,
+				DFE650FB3EA4B16F45852489 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -167,6 +195,8 @@
 				0945E3AB21755E6300B2AB60 /* ViewController.swift */,
 				8DD0C08124B2F34200A53B01 /* Bridging_Header.h */,
 				E8223AAE247C152100755C43 /* StartViewController.swift */,
+				40576AB524B1F4770046EBF4 /* mapContainerView.swift */,
+				40A3DD7724B4B542006FAB1C /* RobotControlView.swift */,
 				0945E3AD21755E6300B2AB60 /* Main.storyboard */,
 				0945E3B021755E6400B2AB60 /* Assets.xcassets */,
 				0945E3B221755E6400B2AB60 /* LaunchScreen.storyboard */,
@@ -260,6 +290,13 @@
 				8D0FE2B424B6D9A300FA99DC /* MTMapCircle.h */,
 			);
 			path = Headers;
+		DFE650FB3EA4B16F45852489 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FB8630E8846C2BB42DD305AE /* Pods-Be-My-Eyes.debug.xcconfig */,
+				7FDE922ADB7604E1008AFA8B /* Pods-Be-My-Eyes.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		E84E11F92488E0D200B7AFE0 /* Frameworks */ = {
@@ -272,7 +309,9 @@
 				8DD0C07924B2EF9C00A53B01 /* QuartzCore.framework */,
 				8DD0C07624B2EF8D00A53B01 /* SystemConfiguration.framework */,
 				8DD0C07424B2EF3600A53B01 /* OpenGLES.framework */,
+				40576AB724B1F5800046EBF4 /* TMapSDK.framework */,
 				E84E11FA2488E0D200B7AFE0 /* CoreLocation.framework */,
+				D37EAB4A6D6287B5F0652C4A /* Pods_Be_My_Eyes.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -284,9 +323,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0945E3B821755E6400B2AB60 /* Build configuration list for PBXNativeTarget "Be-My-Eyes" */;
 			buildPhases = (
+				CD77783AC5D50242E1B0F74F /* [CP] Check Pods Manifest.lock */,
 				0945E3A221755E6300B2AB60 /* Sources */,
 				0945E3A321755E6300B2AB60 /* Frameworks */,
 				0945E3A421755E6300B2AB60 /* Resources */,
+				40576ABB24B1F6280046EBF4 /* Embed Frameworks */,
+				31922EBECE6872DD1AA186F4 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -371,15 +413,59 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		31922EBECE6872DD1AA186F4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Be-My-Eyes/Pods-Be-My-Eyes-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Be-My-Eyes/Pods-Be-My-Eyes-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Be-My-Eyes/Pods-Be-My-Eyes-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CD77783AC5D50242E1B0F74F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Be-My-Eyes-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		0945E3A221755E6300B2AB60 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				0945E3AC21755E6300B2AB60 /* ViewController.swift in Sources */,
+				40A3DD7824B4B542006FAB1C /* RobotControlView.swift in Sources */,
 				09A102052176932300220459 /* Tiramisu45.mlmodel in Sources */,
 				0945E4182175811C00B2AB60 /* UIImage+CVPixelBuffer.swift in Sources */,
 				8DD0C08524B2F6F200A53B01 /* MapViewController.swift in Sources */,
+				40576AB624B1F4770046EBF4 /* mapContainerView.swift in Sources */,
 				09DC0B592175B5690044D811 /* Popup.swift in Sources */,
 				0945E41B2175811C00B2AB60 /* MultiArray.swift in Sources */,
 				E8223AAF247C152100755C43 /* StartViewController.swift in Sources */,
@@ -529,6 +615,7 @@
 		};
 		0945E3B921755E6400B2AB60 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FB8630E8846C2BB42DD305AE /* Pods-Be-My-Eyes.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
@@ -540,6 +627,7 @@
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/DaumMap.embeddedframework",
 				);
+
 				INFOPLIST_FILE = "Be-My-Eyes/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -559,6 +647,7 @@
 		};
 		0945E3BA21755E6400B2AB60 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7FDE922ADB7604E1008AFA8B /* Pods-Be-My-Eyes.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = NO;
@@ -568,6 +657,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/DaumMap.embeddedframework",
+
 				);
 				INFOPLIST_FILE = "Be-My-Eyes/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
@@ -577,6 +667,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = "sohee.Be-My-Eyes";
+
 				PRODUCT_NAME = "Be-My-Eyes";
 				SWIFT_OBJC_BRIDGING_HEADER = "Be-My-Eyes/Bridging_Header.h";
 				SWIFT_PRECOMPILE_BRIDGING_HEADER = YES;
