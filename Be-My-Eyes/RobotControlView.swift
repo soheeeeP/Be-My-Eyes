@@ -17,7 +17,7 @@ class RobotControlView: UIViewController {
                                     2: "left",
                                     3: "right"]
     
-    let mqttClient = CocoaMQTT(clientID: "pi", host:"127.0.0.1", port:22)
+    let mqttClient = CocoaMQTT(clientID: "PiBot", host:"127.0.0.1", port:1883)
     
     override func viewDidLoad() {
         super.viewDidLoad()

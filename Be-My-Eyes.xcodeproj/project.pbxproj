@@ -450,7 +450,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = yoon2.segmentation;
+				PRODUCT_BUNDLE_IDENTIFIER = yoon3.segmentation;
 				PRODUCT_NAME = "Be-My-Eyes";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -476,7 +476,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = "yoon.Be-My-Eyes";
+				PRODUCT_BUNDLE_IDENTIFIER = "yoon3.Be-My-Eyes";
 				PRODUCT_NAME = "Be-My-Eyes";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
