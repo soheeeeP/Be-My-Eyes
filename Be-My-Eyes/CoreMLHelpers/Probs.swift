@@ -226,9 +226,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     con_count = con_count + 1
     print("count : \(con_count)")
     //connect2()
-    if con_count == 10 {
-        print("count = 10 ")
+    if con_count == 20 {
+        print("count = 20 ")
         mqttClient.publish("robot/move", withString:text)
+        mqttClient.publish("user/vibr", withString:text)
         con_count = 0
     }
     
