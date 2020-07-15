@@ -58,7 +58,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cVb-RM-mR6">
-                                <rect key="frame" x="58" y="62" width="276" height="216"/>
+                                <rect key="frame" x="58" y="61" width="276" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
@@ -77,13 +77,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="53w-Sg-PWT">
-                                <rect key="frame" x="58" y="285" width="557" height="34"/>
+                                <rect key="frame" x="58" y="284" width="557" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="een-F0-TQU">
-                                <rect key="frame" x="338" y="62" width="278" height="216"/>
+                                <rect key="frame" x="338" y="61" width="278" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
@@ -110,6 +110,17 @@
                                 </state>
                                 <connections>
                                     <segue destination="DIj-56-bl8" kind="show" identifier="" id="4Uv-rY-Lzk"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rtk-Dz-8Wu">
+                                <rect key="frame" x="451" y="12" width="52" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="DEPTH">
+                                    <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="uMv-tR-HFX" kind="presentation" id="Zya-GB-dDO"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -367,6 +378,35 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gG6-kK-Wdx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1556" y="462"/>
+        </scene>
+        <!--Depth View Controller-->
+        <scene sceneID="qfg-ue-7CF">
+            <objects>
+                <viewController id="uMv-tR-HFX" customClass="depthViewController" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0MP-xl-MsO">
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cWz-o5-VGf">
+                                <rect key="frame" x="20" y="47" width="627" height="280"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="dHp-jW-Vqa" firstAttribute="trailing" secondItem="cWz-o5-VGf" secondAttribute="trailing" constant="20" id="kHy-X1-Ijw"/>
+                            <constraint firstItem="cWz-o5-VGf" firstAttribute="leading" secondItem="dHp-jW-Vqa" secondAttribute="leading" constant="20" id="mNc-bt-luN"/>
+                            <constraint firstItem="dHp-jW-Vqa" firstAttribute="bottom" secondItem="cWz-o5-VGf" secondAttribute="bottom" constant="48" id="o7h-RQ-YNv"/>
+                            <constraint firstItem="cWz-o5-VGf" firstAttribute="top" secondItem="dHp-jW-Vqa" secondAttribute="top" constant="47" id="r53-1q-OA3"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="dHp-jW-Vqa"/>
+                    </view>
+                    <connections>
+                        <outlet property="previewView" destination="cWz-o5-VGf" id="Aro-HJ-aAM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zne-lO-ZC8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1152.7736131934034" y="-447.19999999999999"/>
         </scene>
     </scenes>
     <color key="tintColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
