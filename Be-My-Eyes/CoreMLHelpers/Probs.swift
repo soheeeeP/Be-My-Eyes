@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreML
+import CocoaMQTT
 
 /// Convert probability tensor into an image
 func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
@@ -82,6 +83,12 @@ var didAppeared = Array(repeating: 0, count: 16)
 var idxAppeared = Array(repeating: 0, count: 12)
 var moveFlag = false
 
+//var for MQTT
+var conflag = false
+var con_count = 0
+let mqttClient = CocoaMQTT(clientID: "EYES", host:"192.168.137.2", port:1883)
+var mqttflag = false
+
 /// Locate the obstacle & Return in text
 func FindObject(_ _probs: MLMultiArray) -> String {
     /* Label map
@@ -98,6 +105,9 @@ func FindObject(_ _probs: MLMultiArray) -> String {
      10: vegetation  green
      11: unlabeled   black
     */
+    
+    // connect to MQTT
+    connect()
     
     // convert the MLMultiArray to a MultiArray
     let codes = MultiArray<Float32>(_probs)
@@ -173,6 +183,11 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     }
     //print("cell index:\(min_key), distance:\(minDistance)")
     
+    // send message to MQTT
+    con_count = con_count + 1
+    print("count : \(con_count)")
+    connect2()
+    
     // straight 영역의 장애물이 limit보다 멀리 있는 경우 straight부터 가도록 알림
     for i in 6...9 {
         if cell[i] > height/4 {  // limit == height/4
@@ -236,4 +251,22 @@ func FindObstacle(code: Int) -> String{
             obstacle = ""
     }
     return obstacle
+}
+
+func connect2() {
+    if con_count == 10 {
+        print("count = 10 ")
+        mqttClient.publish("robot/move", withString:"dfdfsfs")
+        con_count = 0
+    }
+}
+
+
+func connect() {
+    if mqttflag == false {
+        mqttClient.connect()
+        mqttflag = true
+        //mqttClient.publish("robot/move", withString: "555")
+        //mqttClient.publish("robot/move", withString: direction[0]!)
+    }
 }
