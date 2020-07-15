@@ -86,7 +86,7 @@ var moveFlag = false
 //var for MQTT
 var conflag = false
 var con_count = 0
-let mqttClient = CocoaMQTT(clientID: "EYES", host:"192.168.137.2", port:1883)
+let mqttClient = CocoaMQTT(clientID: "PiBot", host:"192.168.1.6", port:1883)
 var mqttflag = false
 
 /// Locate the obstacle & Return in text
@@ -183,10 +183,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     }
     //print("cell index:\(min_key), distance:\(minDistance)")
     
-    // send message to MQTT
-    con_count = con_count + 1
-    print("count : \(con_count)")
-    connect2()
     
     // straight 영역의 장애물이 limit보다 멀리 있는 경우 straight부터 가도록 알림
     for i in 6...9 {
@@ -224,6 +220,18 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     // debugging TTS message
     print(text)
     
+    
+    
+    // send message to MQTT
+    con_count = con_count + 1
+    print("count : \(con_count)")
+    //connect2()
+    if con_count == 10 {
+        print("count = 10 ")
+        mqttClient.publish("robot/move", withString:text)
+        con_count = 0
+    }
+    
     // return text to print and make TTS
     return text
 }
@@ -254,8 +262,8 @@ func FindObstacle(code: Int) -> String{
 }
 
 func connect2() {
-    if con_count == 10 {
-        print("count = 10 ")
+    if con_count == 20 {
+        print("count = 20 ")
         mqttClient.publish("robot/move", withString:"dfdfsfs")
         con_count = 0
     }
