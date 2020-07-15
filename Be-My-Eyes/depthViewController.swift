@@ -13,7 +13,7 @@ class depthViewController: UIViewController {
 
     @IBOutlet weak var previewView: UIImageView!
     
-    let session = AVCaptureSession()
+    let depthSession = AVCaptureSession()
     let dataOutputQueue = DispatchQueue(label: "video data queue",
                                         qos: .userInitiated,
                                         attributes: [],
@@ -26,7 +26,7 @@ class depthViewController: UIViewController {
         super.viewDidLoad()
 
         configureCaptureSession()
-        session.startRunning()
+        depthSession.startRunning()
     }
     
 
@@ -46,15 +46,15 @@ class depthViewController: UIViewController {
 extension depthViewController {
     func configureCaptureSession() {
     
-        guard let camera = AVCaptureDevice.default(.builtInTrueDepthCamera, for: .video, position: .unspecified) else {
+        guard let camera = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) else {
           fatalError("No depth video camera available")
         }
 
-        session.sessionPreset = .photo
+        depthSession.sessionPreset = .photo
         
         do{
             let cameraInput = try AVCaptureDeviceInput(device: camera)
-            session.addInput(cameraInput)
+            depthSession.addInput(cameraInput)
         } catch {
             fatalError(error.localizedDescription)
         }
@@ -62,15 +62,15 @@ extension depthViewController {
         let videoOutput = AVCaptureVideoDataOutput()
         videoOutput.setSampleBufferDelegate(self, queue: dataOutputQueue)
         videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
-        session.addOutput(videoOutput)
+        depthSession.addOutput(videoOutput)
         
         let videoConnection = videoOutput.connection(with: .video)
-        videoConnection?.videoOrientation = .portrait
+        videoConnection?.videoOrientation = .landscapeRight
         
         let depthOutput = AVCaptureDepthDataOutput()
         depthOutput.setDelegate(self, callbackQueue: dataOutputQueue)
         depthOutput.isFilteringEnabled = true
-        session.addOutput(depthOutput)
+        depthSession.addOutput(depthOutput)
         
         let outputRect = CGRect(x: 0, y: 0, width: 1, height: 1)
         let videoRect = videoOutput
@@ -100,6 +100,7 @@ extension depthViewController {
 
 // MARK: -Capture Video Data Delegate Methods
 extension depthViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
+    
     func captureOutput(_ output: AVCaptureOutput,
                        didOutput sampleBuffer: CMSampleBuffer,
                        from connection: AVCaptureConnection) {
@@ -116,6 +117,7 @@ extension depthViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             self?.previewView.image = displayImage
         }
     }
+ 
 }
 
 // MARK: -Capture Depth Data Delegate Methods
