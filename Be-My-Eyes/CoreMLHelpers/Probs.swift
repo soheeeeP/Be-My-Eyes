@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreML
+import CocoaMQTT
 
 /// Convert probability tensor into an image
 func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
@@ -82,6 +83,12 @@ var didAppeared = Array(repeating: 0, count: 16)
 var idxAppeared = Array(repeating: 0, count: 12)
 var moveFlag = false
 
+/// for MQTT
+let mqttClient = CocoaMQTT(clientID: "BMY-ROBOT", host:"192.168.137.118", port:1883)
+var conflag = false
+var con_count = 0
+var mqttflag = false
+
 /// Locate the obstacle & Return in text
 func FindObject(_ _probs: MLMultiArray) -> String {
     /* Label map
@@ -98,6 +105,9 @@ func FindObject(_ _probs: MLMultiArray) -> String {
      10: vegetation  green
      11: unlabeled   black
     */
+    
+    // connect to MQTT
+    MQTTconnect()
     
     // convert the MLMultiArray to a MultiArray
     let codes = MultiArray<Float32>(_probs)
@@ -118,8 +128,9 @@ func FindObject(_ _probs: MLMultiArray) -> String {
 
     // calculate obstacle distance for each cell
     for i in 0...15 {
-        for h in 50 ..< height {
-            if Int(codes[0, height-1-h, ww*i]) != 6 && Int(codes[0, height-1-h, ww*i]) != 7 {  //인도 또는 도로가 아닌 경우
+        // for h in 50 ..< height {
+        for h in stride(from: 50, to: height, by: 2) { // for speed
+            if Int(codes[0, height-1-h, ww*i]) != 6 && Int(codes[0, height-1-h, ww*i]) != 7 {  // 인도 또는 도로가 아닌 경우
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
                 CurFrame.obstacle[i] = Int(codes[0,height-1-h,ww*i])
                 CurFrame.height[i] = height-1-h
@@ -136,7 +147,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         heightDistance = cell[i]
         widthDistance = ((ww*i)-(width/2))
         cellDistance = Int(sqrt((pow(Double(heightDistance), 2) + pow(Double(widthDistance),2))))
-        
         if minDistance > cellDistance {
             if (i>0 && cell[i-1] <= height*3/4) || (i<15 && cell[i+1] <= height*3/4) {
                 minDistance = cellDistance
@@ -209,6 +219,17 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     // debugging TTS message
     print(text)
     
+    // send message to MQTT
+    con_count+=1
+    print("count : \(con_count)")
+    // MQTTclient()
+    if con_count == 3 {
+        print("Send message to MQTT")
+        mqttClient.publish("robot/move", withString:text) // for robot
+        mqttClient.publish("user/vibr", withString:text) // for vibration motor
+        con_count = 0
+    }
+    
     // return text to print and make TTS
     return text
 }
@@ -236,4 +257,21 @@ func FindObstacle(code: Int) -> String{
             obstacle = ""
     }
     return obstacle
+}
+
+func MQTTconnect() {
+    if mqttflag == false {
+        mqttClient.connect()
+        mqttflag = true
+        //mqttClient.publish("robot/move", withString: "555")
+        //mqttClient.publish("robot/move", withString: direction[0]!)
+    }
+}
+
+func MQTTclient() {
+    if con_count == 20 {
+        print("count = 20 ")
+        mqttClient.publish("robot/move", withString:"test")
+        con_count = 0
+    }
 }
