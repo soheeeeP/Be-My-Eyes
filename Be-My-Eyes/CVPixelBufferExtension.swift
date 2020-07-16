@@ -55,3 +55,9 @@ extension CVPixelBuffer {
     CVPixelBufferUnlockBaseAddress(self, CVPixelBufferLockFlags(rawValue: 0))
   }
 }
+
+//extension CVPixelBuffer{
+//    func render(pixelBuffer: CVPixelBuffer) -> CVPixelBuffer? {
+//
+//    }
+//}
