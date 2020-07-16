@@ -100,8 +100,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             return _queue
         }
     }
-
+    @IBAction func wind(_ sender: Any) {
+        self.performSegue(withIdentifier: "ManualWind", sender: self)
+    }
     
+    @IBAction func unwindToVC(_ sender: UIStoryboardSegue) {
+    }
     /// the model for the view controller to apss camera data through
     private var _model: VNCoreMLModel?
     /// the model for the view controller to apss camera data through
@@ -276,6 +280,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             popup_alert(self, title: "Camera Error", message: message)
             return
         }
+//        configureCaptureSession()
+//        depthSession.startRunning()
+        
     }
           
     /// Setup the live preview from the camera
