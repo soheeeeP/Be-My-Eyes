@@ -58,7 +58,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cVb-RM-mR6">
-                                <rect key="frame" x="58" y="62" width="276" height="216"/>
+                                <rect key="frame" x="58" y="62" width="173" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
@@ -83,7 +83,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="een-F0-TQU">
-                                <rect key="frame" x="338" y="62" width="278" height="216"/>
+                                <rect key="frame" x="239" y="62" width="181" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
@@ -112,6 +112,26 @@
                                     <segue destination="DIj-56-bl8" kind="show" identifier="" id="4Uv-rY-Lzk"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rtk-Dz-8Wu">
+                                <rect key="frame" x="451" y="12" width="52" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="DEPTH">
+                                    <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="wind:" destination="muv-iN-7Kq" eventType="touchUpInside" id="zPq-HK-gvD"/>
+                                    <segue destination="uMv-tR-HFX" kind="presentation" identifier="ManualWind" id="Zya-GB-dDO"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bLn-en-eRl">
+                                <rect key="frame" x="428" y="62" width="181" height="216"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="keyPath" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -122,6 +142,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="iKC-4e-w3s"/>
                     <connections>
+                        <outlet property="depthPreview" destination="bLn-en-eRl" id="O7Z-Ez-XVq"/>
                         <outlet property="framerate" destination="ItP-uR-dE2" id="Ldc-fv-lZX"/>
                         <outlet property="preview" destination="cVb-RM-mR6" id="6yf-p7-OxR"/>
                         <outlet property="segmentation" destination="een-F0-TQU" id="CnP-Jz-lRA"/>
@@ -136,7 +157,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1879.0178571428571" y="-446.37681159420293"/>
+            <point key="canvasLocation" x="-1879.610194902549" y="-447.19999999999999"/>
         </scene>
         <!--Robot Control View-->
         <scene sceneID="TSR-7i-vgh">
@@ -367,6 +388,50 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gG6-kK-Wdx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1556" y="462"/>
+        </scene>
+        <!--Depth View Controller-->
+        <scene sceneID="qfg-ue-7CF">
+            <objects>
+                <viewController id="uMv-tR-HFX" customClass="depthViewController" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0MP-xl-MsO">
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cWz-o5-VGf">
+                                <rect key="frame" x="10" y="75" width="647" height="280"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JiV-xQ-65g">
+                                <rect key="frame" x="25" y="20" width="42" height="30"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="BACK">
+                                    <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="wind:" destination="muv-iN-7Kq" eventType="touchUpInside" id="N3r-4c-pf9"/>
+                                    <segue destination="t5g-sV-0lg" kind="unwind" unwindAction="unwindToVC:" id="wHb-jE-n39"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="JiV-xQ-65g" firstAttribute="leading" secondItem="dHp-jW-Vqa" secondAttribute="leading" constant="25" id="22g-PR-Vr5"/>
+                            <constraint firstItem="dHp-jW-Vqa" firstAttribute="bottom" secondItem="cWz-o5-VGf" secondAttribute="bottom" constant="20" id="KGr-wj-VZi"/>
+                            <constraint firstItem="dHp-jW-Vqa" firstAttribute="trailing" secondItem="cWz-o5-VGf" secondAttribute="trailing" constant="10" id="Q4y-ga-w9l"/>
+                            <constraint firstItem="cWz-o5-VGf" firstAttribute="leading" secondItem="dHp-jW-Vqa" secondAttribute="leading" constant="10" id="Xgr-xC-FAj"/>
+                            <constraint firstItem="cWz-o5-VGf" firstAttribute="top" secondItem="JiV-xQ-65g" secondAttribute="bottom" constant="25" id="bTp-9M-Fu1"/>
+                            <constraint firstItem="cWz-o5-VGf" firstAttribute="top" secondItem="JiV-xQ-65g" secondAttribute="bottom" constant="25" id="ehB-dR-h6W"/>
+                            <constraint firstItem="JiV-xQ-65g" firstAttribute="top" secondItem="dHp-jW-Vqa" secondAttribute="top" constant="20" id="gEA-bM-DVy"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="dHp-jW-Vqa"/>
+                    </view>
+                    <connections>
+                        <outlet property="previewView" destination="cWz-o5-VGf" id="Aro-HJ-aAM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zne-lO-ZC8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="t5g-sV-0lg" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="-1152.7736131934034" y="-447.19999999999999"/>
         </scene>
     </scenes>
     <color key="tintColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
