@@ -84,7 +84,7 @@ var idxAppeared = Array(repeating: 0, count: 12)
 var moveFlag = false
 
 /// for MQTT
-let mqttClient = CocoaMQTT(clientID: "BMY-ROBOT", host:"192.168.137.118", port:1883)
+let mqttClient = CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
 var conflag = false
 var con_count = 0
 var mqttflag = false
@@ -263,8 +263,6 @@ func MQTTconnect() {
     if mqttflag == false {
         mqttClient.connect()
         mqttflag = true
-        //mqttClient.publish("robot/move", withString: "555")
-        //mqttClient.publish("robot/move", withString: direction[0]!)
     }
 }
 
