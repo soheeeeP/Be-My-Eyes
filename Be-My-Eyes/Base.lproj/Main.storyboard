@@ -377,7 +377,6 @@
                     </view>
                     <navigationItem key="navigationItem" id="P82-7m-ICn"/>
                     <connections>
-                        <outlet property="MapContainerView" destination="HCK-sy-WY6" id="Zet-KO-7fs"/>
                         <outlet property="logLabel" destination="19m-ad-uql" id="a3w-70-jqh"/>
                         <outlet property="mapContainerView" destination="HCK-sy-WY6" id="oaU-mG-86n"/>
                         <outlet property="menuConstraints" destination="dF5-IQ-JKo" id="Spa-Fv-JBJ"/>
