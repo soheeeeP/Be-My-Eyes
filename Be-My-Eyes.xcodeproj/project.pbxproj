@@ -23,7 +23,6 @@
 		40576AB924B1F6280046EBF4 /* TMapSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40576AB724B1F5800046EBF4 /* TMapSDK.framework */; };
 		40576ABA24B1F6280046EBF4 /* TMapSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40576AB724B1F5800046EBF4 /* TMapSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		40A3DD7824B4B542006FAB1C /* RobotControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A3DD7724B4B542006FAB1C /* RobotControlView.swift */; };
-		40AEF6FF24C873B700B6F280 /* RouteMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40AEF6FE24C873B700B6F280 /* RouteMapViewController.swift */; };
 		E8223AAF247C152100755C43 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8223AAE247C152100755C43 /* StartViewController.swift */; };
 		E84E11FB2488E0D200B7AFE0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E84E11FA2488E0D200B7AFE0 /* CoreLocation.framework */; };
 		EC5DE2A224B49AE6C22F1390 /* Pods_Be_My_Eyes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D37EAB4A6D6287B5F0652C4A /* Pods_Be_My_Eyes.framework */; };
@@ -61,7 +60,6 @@
 		40576AB524B1F4770046EBF4 /* mapContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mapContainerView.swift; sourceTree = "<group>"; };
 		40576AB724B1F5800046EBF4 /* TMapSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TMapSDK.framework; path = "Be-My-Eyes/TMapSDK.framework"; sourceTree = "<group>"; };
 		40A3DD7724B4B542006FAB1C /* RobotControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotControlView.swift; sourceTree = "<group>"; };
-		40AEF6FE24C873B700B6F280 /* RouteMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteMapViewController.swift; sourceTree = "<group>"; };
 		7FDE922ADB7604E1008AFA8B /* Pods-Be-My-Eyes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Be-My-Eyes.release.xcconfig"; path = "Target Support Files/Pods-Be-My-Eyes/Pods-Be-My-Eyes.release.xcconfig"; sourceTree = "<group>"; };
 		D37EAB4A6D6287B5F0652C4A /* Pods_Be_My_Eyes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Be_My_Eyes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8223AAE247C152100755C43 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
@@ -110,7 +108,6 @@
 				0945E3A921755E6300B2AB60 /* AppDelegate.swift */,
 				0945E3AB21755E6300B2AB60 /* ViewController.swift */,
 				4047C08824BF034A00A7069F /* MapkitViewController.swift */,
-				40AEF6FE24C873B700B6F280 /* RouteMapViewController.swift */,
 				E8223AAE247C152100755C43 /* StartViewController.swift */,
 				40576AB524B1F4770046EBF4 /* mapContainerView.swift */,
 				40A3DD7724B4B542006FAB1C /* RobotControlView.swift */,
@@ -269,7 +266,6 @@
 			files = (
 				0945E3AC21755E6300B2AB60 /* ViewController.swift in Sources */,
 				40A3DD7824B4B542006FAB1C /* RobotControlView.swift in Sources */,
-				40AEF6FF24C873B700B6F280 /* RouteMapViewController.swift in Sources */,
 				09A102052176932300220459 /* Tiramisu45.mlmodel in Sources */,
 				0945E4182175811C00B2AB60 /* UIImage+CVPixelBuffer.swift in Sources */,
 				40576AB624B1F4770046EBF4 /* mapContainerView.swift in Sources */,
