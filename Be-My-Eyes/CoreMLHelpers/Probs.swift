@@ -81,7 +81,7 @@ var obstacleDistance = 0
 var obstacle_idx = 6;
 var didAppeared = Array(repeating: 0, count: 16)
 var idxAppeared = Array(repeating: 0, count: 12)
-var moveFlag = false
+var safeArea = false
 
 /// for MQTT
 let mqttClient = CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
@@ -122,7 +122,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     
     var cellDistance = 0  // distance between each cell's obstacle and the user
     var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // most far distance
-    var min_key = 0  // most far cell index
+    var minKey = 0  // most far cell index
 
     // calculate obstacle distance for each cell
     for i in 0...15 {
@@ -131,7 +131,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장 (위를 0으로 계산)
                 CurFrame.obstacle[i] = Int(codes[0,height-1-h,ww*i])
                 CurFrame.height[i] = height-1-h
-                // print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
+                //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
                 break
             }
         }
@@ -146,7 +146,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         if minDistance > cellDistance {
             if (i>0 && cell[i-1] <= height*3/4) || (i<15 && cell[i+1] <= height*3/4) {
                 minDistance = cellDistance
-                min_key = i
+                minKey = i
             }
         }
         
@@ -168,7 +168,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 didAppeared[PrevFrame.totalCnt[i]] = 1
                 obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
                 obstacle = FindObstacle(code: PrevFrame.obstacle[i])
-                obstacle_idx = PrevFrame.obstacle[i];
+                obstacle_idx = PrevFrame.obstacle[i]
                 
                 // 장애물이 존재하는 경우 메세지 추가 & 장애물 flag 설정
                 if obstacle != "" {
@@ -187,41 +187,41 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         if i == 9 {
             text = "Go straight"
             print("Safe Area")
-            return text
+            minKey = 8
+            safeArea = true
         }
     }
     
-    // Navigation message
-    if minDistance > Int(height-40) {
-        text = "It's blocked. Go back."
-        moveFlag = false
-    } else if min_key < 6 {
-        text = "Move left."
-        moveFlag = true
-    } else if min_key > 9 {
-        text = "Move right."
-        moveFlag = true
-    } else {
-        text = "Go straight."
-        moveFlag = false
+    if safeArea == false {
+        // Navigation message
+        if minDistance > Int(height-40) {
+            text = "It's blocked. Go back."
+        } else if minKey < 6 {
+            text = "Move left."
+        } else if minKey > 9 {
+            text = "Move right."
+        } else {
+            text = "Go straight."
+        }
+        
+        // Obstacle detecting message
+        if obstacleFlag {
+            PrevFrame.totalCnt = Array(repeating: 0, count: 16)  // initialize totalCnt
+            didAppeared = Array(repeating: 0, count: 16)  // initialize didAppeared
+        }
     }
     
-    // Obstacle detecting message
-    if obstacleFlag {
-        PrevFrame.totalCnt = Array(repeating: 0, count: 16)  // initialize totalCnt
-        didAppeared = Array(repeating: 0, count: 16)  // initialize didAppeared
-    }
-        
     // debugging TTS message
-    print(text)
+    print(text + "cell : \(minKey)")
     
     // send message to MQTT
     con_count+=1
-    print("count : \(con_count)")
+    print("count \(con_count)")
     // MQTTclient()
     if con_count == 3 {
         print("Send message to MQTT")
         mqttClient.publish("robot/move", withString:text) // for robot
+        mqttClient.publish("robot/key", withString:String(minKey)) // for robot
         mqttClient.publish("user/vibr", withString:text) // for vibration motor
         con_count = 0
     }
