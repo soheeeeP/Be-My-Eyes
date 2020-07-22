@@ -44,6 +44,7 @@
                 <swipeGestureRecognizer direction="right" id="hvv-r7-RCe">
                     <connections>
                         <action selector="Swipe2:" destination="5ok-ST-3X4" id="HbW-bV-2w4"/>
+                        <segue destination="muv-iN-7Kq" kind="show" id="aUE-uD-sNK"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
@@ -58,7 +59,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cVb-RM-mR6">
-                                <rect key="frame" x="58" y="62" width="276" height="216"/>
+                                <rect key="frame" x="58" y="61" width="276" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
@@ -77,13 +78,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="53w-Sg-PWT">
-                                <rect key="frame" x="58" y="285" width="557" height="34"/>
+                                <rect key="frame" x="58" y="284" width="557" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="een-F0-TQU">
-                                <rect key="frame" x="338" y="62" width="278" height="216"/>
+                                <rect key="frame" x="338" y="61" width="278" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
@@ -112,6 +113,18 @@
                                     <segue destination="DIj-56-bl8" kind="show" identifier="" id="4Uv-rY-Lzk"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y2z-XE-qy0">
+                                <rect key="frame" x="464" y="11" width="52" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Mapkit">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="mapKit:" destination="muv-iN-7Kq" eventType="touchUpInside" id="Dhw-T9-ynd"/>
+                                    <segue destination="Dxr-xR-Pcd" kind="show" id="eRl-JF-jAE"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -137,6 +150,101 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1879.0178571428571" y="-446.37681159420293"/>
+        </scene>
+        <!--Mapkit View Controller-->
+        <scene sceneID="a0V-ca-Srf">
+            <objects>
+                <viewController storyboardIdentifier="Mapkit" id="Dxr-xR-Pcd" customClass="MapkitViewController" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fRV-wB-jd8">
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xy9-Sm-Pr5">
+                                <rect key="frame" x="0.0" y="0.0" width="100" height="59"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                <state key="normal" title="GoBack">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="GoBack:" destination="Dxr-xR-Pcd" eventType="touchUpInside" id="iNp-ft-tdK"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xaa-0O-3VT">
+                                <rect key="frame" x="108" y="12" width="448" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="search"/>
+                                <connections>
+                                    <action selector="FindDirection:" destination="Dxr-xR-Pcd" eventType="editingDidEndOnExit" id="QSf-Gx-sXl"/>
+                                    <action selector="FindDirection:" destination="Dxr-xR-Pcd" eventType="editingDidEnd" id="yNm-4E-wBI"/>
+                                </connections>
+                            </textField>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="kQd-Pq-gqH">
+                                <rect key="frame" x="33" y="54" width="467" height="227"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="feb-f3-eF3">
+                                <rect key="frame" x="564" y="4" width="42" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="find">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="Find:" destination="Dxr-xR-Pcd" eventType="touchUpInside" id="ytg-F9-vHb"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <gestureRecognizers/>
+                        <viewLayoutGuide key="safeArea" id="rtZ-Qo-jWM"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Md9-Y3-9jc"/>
+                    <connections>
+                        <outlet property="routeMap" destination="kQd-Pq-gqH" id="t0y-vs-5dl"/>
+                        <outlet property="searchText" destination="Xaa-0O-3VT" id="xem-5k-Nal"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0wT-jE-dS9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1879.610194902549" y="-1368.8"/>
+        </scene>
+        <!--Route Map View Controller-->
+        <scene sceneID="IiA-nC-Vla">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aWJ-L1-S6d" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="routeMap" id="xzj-fJ-JvS" customClass="RouteMapViewController" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="elT-My-EtB">
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h5c-LW-4AA">
+                                <rect key="frame" x="26" y="33" width="103" height="48"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <state key="normal" title="GoBack">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="GoBack:" destination="xzj-fJ-JvS" eventType="touchUpInside" id="cH1-s7-DpD"/>
+                                </connections>
+                            </button>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="oy5-8n-Ub3">
+                                <rect key="frame" x="26" y="75" width="621" height="280"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="ZdV-ZC-z7R"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="dLz-fU-ffc"/>
+                    <connections>
+                        <outlet property="routeMap" destination="oy5-8n-Ub3" id="0kM-mm-bYW"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="-1192.3538230884558" y="-1362.4000000000001"/>
         </scene>
         <!--Robot Control View-->
         <scene sceneID="TSR-7i-vgh">
@@ -349,6 +457,11 @@
                                 <connections>
                                     <action selector="touchMenuButton:" destination="DIj-56-bl8" eventType="touchUpInside" id="ClY-AK-ufd"/>
                                 </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fay-RP-wcF">
+                                <rect key="frame" x="242" y="16" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>

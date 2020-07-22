@@ -71,6 +71,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     var _queue: MTLCommandQueue?
     
+    @IBAction func mapKit(_ sender: Any) {
+        /*let vcName = self.storyboard?.instantiateViewController(withIdentifier: "Mapkit")
+        vcName?.modalTransitionStyle = .coverVertical
+        self.present(vcName!, animated: true, completion: nil)*/
+    }
     @IBAction func asdasd(_ sender: Any) {
         Count = 0
         locationManager = CLLocationManager()
