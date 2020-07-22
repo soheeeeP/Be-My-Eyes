@@ -419,8 +419,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
 
 extension ViewController {
     func configureCaptureSession() {
-        guard let camera = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) else {
-          fatalError("No depth video camera available")
+        guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
+            //.builtInDualWideCamera /builtInWideAngleCamera
+            fatalError("No depth video camera available")
         }
 
         depthSession.sessionPreset = .photo
