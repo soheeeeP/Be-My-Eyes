@@ -69,6 +69,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     var CurrentLocation = ""
     var Count = 0
     var Check = 0
+    
+    //Saving Real-Time Location
     private var lastSavedTime: Double = 0.0
     private let savingLocationInterval: TimeInterval = 10.0
     
@@ -222,6 +224,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
                                 obstacleDistance = 0
                             }
                         }
+                        
+                        self.savingLocation()
                     }
                     self.ready = true
                 })
@@ -447,8 +451,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         }
     }
     
-    func savingLocation() -> Int {
+    func savingLocation() {
         let currentTime = Date().timeIntervalSince1970
+        
+        var formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        var currentDateString = formatter.string(from: Date())
         
         if (lastSavedTime == 0 || (currentTime - lastSavedTime) > savingLocationInterval) {
 
@@ -461,16 +469,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             location = getCurrentCoordinate()
             currentGeoLocation = getCurrentGeolocation(currentCLLocation: location)
             
-            visitedLocationInfo.append(currentGeoLocation)
-            lastSavedTime = Date().timeIntervalSince1970
+            visitedLocationInfo.append(currentDateString + " ==> " + currentGeoLocation)
             
             //debugging
             print(visitedLocationInfo)
             print("================")
-            return 0
-        }
-        else{
-            return -1
+            
+            lastSavedTime = Date().timeIntervalSince1970
         }
     }
 }
