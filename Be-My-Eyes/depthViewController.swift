@@ -152,12 +152,13 @@ extension depthViewController: AVCaptureDepthDataOutputDelegate{
         pixelBuffer.clamp()
 
         let depthMap = CIImage(cvPixelBuffer: pixelBuffer)
+        
+        let displayImage = UIImage(ciImage: depthMap)
+        
+        print(pixelValues(fromCGImage: convertCIImageToCGImage(inputImage: depthMap), width: Int(displayImage.size.width), height: Int(displayImage.size.height)))
+
         DispatchQueue.main.async { [weak self] in
           self?.depthMap = depthMap
-            
-          //obtain pixel data from CIImage
-            print(self!.pixelValues(fromCGImage: self!.convertCIImageToCGImage(inputImage: depthMap), width: 1000, height: 800))
-
         }
     }
 }
@@ -193,10 +194,12 @@ extension depthViewController {
 }
 
 extension depthViewController {
-    func pixelValues(fromCGImage imageRef: CGImage?, width: Int, height: Int) -> (pixelValues: [UInt8]?, width: Int, height: Int)
+    func pixelValues(fromCGImage imageRef: CGImage?, width: Int, height: Int) -> [UInt8]?
     {
 
         var pixelValues: [UInt8]?
+        var minimizedPixelValues = [UInt8](repeating: 0, count: height)
+
         if let imageRef = imageRef {
 
             let bitsPerComponent = imageRef.bitsPerComponent
@@ -210,9 +213,14 @@ extension depthViewController {
             contextRef?.draw(imageRef, in: CGRect(x: 0.0, y: 0.0, width: CGFloat(width), height: CGFloat(height)))
 
             pixelValues = intensities
+            
+            //resize pixel values
+            for i in stride(from: 0, to: height, by: 1) {
+                minimizedPixelValues[i] = pixelValues![i*bytesPerRow]
+            }
         }
-
-        return (pixelValues, width, height)
+        return minimizedPixelValues
+//        return pixelValues
     }
 
     func image(fromPixelValues pixelValues: [UInt8]?, width: Int, height: Int) -> CGImage?
