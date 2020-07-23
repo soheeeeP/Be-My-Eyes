@@ -76,9 +76,8 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="53w-Sg-PWT">
-                                <rect key="frame" x="58" y="285" width="557" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="53w-Sg-PWT">
+                                <rect key="frame" x="58" y="285" width="551" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
@@ -132,9 +131,8 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="keyPath" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FIr-Sv-edK">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FIr-Sv-edK">
                                 <rect key="frame" x="603" y="328" width="46" height="33"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <state key="normal" title="USER">
                                     <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -146,6 +144,14 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="QVD-Hp-wKi" firstAttribute="trailing" secondItem="53w-Sg-PWT" secondAttribute="trailing" constant="58" id="2O2-Q0-X71"/>
+                            <constraint firstItem="QVD-Hp-wKi" firstAttribute="trailing" secondItem="FIr-Sv-edK" secondAttribute="trailing" constant="18" id="Tbo-lh-Mqw"/>
+                            <constraint firstItem="FIr-Sv-edK" firstAttribute="top" secondItem="53w-Sg-PWT" secondAttribute="bottom" constant="9" id="dPP-oT-yRC"/>
+                            <constraint firstItem="QVD-Hp-wKi" firstAttribute="bottom" secondItem="FIr-Sv-edK" secondAttribute="bottom" constant="14" id="iu3-A4-zqW"/>
+                            <constraint firstItem="53w-Sg-PWT" firstAttribute="leading" secondItem="QVD-Hp-wKi" secondAttribute="leading" constant="58" id="p3p-2T-Jfu"/>
+                            <constraint firstItem="FIr-Sv-edK" firstAttribute="leading" secondItem="QVD-Hp-wKi" secondAttribute="leading" constant="603" id="w9N-gV-cso"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="QVD-Hp-wKi"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="LTo-4Q-Z2t" appends="YES" id="tU7-0n-PVd"/>
@@ -400,7 +406,6 @@
                     </view>
                     <navigationItem key="navigationItem" id="P82-7m-ICn"/>
                     <connections>
-                        <outlet property="MapContainerView" destination="HCK-sy-WY6" id="Zet-KO-7fs"/>
                         <outlet property="logLabel" destination="19m-ad-uql" id="a3w-70-jqh"/>
                         <outlet property="mapContainerView" destination="HCK-sy-WY6" id="oaU-mG-86n"/>
                         <outlet property="menuConstraints" destination="dF5-IQ-JKo" id="Spa-Fv-JBJ"/>

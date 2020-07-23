@@ -14,6 +14,9 @@ import MetalPerformanceShaders
 import CoreMotion
 import CoreLocation
 
+// 사용자의 이동 경로를 저장할 배열
+var visitedLocationInfo : [String] = []
+
 /// A view controller to pass camera inputs through a vision model
 class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate{
     /// a local reference to time to update the framerate
@@ -67,6 +70,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     var Count = 0
     var Check = 0
     
+    //Saving Real-Time Location
+    private var lastSavedTime: Double = 0.0
+    private let savingLocationInterval: TimeInterval = 10.0
+    
     /// TODO:
     private var _device: MTLDevice?
     /// TODO:
@@ -84,11 +91,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     
     @IBAction func asdasd(_ sender: Any) {
         Count = 0
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
+        locationModeOn()
+        
+//        locationManager = CLLocationManager()
+//        locationManager.delegate = self
+//        locationManager.requestWhenInUseAuthorization()
+//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//        locationManager.startUpdatingLocation()
     }
     var queue: MTLCommandQueue! {
         get {
@@ -215,6 +224,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
                                 obstacleDistance = 0
                             }
                         }
+                        
+                        self.savingLocation()
                     }
                     self.ready = true
                 })
@@ -254,11 +265,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             return
         }
         if Check == 0{
-            locationManager = CLLocationManager()
-            locationManager.delegate = self
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.startUpdatingLocation()
+            locationModeOn()
+//            locationManager = CLLocationManager()
+//            locationManager.delegate = self
+//            locationManager.requestWhenInUseAuthorization()
+//            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//            locationManager.startUpdatingLocation()
             Check = 1
         }
         // create an input device from the back camera and handle
@@ -388,15 +400,28 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        //print("locations = \(locValue.latitude) \(locValue.longitude)")
+    func locationModeOn() {
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
         
-        let findLocation = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
+    }
+    func getCurrentCoordinate() -> CLLocation{
+        let coordinate = locationManager.location?.coordinate
+        let findLocation = CLLocation(latitude: coordinate!.latitude, longitude: coordinate!.longitude)
+        
+        return findLocation
+        
+    }
+    func getCurrentGeolocation(currentCLLocation: CLLocation) -> String {
+        
+        var currentGeoLocation = ""
         let geocoder = CLGeocoder()
         let locale = Locale(identifier: "Ko-kr") //원하는 언어의 나라 코드를 넣어주시면 됩니다.
         
-        geocoder.reverseGeocodeLocation(findLocation, preferredLocale: locale, completionHandler: {(placemarks, error) in
+        geocoder.reverseGeocodeLocation(currentCLLocation, preferredLocale: locale, completionHandler: {(placemarks, error) in
             if let address: [CLPlacemark] = placemarks {
                 if let administrativeArea: String = address.last?.administrativeArea { self.administrativeArea = administrativeArea }
                 if let locality: String = address.last?.locality { self.locality = locality }
@@ -405,7 +430,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             }
         })
 
-        CurrentLocation = administrativeArea + " " + locality + " " + thoroughfare
+        currentGeoLocation = administrativeArea + " " + locality + " " + thoroughfare
+        
+        return currentGeoLocation
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        //print("locations = \(locValue.latitude) \(locValue.longitude)")
+        
+        let findLocation = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
+        CurrentLocation = getCurrentGeolocation(currentCLLocation: findLocation)
 
         if Count == 0{
             Count += 1
@@ -413,6 +448,34 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             speak2(CurrentLocation)
             print(CurrentLocation)
             islocation = false
+        }
+    }
+    
+    func savingLocation() {
+        let currentTime = Date().timeIntervalSince1970
+        
+        var formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        var currentDateString = formatter.string(from: Date())
+        
+        if (lastSavedTime == 0 || (currentTime - lastSavedTime) > savingLocationInterval) {
+
+            locationModeOn()
+            
+            var location = CLLocation()
+            var currentGeoLocation = ""
+            
+            //5초 간격으로 현재 위치의 좌표(위도,경도)를 받아온 뒤, 지리 좌표로 변환하여 visitedLocationInfo에 저장
+            location = getCurrentCoordinate()
+            currentGeoLocation = getCurrentGeolocation(currentCLLocation: location)
+            
+            visitedLocationInfo.append(currentDateString + " ==> " + currentGeoLocation)
+            
+            //debugging
+            print(visitedLocationInfo)
+            print("================")
+            
+            lastSavedTime = Date().timeIntervalSince1970
         }
     }
 }
