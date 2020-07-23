@@ -3,7 +3,7 @@
 //  Be-My-Eyes
 //
 //  Created by 방윤 on 2020/07/23.
-//  Copyright © 2020 Kautenja. All rights reserved.
+//  Copyright © 2020 Be-My-Eyes. All rights reserved.
 //
 
 import UIKit
@@ -12,7 +12,6 @@ var userStride = ""
 var isUser = false
 
 class UserDefineControlView: UIViewController {
-    @IBOutlet weak var DoneBarButton: UIBarButtonItem!
     
     @IBOutlet weak var textField: UITextField!
     
