@@ -131,7 +131,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장 (위를 0으로 계산)
                 CurFrame.obstacle[i] = Int(codes[0,height-1-h,ww*i])
                 CurFrame.height[i] = height-1-h
-                //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
+                print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
                 break
             }
         }
@@ -180,6 +180,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     //print("cell index:\(min_key), distance:\(minDistance)")
     
     // straight 영역의 장애물이 limit보다 멀리 있는 경우 straight부터 가도록 알림
+    safeArea = false
     for i in 6...9 {
         if cell[i] > height/4 {  // limit == height/4
             break
@@ -262,10 +263,10 @@ func MQTTconnect() {
     }
 }
 
-func MQTTclient() {
-    if con_count == 20 {
-        print("count = 20 ")
-        mqttClient.publish("robot/move", withString:"test")
-        con_count = 0
-    }
-}
+//func MQTTclient() {
+//    if con_count == 20 {
+//        print("count = 20 ")
+//        mqttClient.publish("robot/move", withString:"test")
+//        con_count = 0
+//    }
+//}
