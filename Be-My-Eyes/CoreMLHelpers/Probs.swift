@@ -167,7 +167,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
             if didAppeared[PrevFrame.totalCnt[i]] == 0 {
                 didAppeared[PrevFrame.totalCnt[i]] = 1
                 // obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
-                obstacleDistance = DistObstacle(height: PrevFrame.height[i], stride: 35)
+                if isUser == false {
+                    userStride = "35"
+                }
+                obstacleDistance = DistObstacle(height: PrevFrame.height[i], stride: Int(userStride)!)
                 obstacle = FindObstacle(code: PrevFrame.obstacle[i])
                 obstacle_idx = PrevFrame.obstacle[i]
                 
@@ -227,6 +230,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         mqttClient.publish("user/vibr", withString:text) // for vibration motor
         con_count = 0
     }
+    print("user stride : " + userStride)
     
     // return text to print and make TTS
     return text
