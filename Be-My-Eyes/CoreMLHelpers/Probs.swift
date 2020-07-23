@@ -150,30 +150,35 @@ func FindObject(_ _probs: MLMultiArray) -> String {
             }
         }
         
-        if CurFrame.obstacle[i] == PrevFrame.obstacle[i] {
-            if CurFrame.height[i] > PrevFrame.height[i] {  // 장애물이 다가오는 경우
-                PrevFrame.totalCnt[i]+=1
-            } else if CurFrame.height[i] < PrevFrame.height[i] { // 장애물이 멀어지는 경우
-                PrevFrame.totalCnt[i]-=1
+        if i>5 && i<10 {
+            if CurFrame.obstacle[i] == PrevFrame.obstacle[i] {
+                if CurFrame.height[i] > PrevFrame.height[i] {  // 장애물이 다가오는 경우
+                    PrevFrame.totalCnt[i]+=1
+                } else if CurFrame.height[i] < PrevFrame.height[i] { // 장애물이 멀어지는 경우
+                    PrevFrame.totalCnt[i]-=1
+                }
             }
-        }
-        
-        // info of prev frame obstacle
-        PrevFrame.obstacle[i] = CurFrame.obstacle[i]
-        PrevFrame.height[i] = CurFrame.height[i]
+            
+            // info of prev frame obstacle
+            PrevFrame.obstacle[i] = CurFrame.obstacle[i]
+            PrevFrame.height[i] = CurFrame.height[i]
 
-        // 동일한 장애물이 4 frame 연속으로 다가오는 경우 경보
-        if (PrevFrame.totalCnt[i] > 3 && (i>5 && i<10)) {
-            if didAppeared[PrevFrame.totalCnt[i]] == 0 {
-                didAppeared[PrevFrame.totalCnt[i]] = 1
-                // obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
-                obstacleDistance = DistObstacle(height: PrevFrame.height[i], stride: 35)
-                obstacle = FindObstacle(code: PrevFrame.obstacle[i])
-                obstacle_idx = PrevFrame.obstacle[i]
-                
-                // 장애물이 존재하는 경우 메세지 추가 & 장애물 flag 설정
-                if obstacle != "" {
-                    obstacleFlag = true
+            // 동일한 장애물이 4 frame 연속으로 다가오는 경우 경보
+            if (PrevFrame.totalCnt[i] > 3) {
+                if didAppeared[PrevFrame.totalCnt[i]] == 0 {
+                    didAppeared[PrevFrame.totalCnt[i]] = 1
+                    // obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
+                    if isUser == false {
+                        userStride = "35"
+                    }
+                    obstacleDistance = DistObstacle(height: PrevFrame.height[i], stride: Int(userStride)!)
+                    obstacle = FindObstacle(code: PrevFrame.obstacle[i])
+                    obstacle_idx = PrevFrame.obstacle[i]
+                    
+                    // 장애물이 존재하는 경우 메세지 추가 & 장애물 flag 설정
+                    if obstacle != "" {
+                        obstacleFlag = true
+                    }
                 }
             }
         }
@@ -227,6 +232,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         mqttClient.publish("user/vibr", withString:text) // for vibration motor
         con_count = 0
     }
+    print("user stride : " + userStride)
     
     // return text to print and make TTS
     return text
@@ -248,7 +254,7 @@ func FindObstacle(code: Int) -> String {
         case 5:
             obstacle = "Person"
         case 8:
-            obstacle = "trafficsign"
+            obstacle = "Traffic sign"
         case 10:
             obstacle = "Vegetation"
         default:
