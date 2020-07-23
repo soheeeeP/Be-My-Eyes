@@ -78,7 +78,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="53w-Sg-PWT">
-                                <rect key="frame" x="58" y="284" width="557" height="34"/>
+                                <rect key="frame" x="58" y="283" width="557" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -195,6 +195,22 @@
                                     <action selector="Find:" destination="Dxr-xR-Pcd" eventType="touchUpInside" id="ytg-F9-vHb"/>
                                 </connections>
                             </button>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8N1-KW-F6N">
+                                <rect key="frame" x="241" y="299" width="406" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n6z-1H-uRP">
+                                <rect key="frame" x="54" y="303" width="146" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="STT:" destination="Dxr-xR-Pcd" eventType="touchUpInside" id="uP1-BW-Vc0"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <gestureRecognizers/>
@@ -202,13 +218,15 @@
                     </view>
                     <navigationItem key="navigationItem" id="Md9-Y3-9jc"/>
                     <connections>
+                        <outlet property="button" destination="n6z-1H-uRP" id="aRu-uo-wDz"/>
+                        <outlet property="myTextView" destination="8N1-KW-F6N" id="R2U-MP-a6x"/>
                         <outlet property="routeMap" destination="kQd-Pq-gqH" id="t0y-vs-5dl"/>
                         <outlet property="searchText" destination="Xaa-0O-3VT" id="xem-5k-Nal"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0wT-jE-dS9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1174" y="-447"/>
+            <point key="canvasLocation" x="-1174.3628185907048" y="-447.19999999999999"/>
         </scene>
         <!--Robot Control View-->
         <scene sceneID="TSR-7i-vgh">
