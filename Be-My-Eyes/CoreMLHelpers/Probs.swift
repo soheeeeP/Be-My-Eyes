@@ -166,7 +166,8 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         if (PrevFrame.totalCnt[i] > 3 && (i>5 && i<10)) {
             if didAppeared[PrevFrame.totalCnt[i]] == 0 {
                 didAppeared[PrevFrame.totalCnt[i]] = 1
-                obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
+                // obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
+                obstacleDistance = DistObstacle(height: PrevFrame.height[i], stride: 35)
                 obstacle = FindObstacle(code: PrevFrame.obstacle[i])
                 obstacle_idx = PrevFrame.obstacle[i]
                 
@@ -231,7 +232,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     return text
 }
 
-func FindObstacle(code: Int) -> String{
+func FindObstacle(code: Int) -> String {
     var obstacle = ""
     switch code {
         case 0:
@@ -254,6 +255,36 @@ func FindObstacle(code: Int) -> String{
             obstacle = ""
     }
     return obstacle
+}
+
+func DistObstacle(height: Int, stride: Int) -> Int { // (10 - PrevFrame.height[i] / 35) * 2
+    var foot = 0
+    //stride = 35 시각장애인 평균 보폭
+    switch height {
+        case 290 ..< 302:
+            foot = 0
+        case 275 ..< 290:
+            foot = 90/stride //45*2
+        case 250 ..< 275:
+            foot = 135/stride //45*3
+        case 230 ..< 250:
+            foot = 180/stride //45*4
+        case 210 ..< 230:
+            foot = 225/stride //45*5
+        case 195 ..< 210:
+            foot = 270/stride //45*6
+        case 180 ..< 195:
+            foot = 315/stride //45*7
+        case 170 ..< 180:
+            foot = 360/stride //45*8
+        case 160 ..< 170:
+            foot = 405/stride //45*9
+        case 150 ..< 160:
+            foot = 450/stride //45*10
+        default:
+            foot = 495/stride //45*11
+    }
+    return foot
 }
 
 func MQTTconnect() {
