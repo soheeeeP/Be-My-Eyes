@@ -13,13 +13,13 @@ import Metal
 import MetalPerformanceShaders
 import CoreMotion
 import CoreLocation
+import Firebase
 
 // 사용자의 이동 경로를 저장할 배열
 var visitedLocationInfo : [String] = []
 
 /// A view controller to pass camera inputs through a vision model
 class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate{
-    
     /// a local reference to time to update the framerate
     var time = Date()
     
@@ -452,6 +452,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         }
     }
     
+    /// 내 Firebase DB 주소 저장
+    var ref : DatabaseReference! = Database.database().reference()
+    
     func savingLocation() {
         let currentTime = Date().timeIntervalSince1970
         
@@ -463,7 +466,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
 
             locationModeOn()
             
-            let locValue = CLLocationCoordinate2D()
+//            let locValue = CLLocationCoordinate2D()
             var coordinate = CLLocation()
             var location = ""
 
@@ -475,30 +478,38 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
 //            let findLocation = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
 //            CurrentLocation = getCurrentGeolocation(currentCLLocation: findLocation)
 
-            let visitedLocationInfo = ["x" : locValue.latitude, "y": locValue.longitude, "location" : String(location)] as [String : Any]
+            let userRef = self.ref.child("location")
+            userRef.setValue(["location" : String(location),
+                              "x" : coordinate.coordinate.latitude, //String(locValue.latitude),
+                              "y": coordinate.coordinate.longitude,
+                              "time": currentDateString])
             
-            let jsonData = try! JSONSerialization.data(withJSONObject: visitedLocationInfo, options: [])
-            //visitedLocationInfo.append(currentDateString + " ==> " + currentGeoLocation)
             
-            // URL 객체 정의 : 데이터 보낼 서버
-            let url = URL(string: "http://172.20.10.14:3000/") //"http://****/practice/echoJSON"
-            
-            // URLRequest 객체 정의
-            var request = URLRequest(url:url!)
-            request.httpMethod = "POST"
-            
-            // request body에 전송할 json 데이터 저장
-            request.httpBody = jsonData
-            
-            // HTTP 메세지 헤더
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            //request.setValue(String(jsonData.count), forHTTPHeaderField: "Content-Length")
-            
-            // session을 이용해 서버에 데이터 전송
-            let session = URLSession.shared
-            session.dataTask(with: request, completionHandler: {(data, response, error) in
-                print("전송 완료")
-            }).resume()
+            ///==========
+//            let visitedLocationInfo = ["x" : locValue.latitude, "y": locValue.longitude, "location" : String(location)] as [String : Any]
+//
+//            let jsonData = try! JSONSerialization.data(withJSONObject: visitedLocationInfo, options: [])
+//            //visitedLocationInfo.append(currentDateString + " ==> " + currentGeoLocation)
+//
+//            // URL 객체 정의 : 데이터 보낼 서버
+//            let url = URL(string: "http://172.20.10.14:3000/") //"http://****/practice/echoJSON"
+//
+//            // URLRequest 객체 정의
+//            var request = URLRequest(url:url!)
+//            request.httpMethod = "POST"
+//
+//            // request body에 전송할 json 데이터 저장
+//            request.httpBody = jsonData
+//
+//            // HTTP 메세지 헤더
+//            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+//            //request.setValue(String(jsonData.count), forHTTPHeaderField: "Content-Length")
+//
+//            // session을 이용해 서버에 데이터 전송
+//            let session = URLSession.shared
+//            session.dataTask(with: request, completionHandler: {(data, response, error) in
+//                print("전송 완료")
+//            }).resume()
             
             //debugging
             print(CurrentLocation)
