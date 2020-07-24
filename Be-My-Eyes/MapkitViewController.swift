@@ -43,10 +43,16 @@ class MapkitViewController: UIViewController,  MKMapViewDelegate, CLLocationMana
     
     //Finder
     var flag3 = false
+    @IBOutlet weak var distance: UITextField!
     
     // STT
     @IBOutlet weak var button: UIButton!
     @IBOutlet weak var myTextView: UITextField!
+    @IBOutlet weak var output: UITextField!
+    @IBOutlet weak var start: UITextField!
+    @IBOutlet weak var last: UITextField!
+    var c = 0
+    var flag4 = true
     
     private let speechRecognizer = SFSpeechRecognizer(locale: Locale.init(identifier: "ko-KR"))
     
@@ -165,10 +171,10 @@ class MapkitViewController: UIViewController,  MKMapViewDelegate, CLLocationMana
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         routeMap.delegate = self
-        routeMap.userTrackingMode = .follow
-        
-        distanceTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(MapkitViewController.distanceCheck), userInfo: nil, repeats: true)
-        directionTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(MapkitViewController.getDirections), userInfo: nil, repeats: true)
+        //routeMap.userTrackingMode = .follow
+        routeMap.showsUserLocation = true
+        distanceTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MapkitViewController.distanceCheck), userInfo: nil, repeats: true)
+        directionTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MapkitViewController.getDirections), userInfo: nil, repeats: true)
         
         speechRecognizer?.delegate = self
     }
@@ -191,12 +197,14 @@ class MapkitViewController: UIViewController,  MKMapViewDelegate, CLLocationMana
             let utterance = AVSpeechUtterance(string: string)
             utterance.voice = AVSpeechSynthesisVoice(language: "ko-KR")
             utterance.rate = 0.5
+            utterance.pitchMultiplier = 0.5
             tts.speak(utterance)
         }
     }
     
     // LocationManager
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print(flag2)
         if flag2 == true{
             startLocation = locationManager.location
             flag2 = false
@@ -204,6 +212,16 @@ class MapkitViewController: UIViewController,  MKMapViewDelegate, CLLocationMana
         else{
             lastLocation = locationManager.location
             travelDistance = Int(startLocation.distance(from: lastLocation))
+            print("-------------------------------")
+            print(startLocation.coordinate)
+            print("###############################")
+            print(lastLocation.coordinate)
+            print(travelDistance)
+            print("-------------------------------")
+            
+            start.text = "\(c)" + " " + "\(startLocation.coordinate)"
+            last.text = "\(lastLocation.coordinate)"
+            c += 1
         }
     }
     
@@ -285,18 +303,22 @@ class MapkitViewController: UIViewController,  MKMapViewDelegate, CLLocationMana
             }
             else{
                 if index < count{
-                    print("\(Int(step.distance)) vs \(Int(travelDistance))")
+                    print("\(Int(travelDistance)) vs \(Int(step.distance))")
+                    distance.text = "\(Int(travelDistance)) vs \(Int(step.distance))" + " " + "\(flag2)"
                     if Int(travelDistance) > Int(step.distance)  {
                         if step.instructions.contains("우회전") {
                             speak("우회전 하세요.")
+                            output.text = "우회전 하세요."
                             print(step.instructions)
                         }
                         else if step.instructions.contains("좌회전"){
                             speak("좌회전 하세요")
+                            output.text = "좌회전 하세요."
                             print(step.instructions)
                         }
                         else{
                             speak(step.instructions)
+                            output.text = step.instructions
                             print(step.instructions)
                         }
                         travelDistance = 0
@@ -316,10 +338,15 @@ class MapkitViewController: UIViewController,  MKMapViewDelegate, CLLocationMana
                 }
             }
         }
-        let userLocation = routeMap.userLocation
-        let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
         
-        routeMap.setRegion(region, animated: true)
+        if flag4 == true{
+            let userLocation = routeMap.userLocation
+            let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
+            
+            routeMap.setRegion(region, animated: true)
+            flag4 = false
+            
+        }
     }
     
     // Find user location
@@ -330,7 +357,7 @@ class MapkitViewController: UIViewController,  MKMapViewDelegate, CLLocationMana
             locationManager.requestWhenInUseAuthorization()
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.startUpdatingLocation()
-            locationManager.startMonitoringSignificantLocationChanges()
+            //locationManager.startMonitoringSignificantLocationChanges()
             locationManager.distanceFilter = 10
         }
     }

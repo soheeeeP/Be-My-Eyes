@@ -194,7 +194,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         else {
                             if (obstacleFlag && idxAppeared[obstacle_idx] == 0){
                                 idxAppeared[obstacle_idx] = 1
-                                print(obstacle)
+                                //print(obstacle)
                                 if obstacleDistance == 0 {
                                     self.speak("\(obstacle) is in front of you.")
                                 }
@@ -357,7 +357,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         isFacingHorzion = gravity.x <= -0.8 && gravity.x <= 1.0
         if (!isFacingHorzion) {
             // TODO: Make some beep for this
-            speak("Make sure the camera is vertical.")
+            //speak("Make sure the camera is vertical.")
         }
     }
     func handlePrediction() -> Int{

@@ -180,7 +180,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         }
         if i == 9 {
             text = "Go straight"
-            print("Safe Area")
+            //print("Safe Area")
             return text
         }
     }
@@ -207,7 +207,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     }
         
     // debugging TTS message
-    print(text)
+    //print(text)
     
     // return text to print and make TTS
     return text
