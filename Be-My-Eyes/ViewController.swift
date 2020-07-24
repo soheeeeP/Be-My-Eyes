@@ -14,8 +14,11 @@ import MetalPerformanceShaders
 import CoreMotion
 import CoreLocation
 
+// 사용자의 이동 경로를 저장할 배열
+var visitedLocationInfo : [String] = []
+
 /// A view controller to pass camera inputs through a vision model
-class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, CLLocationManagerDelegate {
+class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate{
     /// a local reference to time to update the framerate
     var time = Date()
     
@@ -30,6 +33,17 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @IBOutlet weak var framerate: UILabel!
     /// a text that will be changed to speech
     @IBOutlet weak var textforspeech: UILabel!
+    
+    @IBOutlet weak var depthPreview: UIImageView!
+    
+    let depthSession = AVCaptureSession()
+    let dataOutputQueue = DispatchQueue(label: "video data queue",
+                                        qos: .userInitiated,
+                                        attributes: [],
+                                        autoreleaseFrequency: .workItem)
+
+    var depthMap: CIImage?
+    var scale: CGFloat = 0.0
     
     /// the camera session for streaming data from the camera
     var captureSession: AVCaptureSession!
@@ -56,6 +70,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var Count = 0
     var Check = 0
     
+    //Saving Real-Time Location
+    private var lastSavedTime: Double = 0.0
+    private let savingLocationInterval: TimeInterval = 10.0
+    
     /// TODO:
     private var _device: MTLDevice?
     /// TODO:
@@ -78,11 +96,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     @IBAction func asdasd(_ sender: Any) {
         Count = 0
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
+        locationModeOn()
+        
+//        locationManager = CLLocationManager()
+//        locationManager.delegate = self
+//        locationManager.requestWhenInUseAuthorization()
+//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//        locationManager.startUpdatingLocation()
     }
     var queue: MTLCommandQueue! {
         get {
@@ -94,8 +114,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             return _queue
         }
     }
-
+    @IBAction func wind(_ sender: Any) {
+        self.performSegue(withIdentifier: "ManualWind", sender: self)
+    }
     
+    @IBAction func unwindToVC(_ sender: UIStoryboardSegue) {
+    }
     /// the model for the view controller to apss camera data through
     private var _model: VNCoreMLModel?
     /// the model for the view controller to apss camera data through
@@ -205,6 +229,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                                 obstacleDistance = 0
                             }
                         }
+                        
+                        self.savingLocation()
                     }
                     self.ready = true
                 })
@@ -224,7 +250,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         popup_alert(self, title: "Memory Warning", message: "received memory warning")
     }
-          
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configureCaptureSession()
+        depthSession.startRunning()
+    }
+    
     /// Handle the view appearing
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -238,11 +270,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             return
         }
         if Check == 0{
-            locationManager = CLLocationManager()
-            locationManager.delegate = self
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.startUpdatingLocation()
+            locationModeOn()
+//            locationManager = CLLocationManager()
+//            locationManager.delegate = self
+//            locationManager.requestWhenInUseAuthorization()
+//            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//            locationManager.startUpdatingLocation()
             Check = 1
         }
         // create an input device from the back camera and handle
@@ -264,6 +297,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             popup_alert(self, title: "Camera Error", message: message)
             return
         }
+//        configureCaptureSession()
+//        depthSession.startRunning()
+        
     }
           
     /// Setup the live preview from the camera
@@ -306,6 +342,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             popup_alert(self, title: "Inference Error", message: message)
             return
         }
+        let image = CIImage(cvPixelBuffer: pixelBuffer)
+        let previewImage = depthMap ?? image
+        
+        let displayImage = UIImage(ciImage: previewImage)
+        
+        DispatchQueue.main.sync { [weak self] in
+            self?.depthPreview.image = displayImage
+        }
+
         // execute the request
         do {
             try VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform([request])
@@ -378,15 +423,28 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        //print("locations = \(locValue.latitude) \(locValue.longitude)")
+    func locationModeOn() {
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
         
-        let findLocation = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
+    }
+    func getCurrentCoordinate() -> CLLocation{
+        let coordinate = locationManager.location?.coordinate
+        let findLocation = CLLocation(latitude: coordinate!.latitude, longitude: coordinate!.longitude)
+        
+        return findLocation
+        
+    }
+    func getCurrentGeolocation(currentCLLocation: CLLocation) -> String {
+        
+        var currentGeoLocation = ""
         let geocoder = CLGeocoder()
         let locale = Locale(identifier: "Ko-kr") //원하는 언어의 나라 코드를 넣어주시면 됩니다.
         
-        geocoder.reverseGeocodeLocation(findLocation, preferredLocale: locale, completionHandler: {(placemarks, error) in
+        geocoder.reverseGeocodeLocation(currentCLLocation, preferredLocale: locale, completionHandler: {(placemarks, error) in
             if let address: [CLPlacemark] = placemarks {
                 if let administrativeArea: String = address.last?.administrativeArea { self.administrativeArea = administrativeArea }
                 if let locality: String = address.last?.locality { self.locality = locality }
@@ -395,7 +453,17 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             }
         })
 
-        CurrentLocation = administrativeArea + " " + locality + " " + thoroughfare
+        currentGeoLocation = administrativeArea + " " + locality + " " + thoroughfare
+        
+        return currentGeoLocation
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        //print("locations = \(locValue.latitude) \(locValue.longitude)")
+        
+        let findLocation = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
+        CurrentLocation = getCurrentGeolocation(currentCLLocation: findLocation)
 
         if Count == 0{
             Count += 1
@@ -404,5 +472,112 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             print(CurrentLocation)
             islocation = false
         }
+    }
+    
+    func savingLocation() {
+        let currentTime = Date().timeIntervalSince1970
+        
+        var formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        var currentDateString = formatter.string(from: Date())
+        
+        if (lastSavedTime == 0 || (currentTime - lastSavedTime) > savingLocationInterval) {
+
+            locationModeOn()
+            
+            var location = CLLocation()
+            var currentGeoLocation = ""
+            
+            //5초 간격으로 현재 위치의 좌표(위도,경도)를 받아온 뒤, 지리 좌표로 변환하여 visitedLocationInfo에 저장
+            location = getCurrentCoordinate()
+            currentGeoLocation = getCurrentGeolocation(currentCLLocation: location)
+            
+            visitedLocationInfo.append(currentDateString + " ==> " + currentGeoLocation)
+            
+            //debugging
+            print(visitedLocationInfo)
+            print("================")
+            
+            lastSavedTime = Date().timeIntervalSince1970
+        }
+    }
+}
+
+extension ViewController {
+    func configureCaptureSession() {
+        guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
+            //.builtInDualWideCamera /builtInWideAngleCamera
+            fatalError("No depth video camera available")
+        }
+
+        depthSession.sessionPreset = .photo
+        
+        do{
+            let cameraInput = try AVCaptureDeviceInput(device: camera)
+            depthSession.addInput(cameraInput)
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+        
+        let videoOutput = AVCaptureVideoDataOutput()
+        videoOutput.setSampleBufferDelegate(self, queue: dataOutputQueue)
+        videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
+        depthSession.addOutput(videoOutput)
+        
+        let videoConnection = videoOutput.connection(with: .video)
+        videoConnection?.videoOrientation = .landscapeRight
+        
+        let depthOutput = AVCaptureDepthDataOutput()
+        depthOutput.setDelegate(self, callbackQueue: dataOutputQueue)
+        depthOutput.isFilteringEnabled = true
+        depthSession.addOutput(depthOutput)
+        
+        let outputRect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let videoRect = videoOutput
+          .outputRectConverted(fromMetadataOutputRect: outputRect)
+        let depthRect = depthOutput
+          .outputRectConverted(fromMetadataOutputRect: outputRect)
+
+        scale =
+          max(videoRect.width, videoRect.height) /
+          max(depthRect.width, depthRect.height)
+
+        do {
+          try camera.lockForConfiguration()
+
+          if let format = camera.activeDepthDataFormat,
+            let range = format.videoSupportedFrameRateRanges.first  {
+            camera.activeVideoMinFrameDuration = range.minFrameDuration
+          }
+
+          camera.unlockForConfiguration()
+        } catch {
+          fatalError(error.localizedDescription)
+        }
+    }
+}
+
+// MARK: -Capture Depth Data Delegate Methods
+extension ViewController: AVCaptureDepthDataOutputDelegate{
+    func depthDataOutput(_ output: AVCaptureDepthDataOutput, didOutput depthData: AVDepthData, timestamp: CMTime, connection: AVCaptureConnection) {
+        
+        var convertedDepth: AVDepthData
+        
+        let depthDataType = kCVPixelFormatType_DisparityFloat32
+        if depthData.depthDataType != depthDataType{
+            convertedDepth = depthData.converting(toDepthDataType: depthDataType)
+        } else {
+            convertedDepth = depthData
+        }
+        
+        let pixelBuffer = convertedDepth.depthDataMap
+        pixelBuffer.clamp()
+        
+        let depthMap = CIImage(cvPixelBuffer: pixelBuffer)
+        
+        DispatchQueue.main.async { [weak self] in
+          self?.depthMap = depthMap
+        }
+        
     }
 }

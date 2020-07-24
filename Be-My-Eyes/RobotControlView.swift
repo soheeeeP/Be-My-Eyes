@@ -12,31 +12,28 @@ import UIKit
 class RobotControlView: UIViewController {
 
     var stop = "stop"
-    var direction: [Int: String] = [0: "forward",
-                                    1: "backward",
-                                    2: "left",
-                                    3: "right"]
+    var direction: [Int: String] = [0: "Go straight.",
+                                    1: "It's blocked. Go back.",
+                                    2: "Move left.",
+                                    3: "Move right."]
     
-    //let mqttClient = CocoaMQTT(clientID: "PiBot", host:"127.0.0.1", port:1883)
+
+    let mqttClient = CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
+
     @IBAction func buttonDown(_ sender: UIButton) {
         print("Sending message: \(direction[sender.tag]!)")
         //mqttClient.publish("robot/move", withString: direction[sender.tag]!)
     }
-    
     @IBAction func buttonUp(_ sender: UIButton) {
         print("Sending message: \(stop)")
         //mqttClient.publish("robot/move", withString: stop)
     }
-    
     @IBAction func connectButtonPressed(_ sender: UIButton) {
         //mqttClient.connect()
     }
-    
-
 }
-
