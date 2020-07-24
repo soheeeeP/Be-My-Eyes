@@ -19,6 +19,7 @@ var visitedLocationInfo : [String] = []
 
 /// A view controller to pass camera inputs through a vision model
 class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate{
+    
     /// a local reference to time to update the framerate
     var time = Date()
     
@@ -454,25 +455,53 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     func savingLocation() {
         let currentTime = Date().timeIntervalSince1970
         
-        var formatter = DateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        var currentDateString = formatter.string(from: Date())
+        let currentDateString = formatter.string(from: Date())
         
         if (lastSavedTime == 0 || (currentTime - lastSavedTime) > savingLocationInterval) {
 
             locationModeOn()
             
-            var location = CLLocation()
-            var currentGeoLocation = ""
-            
+            let locValue = CLLocationCoordinate2D()
+            var coordinate = CLLocation()
+            var location = ""
+
             //5초 간격으로 현재 위치의 좌표(위도,경도)를 받아온 뒤, 지리 좌표로 변환하여 visitedLocationInfo에 저장
-            location = getCurrentCoordinate()
-            currentGeoLocation = getCurrentGeolocation(currentCLLocation: location)
+            coordinate = getCurrentCoordinate() //좌표
+            location = getCurrentGeolocation(currentCLLocation: coordinate) //좌표 변환 location
             
-            visitedLocationInfo.append(currentDateString + " ==> " + currentGeoLocation)
+//            guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+//            let findLocation = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
+//            CurrentLocation = getCurrentGeolocation(currentCLLocation: findLocation)
+
+            let visitedLocationInfo = ["x" : locValue.latitude, "y": locValue.longitude, "location" : String(location)] as [String : Any]
+            
+            let jsonData = try! JSONSerialization.data(withJSONObject: visitedLocationInfo, options: [])
+            //visitedLocationInfo.append(currentDateString + " ==> " + currentGeoLocation)
+            
+            // URL 객체 정의 : 데이터 보낼 서버
+            let url = URL(string: "http://172.20.10.14:3000/") //"http://****/practice/echoJSON"
+            
+            // URLRequest 객체 정의
+            var request = URLRequest(url:url!)
+            request.httpMethod = "POST"
+            
+            // request body에 전송할 json 데이터 저장
+            request.httpBody = jsonData
+            
+            // HTTP 메세지 헤더
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            //request.setValue(String(jsonData.count), forHTTPHeaderField: "Content-Length")
+            
+            // session을 이용해 서버에 데이터 전송
+            let session = URLSession.shared
+            session.dataTask(with: request, completionHandler: {(data, response, error) in
+                print("전송 완료")
+            }).resume()
             
             //debugging
-            print(visitedLocationInfo)
+            print(CurrentLocation)
             print("================")
             
             lastSavedTime = Date().timeIntervalSince1970
