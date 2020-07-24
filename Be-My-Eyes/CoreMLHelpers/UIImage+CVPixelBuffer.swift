@@ -171,3 +171,22 @@ extension UIImage {
     return image
   }
 }
+
+extension UIImage {
+    var noiseReducted: UIImage? {
+        guard let openGLContext = EAGLContext(api: .openGLES2) else { return self }
+        let ciContext = CIContext(eaglContext: openGLContext)
+
+        guard let noiseReduction = CIFilter(name: "CINoiseReduction") else { return self }
+        noiseReduction.setValue(CIImage(image: self), forKey: kCIInputImageKey)
+        noiseReduction.setValue(0.02, forKey: "inputNoiseLevel")
+        noiseReduction.setValue(0.40, forKey: "inputSharpness")
+
+        if let output = noiseReduction.outputImage,
+            let cgImage = ciContext.createCGImage(output, from: output.extent) {
+            return UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
+        }
+
+        return nil
+    }
+}
