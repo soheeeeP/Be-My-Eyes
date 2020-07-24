@@ -74,7 +74,7 @@ class MapkitViewController: UIViewController,  MKMapViewDelegate, CLLocationMana
          
          let audioSession = AVAudioSession.sharedInstance()
          do {
-            try audioSession.setCategory(AVAudioSession.Category.multiRoute)
+            try audioSession.setCategory(AVAudioSession.Category.record)
             try audioSession.setMode(AVAudioSession.Mode.measurement)
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
          } catch {
