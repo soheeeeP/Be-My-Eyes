@@ -89,6 +89,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     }
     var _queue: MTLCommandQueue?
     
+    @IBAction func mapKit(_ sender: Any) {
+        /*let vcName = self.storyboard?.instantiateViewController(withIdentifier: "Mapkit")
+        vcName?.modalTransitionStyle = .coverVertical
+        self.present(vcName!, animated: true, completion: nil)*/
+    }
     @IBAction func asdasd(_ sender: Any) {
         Count = 0
         locationModeOn()
@@ -213,7 +218,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
                         else {
                             if (obstacleFlag && idxAppeared[obstacle_idx] == 0){
                                 idxAppeared[obstacle_idx] = 1
-                                print(obstacle)
+                                //print(obstacle)
                                 if obstacleDistance == 0 {
                                     self.speak("\(obstacle) is in front of you.")
                                 }
@@ -358,6 +363,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     
     // Implement TTS
     func speak(_ string: String) {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(AVAudioSession.Category.playback)
+            try audioSession.setMode(AVAudioSession.Mode.measurement)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("audioSession properties weren't set because of an error.")
+        }
+        
         if islocation == false {
             let utterance = AVSpeechUtterance(string: string)
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
@@ -367,6 +381,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     }
     
     func speak2(_ string: String) {
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(AVAudioSession.Category.playback)
+            try audioSession.setMode(AVAudioSession.Mode.measurement)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("audioSession properties weren't set because of an error.")
+        }
+        
         let utterance = AVSpeechUtterance(string: string)
         utterance.voice = AVSpeechSynthesisVoice(language: "ko-KR")
         utterance.rate = 0.5
@@ -379,7 +402,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         isFacingHorzion = gravity.x <= -0.8 && gravity.x <= 1.0
         if (!isFacingHorzion) {
             // TODO: Make some beep for this
-            speak("Make sure the camera is vertical.")
+            //speak("Make sure the camera is vertical.")
         }
     }
     func handlePrediction() -> Int{

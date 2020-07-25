@@ -23,9 +23,9 @@ class StartViewController: UIViewController{
     //Swipe Right -> Start app
     @IBAction func Swipe2(_ sender: Any) {
         print("Right")
-        let vcName = self.storyboard?.instantiateViewController(withIdentifier: "Show")
+        /*let vcName = self.storyboard?.instantiateViewController(withIdentifier: "Show")
         vcName?.modalTransitionStyle = .coverVertical
-        self.present(vcName!, animated: true, completion: nil)
+        self.present(vcName!, animated: true, completion: nil)*/
         
     }
 
