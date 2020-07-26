@@ -48,6 +48,7 @@ class UserDefineControlView: UIViewController {
         homeLongitude = HomeLongitude.text!
         
         isUser = true
+        Firecount = 0
         print(userID)
         print(userStride)
         print(homeLatitude)
