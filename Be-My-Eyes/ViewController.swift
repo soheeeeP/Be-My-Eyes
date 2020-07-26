@@ -17,6 +17,7 @@ import Firebase
 
 // 사용자의 이동 경로를 저장할 배열
 var visitedLocationInfo : [String] = []
+var Firecount = 0
 
 /// A view controller to pass camera inputs through a vision model
 class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate{
@@ -462,54 +463,24 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
         let currentDateString = formatter.string(from: Date())
         
-        if (lastSavedTime == 0 || (currentTime - lastSavedTime) > savingLocationInterval) {
+        if saveLocation && (lastSavedTime == 0 || (currentTime - lastSavedTime) > savingLocationInterval) {
 
             locationModeOn()
-            
-//            let locValue = CLLocationCoordinate2D()
+
             var coordinate = CLLocation()
             var location = ""
 
-            //5초 간격으로 현재 위치의 좌표(위도,경도)를 받아온 뒤, 지리 좌표로 변환하여 visitedLocationInfo에 저장
+            /// 5초 간격으로 현재 위치의 coordinate 받아온 뒤, 지리 좌표로 변환하여 location에 저장
             coordinate = getCurrentCoordinate() //좌표
             location = getCurrentGeolocation(currentCLLocation: coordinate) //좌표 변환 location
             
-//            guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-//            let findLocation = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
-//            CurrentLocation = getCurrentGeolocation(currentCLLocation: findLocation)
-
-            let userRef = self.ref.child("location")
+            /// Firebase DB location에 정보 저장
+            let userRef = self.ref.child("location\(Firecount)")
             userRef.setValue(["location" : String(location),
                               "x" : coordinate.coordinate.latitude, //String(locValue.latitude),
                               "y": coordinate.coordinate.longitude,
                               "time": currentDateString])
-            
-            
-            ///==========
-//            let visitedLocationInfo = ["x" : locValue.latitude, "y": locValue.longitude, "location" : String(location)] as [String : Any]
-//
-//            let jsonData = try! JSONSerialization.data(withJSONObject: visitedLocationInfo, options: [])
-//            //visitedLocationInfo.append(currentDateString + " ==> " + currentGeoLocation)
-//
-//            // URL 객체 정의 : 데이터 보낼 서버
-//            let url = URL(string: "http://172.20.10.14:3000/") //"http://****/practice/echoJSON"
-//
-//            // URLRequest 객체 정의
-//            var request = URLRequest(url:url!)
-//            request.httpMethod = "POST"
-//
-//            // request body에 전송할 json 데이터 저장
-//            request.httpBody = jsonData
-//
-//            // HTTP 메세지 헤더
-//            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//            //request.setValue(String(jsonData.count), forHTTPHeaderField: "Content-Length")
-//
-//            // session을 이용해 서버에 데이터 전송
-//            let session = URLSession.shared
-//            session.dataTask(with: request, completionHandler: {(data, response, error) in
-//                print("전송 완료")
-//            }).resume()
+            Firecount+=1
             
             //debugging
             print(CurrentLocation)
