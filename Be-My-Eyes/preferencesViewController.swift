@@ -8,6 +8,8 @@
 
 import UIKit
 
+var isAuto = true
+
 class preferencesViewController: UIViewController {
 
     @IBOutlet weak var userName: UITextField!
@@ -19,16 +21,23 @@ class preferencesViewController: UIViewController {
     @IBOutlet weak var addrLongitude: UITextField!
     
     @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var auto: UIButton!
     
-    
-    var isAuto : Bool! = true
+    var state : Bool! = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         designButton()
-        
-        setState()
+        auto.isSelected = true
+        state=setState()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if state == true && resetPreferences == false {
+            saveButton.sendActions(for: .touchUpInside)
+        }
+    }
+
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
@@ -78,31 +87,31 @@ class preferencesViewController: UIViewController {
         userName.text = "user"
     }
     
-    func setState(){
+    func setState() -> Bool {
         let userDefaults = UserDefaults.standard
         
         if let realTime = userDefaults.value(forKey: "realtime"),
-            let stride = userDefaults.value(forKey: "stride"),
-            let latitude = userDefaults.value(forKey: "lat"),
-            let longitude = userDefaults.value(forKey: "long"),
-            let name = userDefaults.value(forKey: "name"){
+            let stride = userDefaults.string(forKey: "stride"),
+            let latitude = userDefaults.string(forKey: "lat"),
+            let longitude = userDefaults.string(forKey: "long"),
+            let name = userDefaults.string(forKey: "name"){
             
+
             // load auto saved info
             RealTimeLocation.isOn = realTime as! Bool
-            userStride.text = stride as? String
-            addrLatitude.text = latitude as? String
-            addrLongitude.text = longitude as? String
-            userName.text = name as? String
+            userStride.text = stride
+            addrLatitude.text = latitude
+            addrLongitude.text = longitude
+            userName.text = name
+            
+            return true
             
         } else {
-            defaultState()
+            //defaultState()
+            
+            print("default mode")
+            return false
         }
-        saveButton.sendActions(for: .touchUpOutside)
-
-//        let webPage = self.storyboard?.instantiateViewController(withIdentifier: "segmentationView")
-//        self.present(webPage!, animated: true, completion: nil)
-    
-//        performSegue(withIdentifier: "seguetoMainView", sender: nil)
     }
     
 

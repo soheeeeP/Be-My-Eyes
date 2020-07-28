@@ -19,6 +19,7 @@ import Speech
 var visitedLocationInfo : [String] = []
 var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
 var mode = ""
+var resetPreferences: Bool! = false
 
 /// A view controller to pass camera inputs through a vision model
 class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, SFSpeechRecognizerDelegate{
@@ -440,6 +441,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
 
         } else {
             //start recording
+            tts.pauseSpeaking(at: .immediate)
             startRecording()
             STTbutton.setTitle("DONE", for: .normal)
         }
@@ -518,7 +520,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         isFacingHorzion = gravity.x <= -0.8 && gravity.x <= 1.0
         if (!isFacingHorzion) {
             // TODO: Make some beep for this
-            //speak("Make sure the camera is vertical.")
+            speak("Make sure the camera is vertical.")
         }
     }
     func handlePrediction() -> Int{
@@ -621,11 +623,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     func switchingView(mode: String) {
         
         //link to mapView
-        if (mode == "navigation" || mode == "길안내") {
+        if (mode == "navigation" || mode == "길 안내") {
             navigationMode.sendActions(for: .touchUpInside)
         }
         //link to userDefinedView
         if (mode == "settings" || mode == "설정") {
+            resetPreferences = true
             UserSettings.sendActions(for: .touchUpInside)
         }
         else{
