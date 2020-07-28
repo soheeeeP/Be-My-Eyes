@@ -13,12 +13,15 @@ import Metal
 import MetalPerformanceShaders
 import CoreMotion
 import CoreLocation
+import Speech
 
 // 사용자의 이동 경로를 저장할 배열
 var visitedLocationInfo : [String] = []
+var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
+var mode = ""
 
 /// A view controller to pass camera inputs through a vision model
-class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate{
+class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, SFSpeechRecognizerDelegate{
     /// a local reference to time to update the framerate
     var time = Date()
     
@@ -36,6 +39,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     
     @IBOutlet weak var depthPreview: UIImageView!
     
+    /// a text which defines execution mode according to the obtained STT
+    @IBOutlet weak var executionMode: UITextField!
+    @IBOutlet weak var STTbutton: UIButton!
+    
+    @IBOutlet weak var UserSettings: UIButton!
+    @IBOutlet weak var navigationMode: UIButton!
+    
+    
     let depthSession = AVCaptureSession()
     let dataOutputQueue = DispatchQueue(label: "video data queue",
                                         qos: .userInitiated,
@@ -51,7 +62,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     var videoPreviewLayer: AVCaptureVideoPreviewLayer!
     
     // Implement TTS
-    private var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
     private var lastPredictionTime: Double = 0.0
     private let PredictionInterval: TimeInterval = 5.0
     
@@ -73,6 +83,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     //Saving Real-Time Location
     private var lastSavedTime: Double = 0.0
     private let savingLocationInterval: TimeInterval = 10.0
+    
+    // Implement STT
+    private let speechRecognizer = SFSpeechRecognizer(locale: Locale.init(identifier: "Ko-kr"))
+    private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    private var recognitionTask: SFSpeechRecognitionTask?
+    
+    private let audioEngine = AVAudioEngine()
     
     /// TODO:
     private var _device: MTLDevice?
@@ -97,12 +114,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     @IBAction func asdasd(_ sender: Any) {
         Count = 0
         locationModeOn()
-        
-//        locationManager = CLLocationManager()
-//        locationManager.delegate = self
-//        locationManager.requestWhenInUseAuthorization()
-//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//        locationManager.startUpdatingLocation()
     }
     var queue: MTLCommandQueue! {
         get {
@@ -253,6 +264,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        speechRecognizer?.delegate = self
+        
         configureCaptureSession()
         depthSession.startRunning()
     }
@@ -271,11 +285,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         }
         if Check == 0{
             locationModeOn()
-//            locationManager = CLLocationManager()
-//            locationManager.delegate = self
-//            locationManager.requestWhenInUseAuthorization()
-//            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//            locationManager.startUpdatingLocation()
             Check = 1
         }
         // create an input device from the back camera and handle
@@ -363,32 +372,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     
     // Implement TTS
     func speak(_ string: String) {
-        let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setCategory(AVAudioSession.Category.playback)
-            try audioSession.setMode(AVAudioSession.Mode.measurement)
-            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch {
-            print("audioSession properties weren't set because of an error.")
-        }
+        setAudioSessionForTTS()
         
         if islocation == false {
             let utterance = AVSpeechUtterance(string: string)
             utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
             utterance.rate = 0.5
-            tts.speak(utterance)
+            
+            StopandResumingTTS(utterance: utterance)
         }
     }
     
     func speak2(_ string: String) {
-        let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setCategory(AVAudioSession.Category.playback)
-            try audioSession.setMode(AVAudioSession.Mode.measurement)
-            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch {
-            print("audioSession properties weren't set because of an error.")
-        }
+        setAudioSessionForTTS()
         
         let utterance = AVSpeechUtterance(string: string)
         utterance.voice = AVSpeechSynthesisVoice(language: "ko-KR")
@@ -397,6 +393,126 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         islocation = false
     }
     
+    func StopandResumingTTS(utterance: AVSpeechUtterance){
+        if mapOn == true {
+            tts.stopSpeaking(at: .word)
+        } else{
+            tts.speak(utterance)
+        }
+    }
+    
+    func setAudioSessionForTTS() {
+        let audioSession = AVAudioSession.sharedInstance()
+        do{
+            try audioSession.setCategory(AVAudioSession.Category.playback)
+            try audioSession.setMode(AVAudioSession.Mode.default)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("audio session error")
+        }
+    }
+    
+    func setAudioSessionForSTT(){
+        let audioSession = AVAudioSession.sharedInstance()
+        do{
+            try audioSession.setCategory(AVAudioSession.Category.record)
+            try audioSession.setMode(AVAudioSession.Mode.measurement)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("audio session error")
+        }
+    }
+    
+    @IBAction func speechToText(_ sender: Any) {
+        //stop audioEngine and recognition tasks if the voice recognition is in progress
+        if audioEngine.isRunning {
+            audioEngine.stop()
+            recognitionRequest?.endAudio()
+            
+            STTbutton.isEnabled = false
+            STTbutton.setTitle("SPEAK",for: .normal)
+            
+            //debugging
+            print(mode)
+            //switching the execution mode according to the voice recognition input
+            switchingView(mode: mode)
+            
+
+        } else {
+            //start recording
+            startRecording()
+            STTbutton.setTitle("DONE", for: .normal)
+        }
+    }
+    
+    func startRecording() {
+        if recognitionTask != nil {
+            recognitionTask?.cancel()
+            recognitionTask = nil
+        }
+        
+        //create AVAudioSession for recording
+        setAudioSessionForSTT()
+
+        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+        
+        //check whether the device can operate voice recognition or not
+        let inputNode = audioEngine.inputNode
+        
+        guard let recognitionRequest = recognitionRequest else {
+            fatalError("Unable to create an SFSpeechAudioBufferRecognitionRequest object")
+        }
+        //report partial recognition result
+        recognitionRequest.shouldReportPartialResults = true
+        
+        //start audio recognition
+        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest, resultHandler: { (result, error) in
+            
+            var isFinal = false
+            //인식 결과가 nil이 아니면, textview의 속성을 최상의 텍스트로 설정
+            if result != nil{
+                self.executionMode.text = result?.bestTranscription.formattedString
+                mode = self.executionMode.text!
+                isFinal = (result?.isFinal)!
+            }
+            //오류가 없거나, 최종 결과가 나오면 audioEngine과 인식 작업을 중지
+            //녹음 버튼 활성화
+            if error != nil || isFinal {
+                self.audioEngine.stop()
+                
+                inputNode.removeTap(onBus: 0)
+                
+                self.recognitionRequest = nil
+                self.recognitionTask = nil
+                self.STTbutton.isEnabled = true
+            }
+        })
+        
+        //recognitionRequest에 오디오 입력 추가
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat){ (buffer, when) in
+            self.recognitionRequest?.append(buffer)
+        }
+        
+        audioEngine.prepare()
+        
+        do{
+            try audioEngine.start()
+        } catch {
+            print("audio engine start error")
+        }
+        
+        executionMode.text = " "
+    }
+    
+    func speechRecognizer(_ speechRecognizer: SFSpeechRecognizer, availabilityDidChange available: Bool) {
+        if available {
+            STTbutton.isEnabled = true
+        } else {
+            STTbutton.isEnabled = false
+        }
+    }
+
     // Check camera horizon
     func handleGravity(_ gravity: CMAcceleration) {
         isFacingHorzion = gravity.x <= -0.8 && gravity.x <= 1.0
@@ -477,9 +593,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     func savingLocation() {
         let currentTime = Date().timeIntervalSince1970
         
-        var formatter = DateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        var currentDateString = formatter.string(from: Date())
+        let currentDateString = formatter.string(from: Date())
         
         if (lastSavedTime == 0 || (currentTime - lastSavedTime) > savingLocationInterval) {
 
@@ -501,12 +617,26 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             lastSavedTime = Date().timeIntervalSince1970
         }
     }
+    
+    func switchingView(mode: String) {
+        
+        //link to mapView
+        if (mode == "navigation" || mode == "길안내") {
+            navigationMode.sendActions(for: .touchUpInside)
+        }
+        //link to userDefinedView
+        if (mode == "settings" || mode == "설정") {
+            UserSettings.sendActions(for: .touchUpInside)
+        }
+        else{
+            self.speak("잘못된 입력입니다. 원하시는 메뉴를 다시 말씀해주세요")
+        }
+    }
 }
 
 extension ViewController {
     func configureCaptureSession() {
-        guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
-            //.builtInDualWideCamera /builtInWideAngleCamera
+        guard let camera = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) else {
             fatalError("No depth video camera available")
         }
 
@@ -581,3 +711,4 @@ extension ViewController: AVCaptureDepthDataOutputDelegate{
         
     }
 }
+
