@@ -20,15 +20,11 @@ class StartViewController: UIViewController{
         UIControl().sendAction(#selector(URLSessionTask.suspend), to: UIApplication.shared, for: nil)
     }
     
-    //Swipe Right -> Start app
-    @IBAction func Swipe2(_ sender: Any) {
-        print("Right")
-        /*let vcName = self.storyboard?.instantiateViewController(withIdentifier: "Show")
-        vcName?.modalTransitionStyle = .coverVertical
-        self.present(vcName!, animated: true, completion: nil)*/
-        
+    // Swipt Right and start app
+    @IBAction func swipeToPreferences(_ sender: Any) {
+        print("Preferences View Controller")
     }
-
+    
  
     override func viewDidLoad() {
         super.viewDidLoad()
