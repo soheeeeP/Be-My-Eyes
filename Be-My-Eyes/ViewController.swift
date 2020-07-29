@@ -413,12 +413,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             //debugging
             print(mode)
             //switching the execution mode according to the voice recognition input
-            if mode == "길 안내" {
-                navigationMode.sendActions(for: .touchUpInside)
-            }
-            if mode == "설정" {
-                userSettings.sendActions(for: .touchUpInside)
-            }
+            switchingView(mode: mode)
 
         } else {
             //start recognition tasks
@@ -647,6 +642,22 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             print("================")
             
             lastSavedTime = Date().timeIntervalSince1970
+        }
+    }
+    func switchingView(mode: String) {
+            
+        switch mode {
+            case "길 안내":        //link to MapView
+                navigationMode.sendActions(for: .touchUpInside)
+            case "설정":          //link to preferenceView
+    //          resetPreferences = true
+                userSettings.sendActions(for: .touchUpInside)
+            case "로봇":          //link to robotView
+                robotController.sendActions(for: .touchUpInside)
+            case "종료":
+                UIControl().sendAction(#selector(URLSessionTask.suspend), to: UIApplication.shared, for: nil)
+            default:
+                speak("Please tell me the Right Menu.")
         }
     }
 }
