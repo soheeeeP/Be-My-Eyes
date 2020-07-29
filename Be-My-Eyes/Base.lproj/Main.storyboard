@@ -31,7 +31,7 @@
                         <viewLayoutGuide key="safeArea" id="VfK-dR-hhQ"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="bV0-IS-1oX" appends="YES" id="YXq-dq-uee"/>
-                            <outletCollection property="gestureRecognizers" destination="hvv-r7-RCe" appends="YES" id="rc8-0p-9fN"/>
+                            <outletCollection property="gestureRecognizers" destination="cKg-iE-TPM" appends="YES" id="w3K-rR-QYH"/>
                         </connections>
                     </view>
                 </viewController>
@@ -41,19 +41,19 @@
                         <action selector="Swipe:" destination="5ok-ST-3X4" id="rwE-aO-qet"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="right" id="hvv-r7-RCe">
+                <swipeGestureRecognizer direction="right" id="cKg-iE-TPM">
                     <connections>
-                        <action selector="Swipe2:" destination="5ok-ST-3X4" id="HbW-bV-2w4"/>
-                        <segue destination="muv-iN-7Kq" kind="show" id="aUE-uD-sNK"/>
+                        <action selector="swipeToPreferences:" destination="5ok-ST-3X4" id="uch-US-3UX"/>
+                        <segue destination="ttJ-Uq-pA0" kind="show" id="k9O-f8-j8F"/>
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-2525" y="-445"/>
+            <point key="canvasLocation" x="-2553" y="-1413"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="xH9-bj-AVy">
             <objects>
-                <viewController storyboardIdentifier="Show" useStoryboardIdentifierAsRestorationIdentifier="YES" id="muv-iN-7Kq" customClass="ViewController" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="muv-iN-7Kq" customClass="ViewController" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8ML-f3-CRY">
                         <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -197,7 +197,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1879.610194902549" y="-447.19999999999999"/>
+            <point key="canvasLocation" x="-1903" y="-484"/>
         </scene>
         <!--Mapkit View Controller-->
         <scene sceneID="a0V-ca-Srf">
@@ -415,7 +415,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f0P-Cr-2SM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="ML2-gl-hO9" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2203" y="510"/>
+            <point key="canvasLocation" x="-1519" y="425"/>
         </scene>
         <!--Map Container View-->
         <scene sceneID="kfZ-ly-lCm">
@@ -544,7 +544,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gG6-kK-Wdx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="DkT-aM-n6p" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1557" y="510"/>
+            <point key="canvasLocation" x="-2406" y="425"/>
         </scene>
         <!--Depth View Controller-->
         <scene sceneID="qfg-ue-7CF">
@@ -588,7 +588,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zne-lO-ZC8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="t5g-sV-0lg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1037" y="-448"/>
+            <point key="canvasLocation" x="-1013" y="-484"/>
         </scene>
         <!--Title-->
         <scene sceneID="mnW-8i-dTc">
@@ -721,9 +721,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UT2-yr-X27" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1166.5178571428571" y="-1278.2608695652175"/>
+            <point key="canvasLocation" x="-1201" y="-1412"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="eza-N4-YCJ"/>
+    </inferredMetricsTieBreakers>
     <color key="tintColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
     <resources>
         <image name="checkmark.square" catalog="system" width="128" height="114"/>

@@ -49,7 +49,7 @@ class UserDefineControlView: UIViewController, UINavigationControllerDelegate, U
         UserStride.becomeFirstResponder()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         if state == true && resetPreferences == false {
             UIApplication.shared.sendAction(saveButton
                 .action!, to: saveButton.target, from: self, for: nil)
@@ -70,13 +70,11 @@ class UserDefineControlView: UIViewController, UINavigationControllerDelegate, U
     }
     /// Go back to Main view without saving the preferences info
     @IBAction func cancel(_ sender: UIStoryboardSegue) {
-        print("cancel")
         self.dismiss(animated: true, completion: nil)
     }
 
     /// Save the Preferences and Go back to Main View
     @IBAction func done(_ sender: UIStoryboardSegue) {
-        print("go back!!!!!!! ")
         let userDefaults = UserDefaults.standard
                 
         //if autoSave mode is on, save the preferences info
@@ -99,8 +97,12 @@ class UserDefineControlView: UIViewController, UINavigationControllerDelegate, U
         isUser = true
         Firecount = 0
         
-        self.dismiss(animated: true, completion: nil)
-        
+//        self.dismiss(animated: true, completion: nil)
+        guard let uvc = self.storyboard?.instantiateViewController(withIdentifier: "MainView") else {
+            return
+        }
+        uvc.modalTransitionStyle = UIModalTransitionStyle.coverVertical
+        self.present(uvc, animated: true)
     }
     
     
