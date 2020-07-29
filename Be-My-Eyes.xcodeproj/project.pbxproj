@@ -19,24 +19,24 @@
 		09DC0B562175B4090044D811 /* Probs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DC0B552175B4090044D811 /* Probs.swift */; };
 		09DC0B592175B5690044D811 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DC0B582175B5690044D811 /* Popup.swift */; };
 
+		401DD10124D1299300D7E4F6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E84E11FA2488E0D200B7AFE0 /* CoreLocation.framework */; };
+		401DD10324D1299400D7E4F6 /* Pods_Be_My_Eyes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D37EAB4A6D6287B5F0652C4A /* Pods_Be_My_Eyes.framework */; };
+		404CEC8F24CAD451009A0B1B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 404CEC8E24CAD451009A0B1B /* GoogleService-Info.plist */; };
+
+
 		4047C08924BF034A00A7069F /* MapkitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4047C08824BF034A00A7069F /* MapkitViewController.swift */; };
 
 		401D5D9024BC0E6000319066 /* DeepLabV3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 401D5D8D24BC0E6000319066 /* DeepLabV3.mlmodel */; };
 		401D5D9224BC0E6000319066 /* DeepLabV3FP16.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 401D5D8F24BC0E6000319066 /* DeepLabV3FP16.mlmodel */; };
+
 
 		40576AB624B1F4770046EBF4 /* mapContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40576AB524B1F4770046EBF4 /* mapContainerView.swift */; };
 		40576AB924B1F6280046EBF4 /* TMapSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40576AB724B1F5800046EBF4 /* TMapSDK.framework */; };
 		40576ABA24B1F6280046EBF4 /* TMapSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40576AB724B1F5800046EBF4 /* TMapSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		40A3DD7824B4B542006FAB1C /* RobotControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A3DD7724B4B542006FAB1C /* RobotControlView.swift */; };
 		40D0DDB124C1646200BA974C /* CVPixelBufferExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DDB024C1646200BA974C /* CVPixelBufferExtension.swift */; };
-		40D0DDB324C1A93F00BA974C /* deeplab_yoon.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DDB224C1A93F00BA974C /* deeplab_yoon.mlmodel */; };
-		40D0DDB524C561A000BA974C /* deeplab_yoon2.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DDB424C561A000BA974C /* deeplab_yoon2.mlmodel */; };
-		40D0DDB924C56F6300BA974C /* deeplab_dm05_float32.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DDB724C56F6300BA974C /* deeplab_dm05_float32.mlmodel */; };
-		40F1D5A624C9443C002945A9 /* espnetv2_pascal_256.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D5A524C9443C002945A9 /* espnetv2_pascal_256.mlmodel */; };
 		40F1D5A824C9770E002945A9 /* UserDefineControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D5A724C9770E002945A9 /* UserDefineControlView.swift */; };
 		E8223AAF247C152100755C43 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8223AAE247C152100755C43 /* StartViewController.swift */; };
-		E84E11FB2488E0D200B7AFE0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E84E11FA2488E0D200B7AFE0 /* CoreLocation.framework */; };
-		EC5DE2A224B49AE6C22F1390 /* Pods_Be_My_Eyes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D37EAB4A6D6287B5F0652C4A /* Pods_Be_My_Eyes.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -68,6 +68,11 @@
 		09DC0B552175B4090044D811 /* Probs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Probs.swift; sourceTree = "<group>"; };
 		09DC0B582175B5690044D811 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 
+		401DD10524D12A1100D7E4F6 /* CocoaMQTT.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CocoaMQTT.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		401DD10824D12B0D00D7E4F6 /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = CocoaAsyncSocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		404CEC8E24CAD451009A0B1B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+
+
 		4047C08824BF034A00A7069F /* MapkitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapkitViewController.swift; sourceTree = "<group>"; };
 
 		401D5D8D24BC0E6000319066 /* DeepLabV3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = DeepLabV3.mlmodel; sourceTree = "<group>"; };
@@ -77,10 +82,6 @@
 		40576AB724B1F5800046EBF4 /* TMapSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TMapSDK.framework; path = "Be-My-Eyes/TMapSDK.framework"; sourceTree = "<group>"; };
 		40A3DD7724B4B542006FAB1C /* RobotControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotControlView.swift; sourceTree = "<group>"; };
 		40D0DDB024C1646200BA974C /* CVPixelBufferExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVPixelBufferExtension.swift; sourceTree = "<group>"; };
-		40D0DDB224C1A93F00BA974C /* deeplab_yoon.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = deeplab_yoon.mlmodel; sourceTree = "<group>"; };
-		40D0DDB424C561A000BA974C /* deeplab_yoon2.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = deeplab_yoon2.mlmodel; sourceTree = "<group>"; };
-		40D0DDB724C56F6300BA974C /* deeplab_dm05_float32.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = deeplab_dm05_float32.mlmodel; sourceTree = "<group>"; };
-		40F1D5A524C9443C002945A9 /* espnetv2_pascal_256.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = espnetv2_pascal_256.mlmodel; sourceTree = "<group>"; };
 		40F1D5A724C9770E002945A9 /* UserDefineControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefineControlView.swift; sourceTree = "<group>"; };
 		7FDE922ADB7604E1008AFA8B /* Pods-Be-My-Eyes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Be-My-Eyes.release.xcconfig"; path = "Target Support Files/Pods-Be-My-Eyes/Pods-Be-My-Eyes.release.xcconfig"; sourceTree = "<group>"; };
 		D37EAB4A6D6287B5F0652C4A /* Pods_Be_My_Eyes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Be_My_Eyes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,9 +95,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E84E11FB2488E0D200B7AFE0 /* CoreLocation.framework in Frameworks */,
+				401DD10124D1299300D7E4F6 /* CoreLocation.framework in Frameworks */,
+				401DD10324D1299400D7E4F6 /* Pods_Be_My_Eyes.framework in Frameworks */,
 				40576AB924B1F6280046EBF4 /* TMapSDK.framework in Frameworks */,
-				EC5DE2A224B49AE6C22F1390 /* Pods_Be_My_Eyes.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,14 +131,18 @@
 				0945E3BB21755EF500B2AB60 /* Models */,
 				0945E3A921755E6300B2AB60 /* AppDelegate.swift */,
 				0945E3AB21755E6300B2AB60 /* ViewController.swift */,
+
 				4047C08824BF034A00A7069F /* MapkitViewController.swift */,
 				E8223AAE247C152100755C43 /* StartViewController.swift */,
+
 				40576AB524B1F4770046EBF4 /* mapContainerView.swift */,
+				E8223AAE247C152100755C43 /* StartViewController.swift */,
 				40A3DD7724B4B542006FAB1C /* RobotControlView.swift */,
 				40F1D5A724C9770E002945A9 /* UserDefineControlView.swift */,
 				0945E3AD21755E6300B2AB60 /* Main.storyboard */,
 				0945E3B021755E6400B2AB60 /* Assets.xcassets */,
 				0945E3B221755E6400B2AB60 /* LaunchScreen.storyboard */,
+				404CEC8E24CAD451009A0B1B /* GoogleService-Info.plist */,
 				0945E3B521755E6400B2AB60 /* Info.plist */,
 			);
 			path = "Be-My-Eyes";
@@ -146,12 +151,6 @@
 		0945E3BB21755EF500B2AB60 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				40F1D5A524C9443C002945A9 /* espnetv2_pascal_256.mlmodel */,
-				40D0DDB724C56F6300BA974C /* deeplab_dm05_float32.mlmodel */,
-				40D0DDB424C561A000BA974C /* deeplab_yoon2.mlmodel */,
-				40D0DDB224C1A93F00BA974C /* deeplab_yoon.mlmodel */,
-				401D5D8D24BC0E6000319066 /* DeepLabV3.mlmodel */,
-				401D5D8F24BC0E6000319066 /* DeepLabV3FP16.mlmodel */,
 				09A102042176932300220459 /* Tiramisu45.mlmodel */,
 			);
 			path = Models;
@@ -196,6 +195,8 @@
 		E84E11F92488E0D200B7AFE0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				401DD10824D12B0D00D7E4F6 /* CocoaAsyncSocket.framework */,
+				401DD10524D12A1100D7E4F6 /* CocoaMQTT.framework */,
 				40576AB724B1F5800046EBF4 /* TMapSDK.framework */,
 				E84E11FA2488E0D200B7AFE0 /* CoreLocation.framework */,
 				D37EAB4A6D6287B5F0652C4A /* Pods_Be_My_Eyes.framework */,
@@ -215,6 +216,9 @@
 				0945E3A321755E6300B2AB60 /* Frameworks */,
 				0945E3A421755E6300B2AB60 /* Resources */,
 				40576ABB24B1F6280046EBF4 /* Embed Frameworks */,
+
+				0FDAEA7EA16299C1E686FBA8 /* [CP] Embed Pods Frameworks */,
+
 			);
 			buildRules = (
 			);
@@ -265,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0945E3B421755E6400B2AB60 /* LaunchScreen.storyboard in Resources */,
+				404CEC8F24CAD451009A0B1B /* GoogleService-Info.plist in Resources */,
 				0945E3B121755E6400B2AB60 /* Assets.xcassets in Resources */,
 				0945E3AF21755E6300B2AB60 /* Main.storyboard in Resources */,
 			);
@@ -273,6 +278,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+
+		0FDAEA7EA16299C1E686FBA8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Be-My-Eyes/Pods-Be-My-Eyes-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Be-My-Eyes/Pods-Be-My-Eyes-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Be-My-Eyes/Pods-Be-My-Eyes-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+
 		CD77783AC5D50242E1B0F74F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -305,24 +329,21 @@
 				0945E3AC21755E6300B2AB60 /* ViewController.swift in Sources */,
 				40A3DD7824B4B542006FAB1C /* RobotControlView.swift in Sources */,
 				09A102052176932300220459 /* Tiramisu45.mlmodel in Sources */,
-				401D5D9024BC0E6000319066 /* DeepLabV3.mlmodel in Sources */,
 				0945E4182175811C00B2AB60 /* UIImage+CVPixelBuffer.swift in Sources */,
-				40F1D5A624C9443C002945A9 /* espnetv2_pascal_256.mlmodel in Sources */,
-				401D5D9224BC0E6000319066 /* DeepLabV3FP16.mlmodel in Sources */,
 				40576AB624B1F4770046EBF4 /* mapContainerView.swift in Sources */,
 				09DC0B592175B5690044D811 /* Popup.swift in Sources */,
 
 				4047C08924BF034A00A7069F /* MapkitViewController.swift in Sources */,
 
 				40D0DDB124C1646200BA974C /* CVPixelBufferExtension.swift in Sources */,
+
 				40D0DDB524C561A000BA974C /* deeplab_yoon2.mlmodel in Sources */,
 
+
 				0945E41B2175811C00B2AB60 /* MultiArray.swift in Sources */,
-				40D0DDB924C56F6300BA974C /* deeplab_dm05_float32.mlmodel in Sources */,
 				40F1D5A824C9770E002945A9 /* UserDefineControlView.swift in Sources */,
 				E8223AAF247C152100755C43 /* StartViewController.swift in Sources */,
 				09DC0B562175B4090044D811 /* Probs.swift in Sources */,
-				40D0DDB324C1A93F00BA974C /* deeplab_yoon.mlmodel in Sources */,
 				0945E3AA21755E6300B2AB60 /* AppDelegate.swift in Sources */,
 				0945E4172175811C00B2AB60 /* Math.swift in Sources */,
 			);

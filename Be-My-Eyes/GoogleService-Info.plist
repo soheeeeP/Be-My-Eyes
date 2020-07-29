@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>146087600144-3nfvjuhh6vca9geqj762t4sa27jgat1n.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.146087600144-3nfvjuhh6vca9geqj762t4sa27jgat1n</string>
+	<key>API_KEY</key>
+	<string>AIzaSyB5cGrZkm1853UiwKuuD1LsuXTihT2_YDg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>146087600144</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>bangyoon.BME</string>
+	<key>PROJECT_ID</key>
+	<string>server-bme</string>
+	<key>STORAGE_BUCKET</key>
+	<string>server-bme.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:146087600144:ios:290c4bc11d38e0f80a6a95</string>
+	<key>DATABASE_URL</key>
+	<string>https://server-bme.firebaseio.com</string>
+</dict>
+</plist>

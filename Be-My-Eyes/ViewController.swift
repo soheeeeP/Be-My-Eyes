@@ -13,9 +13,11 @@ import Metal
 import MetalPerformanceShaders
 import CoreMotion
 import CoreLocation
+import Firebase
 
 // 사용자의 이동 경로를 저장할 배열
 var visitedLocationInfo : [String] = []
+var Firecount = 0
 
 /// A view controller to pass camera inputs through a vision model
 class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate{
@@ -465,7 +467,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         let findLocation = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
         CurrentLocation = getCurrentGeolocation(currentCLLocation: findLocation)
 
-        if Count == 0{
+        if Count == 0 {
             Count += 1
             islocation = true
             speak2(CurrentLocation)
@@ -474,28 +476,37 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         }
     }
     
+    /// 내 Firebase DB 주소 저장
+    var ref : DatabaseReference! = Database.database().reference()
+    
     func savingLocation() {
         let currentTime = Date().timeIntervalSince1970
         
-        var formatter = DateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        var currentDateString = formatter.string(from: Date())
+        let currentDateString = formatter.string(from: Date())
         
-        if (lastSavedTime == 0 || (currentTime - lastSavedTime) > savingLocationInterval) {
+        if saveLocation && (lastSavedTime == 0 || (currentTime - lastSavedTime) > savingLocationInterval) {
 
             locationModeOn()
+
+            var coordinate = CLLocation()
+            var location = ""
+
+            /// 5초 간격으로 현재 위치의 coordinate 받아온 뒤, 지리 좌표로 변환하여 location에 저장
+            coordinate = getCurrentCoordinate() //좌표
+            location = getCurrentGeolocation(currentCLLocation: coordinate) //좌표 변환 location
             
-            var location = CLLocation()
-            var currentGeoLocation = ""
-            
-            //5초 간격으로 현재 위치의 좌표(위도,경도)를 받아온 뒤, 지리 좌표로 변환하여 visitedLocationInfo에 저장
-            location = getCurrentCoordinate()
-            currentGeoLocation = getCurrentGeolocation(currentCLLocation: location)
-            
-            visitedLocationInfo.append(currentDateString + " ==> " + currentGeoLocation)
+            /// Firebase DB location에 정보 저장
+            let userRef = self.ref.child("\(userID)_\(Firecount)")
+            userRef.setValue(["location" : String(location),
+                              "x" : coordinate.coordinate.latitude, //String(locValue.latitude),
+                              "y": coordinate.coordinate.longitude,
+                              "time": currentDateString])
+            Firecount+=1
             
             //debugging
-            print(visitedLocationInfo)
+            print(CurrentLocation)
             print("================")
             
             lastSavedTime = Date().timeIntervalSince1970
