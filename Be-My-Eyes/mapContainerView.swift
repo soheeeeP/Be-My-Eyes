@@ -54,7 +54,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        GetDirectionTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(Move), userInfo: nil, repeats: true)
+        GetDirectionTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(Move), userInfo: nil, repeats: true)
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -85,9 +85,9 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     // get direoction
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        
+
         if flag == true{
-            //self.currentLocation = locValue
+            self.currentLocation = locValue
             if index == count {
                 self.GetDirectionTimer!.invalidate()
                 flag = false
@@ -95,14 +95,18 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                 output2.text = ""
             }
             else{
-                self.currentLocation = self.path[index]
+                //self.currentLocation = self.path[index]
                 output1.text = "현재위치" + "  \(currentLocation.latitude)" + "   " + "\(currentLocation.longitude)"
                 output2.text = "가야할곳" + "  \(path[index].latitude)" + "   " + "\(path[index].longitude)"
-                if fabs(currentLocation.latitude - self.path[index].latitude) < 0.0000005 && fabs(currentLocation.longitude - self.path[index].longitude) < 0.0000005 {
+                if fabs(currentLocation.latitude - self.path[index].latitude) < 0.00005 && fabs(currentLocation.longitude - self.path[index].longitude) < 0.00005 {
                     index += 1
                     
                     if index != count{
-                        if currentLocation.latitude - self.path[index].latitude > 0 && currentLocation.longitude - self.path[index].longitude > 0 {
+                        if fabs(currentLocation.latitude - self.path[index].latitude) < 0.00001 || fabs(currentLocation.longitude - self.path[index].longitude) < 0.00001 {
+                            output3.text = "up \(index) \(directionIndex)"
+                            print("up \(index) \(directionIndex)")
+                        }
+                        else if currentLocation.latitude - self.path[index].latitude > 0 && currentLocation.longitude - self.path[index].longitude > 0 {
                             output3.text = directionCode[directionIndex][0] + " \(index) " + "\(directionIndex)"
                             print("\(directionCode[directionIndex][0])" + " \(index) " + "\(directionIndex)")
                             directionIndex = 0
@@ -150,6 +154,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     
     // Go back
     @IBAction func GoBack(_ sender: Any) {
+        self.GetDirectionTimer!.invalidate()
         dismiss(animated: true, completion: nil)
     }
 

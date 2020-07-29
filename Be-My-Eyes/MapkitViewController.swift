@@ -173,8 +173,8 @@ class MapkitViewController: UIViewController,  MKMapViewDelegate, CLLocationMana
         routeMap.delegate = self
         //routeMap.userTrackingMode = .follow
         routeMap.showsUserLocation = true
-        distanceTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MapkitViewController.distanceCheck), userInfo: nil, repeats: true)
-        directionTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(MapkitViewController.getDirections), userInfo: nil, repeats: true)
+        distanceTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(MapkitViewController.distanceCheck), userInfo: nil, repeats: true)
+        directionTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(MapkitViewController.getDirections), userInfo: nil, repeats: true)
         
         speechRecognizer?.delegate = self
     }
