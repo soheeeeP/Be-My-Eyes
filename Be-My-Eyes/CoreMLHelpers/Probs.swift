@@ -131,7 +131,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장 (위를 0으로 계산)
                 CurFrame.obstacle[i] = Int(codes[0,height-1-h,ww*i])
                 CurFrame.height[i] = height-1-h
-                print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
+                //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
                 break
             }
         }
@@ -263,6 +263,7 @@ func FindObstacle(code: Int) -> String {
     return obstacle
 }
 
+/// Calibration
 func DistObstacle(height: Int, stride: Int) -> Int { // (10 - PrevFrame.height[i] / 35) * 2
     var foot = 0
     //stride = 35 시각장애인 평균 보폭
@@ -299,11 +300,3 @@ func MQTTconnect() {
         mqttflag = true
     }
 }
-
-//func MQTTclient() {
-//    if con_count == 20 {
-//        print("count = 20 ")
-//        mqttClient.publish("robot/move", withString:"test")
-//        con_count = 0
-//    }
-//}

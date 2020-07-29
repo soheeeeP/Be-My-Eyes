@@ -444,7 +444,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         let findLocation = CLLocation(latitude: locValue.latitude, longitude: locValue.longitude)
         CurrentLocation = getCurrentGeolocation(currentCLLocation: findLocation)
 
-        if Count == 0{
+        if Count == 0 {
             Count += 1
             islocation = true
             speak2(CurrentLocation)

@@ -34,11 +34,13 @@ class UserDefineControlView: UIViewController {
         UserStride.becomeFirstResponder()
     }
     
+    /// Go back to Main View
     @IBAction func cancel() {
         print("Contents of the text field: \(UserStride.text!)")
         navigationController?.popViewController(animated: true)
     }
     
+    /// Save inputs
     @IBAction func done() {
         print("Contents of the text field: \(UserStride.text!)")
         navigationController?.popViewController(animated: true)
@@ -57,9 +59,7 @@ class UserDefineControlView: UIViewController {
     
     /// 사용자가 위치 추적 여부를 선택
     @IBAction func actionTriggered(_ sender: Any) {
-        let onState = SaveLocation.isOn
-        
-        if onState {
+        if SaveLocation.isOn {
             saveLocation = true
             print("Save Location O")
         }
