@@ -3,7 +3,7 @@
 //  Be-My-Eyes
 //
 //  Created by 박소희 on 2020/07/28.
-//  Copyright © 2020 Kautenja. All rights reserved.
+//  Copyright © 2020 Be-My-Eyes. All rights reserved.
 //
 
 import UIKit

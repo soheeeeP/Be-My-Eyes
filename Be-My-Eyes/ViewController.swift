@@ -46,7 +46,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     
     @IBOutlet weak var UserSettings: UIButton!
     @IBOutlet weak var navigationMode: UIButton!
-    
+    @IBOutlet weak var robotController: UIButton!
     
     let depthSession = AVCaptureSession()
     let dataOutputQueue = DispatchQueue(label: "video data queue",
@@ -396,7 +396,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     
     func StopandResumingTTS(utterance: AVSpeechUtterance){
         if mapOn == true {
-            tts.stopSpeaking(at: .word)
+            tts.stopSpeaking(at: .immediate)
         } else{
             tts.speak(utterance)
         }
@@ -437,6 +437,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             print(mode)
             //switching the execution mode according to the voice recognition input
             switchingView(mode: mode)
+            tts.continueSpeaking()
             
 
         } else {
@@ -622,17 +623,18 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     
     func switchingView(mode: String) {
         
-        //link to mapView
-        if (mode == "navigation" || mode == "길 안내") {
-            navigationMode.sendActions(for: .touchUpInside)
-        }
-        //link to userDefinedView
-        if (mode == "settings" || mode == "설정") {
-            resetPreferences = true
-            UserSettings.sendActions(for: .touchUpInside)
-        }
-        else{
-            self.speak("잘못된 입력입니다. 원하시는 메뉴를 다시 말씀해주세요")
+        switch mode {
+            case "길 안내":        //link to MapView
+                navigationMode.sendActions(for: .touchUpInside)
+            case "설정":          //link to preferenceView
+                resetPreferences = true
+                UserSettings.sendActions(for: .touchUpInside)
+            case "로봇":          //link to robotView
+                robotController.sendActions(for: .touchUpInside)
+            case "종료":
+                UIControl().sendAction(#selector(URLSessionTask.suspend), to: UIApplication.shared, for: nil)
+            default:
+                speak("Please tell me the Right Menu.")
         }
     }
 }
