@@ -32,14 +32,25 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
 
     // 추가
     var matchingItems: [MKMapItem] = [MKMapItem]()
-    var startLocation: CLLocationCoordinate2D!
+    var startPointLocation: CLLocationCoordinate2D!
+    var endPointLocation: CLLocationCoordinate2D!
+    var currentLocation: CLLocationCoordinate2D!
     var locationManager: CLLocationManager!
+    var start: CLLocationCoordinate2D!
     var path: [CLLocationCoordinate2D]!
     var count = 0
+    var GetDirectionTimer: Timer?
+    var flag = false
+    var index = 0
+    var flag2 = false
+    @IBOutlet weak var output1: UITextField!
+    @IBOutlet weak var output2: UITextField!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        GetDirectionTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(Move), userInfo: nil, repeats: true)
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -56,10 +67,43 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
         self.initTableViewData()
     }
 
+    // Move
+    @objc func Move(){
+        if flag == true {
+            locationManager = CLLocationManager()
+            locationManager.delegate = self
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
     // get direoction
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        self.startLocation = locValue
+        
+        if flag == true{
+            self.currentLocation = locValue
+            if index == count {
+                self.GetDirectionTimer!.invalidate()
+                flag = false
+                output1.text = ""
+                output2.text = ""
+            }
+            else{
+                output1.text = "현재위치" + "  \(currentLocation.latitude)" + "   " + "\(currentLocation.longitude)"
+                output2.text = "가야할곳" + "  \(path[index].latitude)" + "   " + "\(path[index].longitude)"
+                if fabs(currentLocation.latitude - self.path[index].latitude) < 0.00001 && fabs(currentLocation.longitude - self.path[index].longitude) < 0.00001 {
+                    index += 1
+                }
+                /*if currentLocation.latitude != self.path[index].latitude && currentLocation.longitude != self.path[index].longitude{
+                    index += 1
+                }*/
+            }
+        }
+        else{
+            self.startPointLocation = locValue
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -72,39 +116,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     //search text
     @IBAction func search(_ sender: Any) {
         resignFirstResponder()
-        self.performSearch()
-    }
-    func performSearch() {
-        // 배열 값 삭제
-        matchingItems.removeAll()
-        let request = MKLocalSearch.Request()
-        // 텍스트 필드의 값으로 초기화된 MKLocalSearchRequest 인스턴스를 생성
-        request.naturalLanguageQuery = searchText.text
-        // 검색 요청 인스턴스에 대한 참조체로 초기화
-        let search = MKLocalSearch(request: request)
-        // MKLocalSearchCompletionHandler 메서드가 호출되면서 검색이 시작
-        search.start(completionHandler: {(response: MKLocalSearch.Response!, error: Error!) in
-            if error != nil {
-                print("Error occured in search: \(error.localizedDescription)")
-            } else if response.mapItems.count == 0 {
-                print("No matches found")
-            } else {
-                print("Matches found")
-                // 일치된 값이 있다면 일치된 위치에 대한 mapItem 인스턴스의 배열을 가지고 mapItem 속성에 접근한다.
-                for item in response.mapItems as [MKMapItem] {
-                    if item.name != nil {
-                        print("Name = \(item.name!)")
-                    }
-                    if item.phoneNumber != nil {
-                        print("Phone = \(item.phoneNumber!)")
-                    }
-                    
-                    self.matchingItems.append(item as MKMapItem)
-                    print("Matching items = \(self.matchingItems.count)")
-                    // 맵에 표시할 어노테이션 생성
-                }
-            }
-        })
+        self.objfunc56()
     }
     
     // Go back
@@ -167,7 +179,11 @@ extension mapContainerView {
         self.mapView?.delegate = self
         self.mapView?.setApiKey("l7xxf8cfdf8de7494065a7a4f2d71d12a412")
         self.mapView?.isRotationEnable = true
-        self.mapView?.heading = 180
+        self.mapView?.heading = 0
+        self.flag2 = false
+        self.count = 0
+        self.index = 0
+        self.flag = false
         mapContainerView.addSubview(self.mapView!)
     }
 }
@@ -213,6 +229,21 @@ extension mapContainerView {
 
 extension mapContainerView {
     // 경로탐색
+    public func objfunc56(){
+        let pathData = TMapPathData()
+        pathData.requestFindAllPOI(self.searchText.text!, count: 20) { (result, error)->Void in
+            if let result = result {
+                DispatchQueue.main.async {
+                    for poi in result {
+                        if self.flag2 == false{
+                            self.endPointLocation = poi.coordinate
+                            self.flag2 = true
+                        }
+                    }
+                }
+            }
+        }
+    }
     public func objFunc57() {
         for marker in self.markers {
             marker.map = nil
@@ -223,16 +254,15 @@ extension mapContainerView {
         }
         self.polylines.removeAll()
      
-        
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
-        
+
         let pathData = TMapPathData()
-        let startPoint = CLLocationCoordinate2D(latitude: self.startLocation.latitude, longitude: self.startLocation.longitude) //한양대
-        let endPoint = CLLocationCoordinate2D(latitude: self.matchingItems[0].placemark.coordinate.latitude, longitude: self.matchingItems[0].placemark.coordinate.longitude) //오토웨이타워
+        let startPoint = CLLocationCoordinate2D(latitude: self.startPointLocation.latitude, longitude: self.startPointLocation.longitude) //한양대
+        let endPoint = CLLocationCoordinate2D(latitude: self.endPointLocation.latitude, longitude: self.endPointLocation.longitude) //오토웨이타워
         self.mapView?.setCenter(startPoint)
         
         pathData.findPathDataWithType(.PEDESTRIAN_PATH, startPoint: startPoint, endPoint: endPoint){ (result, error)->Void in
@@ -250,12 +280,13 @@ extension mapContainerView {
 
                     polyline.map = self.mapView
                     self.polylines.append(polyline)
-                    //self.mapView?.fitMapBoundsWithPolylines(self.polylines)
                 }
             }
             self.path = result?.path
+            //self.count = self.path.count
+            self.flag = true
             for x in self.path{
-                print("------------" + "\(self.count)" + "-----------------")
+                print("--------------\(self.count)----------------")
                 print(x)
                 self.count += 1
             }
