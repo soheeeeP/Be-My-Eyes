@@ -43,14 +43,18 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     var flag = false
     var index = 0
     var flag2 = false
+    var directionCode = [["up", "left", "right", "down"], ["right", "up", "down", "left"], ["left", "down", "up", "right"], ["down", "right", "left", "up"]]
+    var directionIndex = 0
+    
     @IBOutlet weak var output1: UITextField!
     @IBOutlet weak var output2: UITextField!
+    @IBOutlet weak var output3: UITextField!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        GetDirectionTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(Move), userInfo: nil, repeats: true)
+        GetDirectionTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(Move), userInfo: nil, repeats: true)
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -83,7 +87,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         
         if flag == true{
-            self.currentLocation = locValue
+            //self.currentLocation = locValue
             if index == count {
                 self.GetDirectionTimer!.invalidate()
                 flag = false
@@ -91,14 +95,39 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                 output2.text = ""
             }
             else{
+                self.currentLocation = self.path[index]
                 output1.text = "현재위치" + "  \(currentLocation.latitude)" + "   " + "\(currentLocation.longitude)"
                 output2.text = "가야할곳" + "  \(path[index].latitude)" + "   " + "\(path[index].longitude)"
-                if fabs(currentLocation.latitude - self.path[index].latitude) < 0.00001 && fabs(currentLocation.longitude - self.path[index].longitude) < 0.00001 {
+                if fabs(currentLocation.latitude - self.path[index].latitude) < 0.0000005 && fabs(currentLocation.longitude - self.path[index].longitude) < 0.0000005 {
                     index += 1
+                    
+                    if index != count{
+                        if currentLocation.latitude - self.path[index].latitude > 0 && currentLocation.longitude - self.path[index].longitude > 0 {
+                            output3.text = directionCode[directionIndex][0] + " \(index) " + "\(directionIndex)"
+                            print("\(directionCode[directionIndex][0])" + " \(index) " + "\(directionIndex)")
+                            directionIndex = 0
+                        }
+                        else if currentLocation.latitude - self.path[index].latitude > 0 && currentLocation.longitude - self.path[index].longitude < 0 {
+                            output3.text = directionCode[directionIndex][1] + " \(index) " + "\(directionIndex)"
+                            print("\(directionCode[directionIndex][1])" + " \(index) " + "\(directionIndex)")
+                            directionIndex = 1
+                        }
+                        else if currentLocation.latitude - self.path[index].latitude < 0 && currentLocation.longitude - self.path[index].longitude > 0 {
+                            output3.text = directionCode[directionIndex][2] + " \(index) " + "\(directionIndex)"
+                            print("\(directionCode[directionIndex][2])" + " \(index) " + "\(directionIndex)")
+                            directionIndex = 2
+                        }
+                        else if currentLocation.latitude - self.path[index].latitude < 0 && currentLocation.longitude - self.path[index].longitude < 0{
+                            output3.text = directionCode[directionIndex][3] + " \(index) " + "\(directionIndex)"
+                            print("\(directionCode[directionIndex][3])" + " \(index) " + "\(directionIndex)")
+                            directionIndex = 3
+                        }
+                        else{
+                            output3.text = "up \(index) \(directionIndex)"
+                            print("up \(index) \(directionIndex)")
+                        }
+                    }
                 }
-                /*if currentLocation.latitude != self.path[index].latitude && currentLocation.longitude != self.path[index].longitude{
-                    index += 1
-                }*/
             }
         }
         else{
@@ -244,6 +273,7 @@ extension mapContainerView {
             }
         }
     }
+    
     public func objFunc57() {
         for marker in self.markers {
             marker.map = nil
@@ -289,6 +319,18 @@ extension mapContainerView {
                 print("--------------\(self.count)----------------")
                 print(x)
                 self.count += 1
+            }
+            if self.path[0].latitude - self.path[1].latitude > 0 && self.path[0].longitude - self.path[1].longitude > 0 {
+                self.directionIndex = 0
+            }
+            else if self.path[0].latitude - self.path[1].latitude > 0 && self.path[0].longitude - self.path[1].longitude < 0 {
+                self.directionIndex = 1
+            }
+            else if self.path[0].latitude - self.path[1].latitude < 0 && self.path[0].longitude - self.path[1].longitude > 0 {
+                self.directionIndex = 2
+            }
+            else if self.path[0].latitude - self.path[1].latitude < 0 && self.path[0].longitude - self.path[1].longitude < 0 {
+                self.directionIndex = 3
             }
         }
     }
