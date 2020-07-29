@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import CocoaMQTT
+import CocoaMQTT
 
 class RobotControlView: UIViewController {
 
