@@ -15,7 +15,7 @@ var homeLatitude = ""
 var homeLongitude = ""
 var isUser = false
 
-class UserDefineControlView: UIViewController {
+class UserDefineControlView: UIViewController, UINavigationControllerDelegate, UINavigationBarDelegate {
     
     @IBOutlet weak var SaveLocation: UISwitch!
     @IBOutlet weak var UserID: UITextField!
@@ -24,8 +24,23 @@ class UserDefineControlView: UIViewController {
     @IBOutlet weak var HomeLatitude: UITextField!
     @IBOutlet weak var HomeLongitude: UITextField!
     
+    @IBOutlet weak var autoSave: UIButton!
+    @IBOutlet weak var saveButton: UIBarButtonItem!
+    
+    
+    var isAuto: Bool! = true
+    var state: Bool! = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.delegate = self
+
+        autoSave.isSelected = true
+        if let name = UserDefaults.standard.string(forKey: "name") {
+            print("username: " + name)
+        }
+        
+        state = setState()
     }
     
     /* Initialize keyboard */
@@ -34,38 +49,107 @@ class UserDefineControlView: UIViewController {
         UserStride.becomeFirstResponder()
     }
     
-    /// Go back to Main View
-    @IBAction func cancel() {
-        print("Contents of the text field: \(UserStride.text!)")
-        navigationController?.popViewController(animated: true)
+    override func viewDidDisappear(_ animated: Bool) {
+        if state == true && resetPreferences == false {
+            UIApplication.shared.sendAction(saveButton
+                .action!, to: saveButton.target, from: self, for: nil)
+        }
     }
     
-    /// Save inputs
-    @IBAction func done() {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+    @IBAction func autoSaveAction(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        if sender.isSelected == true {
+            isAuto = true
+        } else {
+            isAuto = false
+        }
+    }
+    /// Go back to Main view without saving the preferences info
+    @IBAction func cancel(_ sender: UIStoryboardSegue) {
+        print("cancel")
+        self.dismiss(animated: true, completion: nil)
+    }
+
+    /// Save the Preferences and Go back to Main View
+    @IBAction func done(_ sender: UIStoryboardSegue) {
+        print("go back!!!!!!! ")
+        let userDefaults = UserDefaults.standard
+                
+        //if autoSave mode is on, save the preferences info
+        if isAuto == true {
+            userDefaults.set(UserID.text, forKey: "name")
+            userDefaults.set(SaveLocation.isOn, forKey: "realtime")
+            userDefaults.set(UserStride.text, forKey: "stride")
+            userDefaults.set(HomeLatitude.text, forKey: "lat")
+            userDefaults.set(HomeLongitude.text, forKey: "long")
+            userDefaults.synchronize()
+        }
+
+
         print("Contents of the text field: \(UserStride.text!)")
-        navigationController?.popViewController(animated: true)
         userID = UserID.text!
         userStride = UserStride.text!
         homeLatitude = HomeLatitude.text!
         homeLongitude = HomeLongitude.text!
-        
+                
         isUser = true
         Firecount = 0
-        print(userID)
-        print(userStride)
-        print(homeLatitude)
-        print(homeLongitude)
+        
+        self.dismiss(animated: true, completion: nil)
+        
     }
+    
     
     /// 사용자가 위치 추적 여부를 선택
     @IBAction func actionTriggered(_ sender: Any) {
         if SaveLocation.isOn {
             saveLocation = true
-            print("Save Location O")
+            print("Save Real-Time Location Mode On")
         }
         else {
             saveLocation = false
-            print("Save Location X")
+            print("Save Real-Time Location Mode Off")
+        }
+    }
+    
+    
+    func defaultState(){
+        // default setting
+        SaveLocation.isOn = true
+        UserStride.text = "35"
+        HomeLatitude.text = "37.550950"
+        HomeLongitude.text = "126.941017"
+        UserID.text = "user"
+    }
+    
+    func setState() -> Bool {
+        let userDefaults = UserDefaults.standard
+        
+        if let realTime = userDefaults.value(forKey: "realtime"),
+            let stride = userDefaults.string(forKey: "stride"),
+            let latitude = userDefaults.string(forKey: "lat"),
+            let longitude = userDefaults.string(forKey: "long"),
+            let name = userDefaults.string(forKey: "name"){
+            
+            // load auto saved info
+            SaveLocation.isOn = realTime as! Bool
+            UserStride.text = stride
+            HomeLatitude.text = latitude
+            HomeLongitude.text = longitude
+            UserID.text = name
+            
+            print("load auto save info")
+            return true
+            
+        } else {
+//            defaultState()
+            
+            print("default mode")
+            return false
         }
     }
 }

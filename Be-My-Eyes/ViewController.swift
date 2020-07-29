@@ -23,6 +23,9 @@ var tts: AVSpeechSynthesizer = AVSpeechSynthesizer()
 var mode = ""
 var sttRecognizing : Bool! = false
 
+var resetPreferences: Bool! = false
+var mapMode : Bool! = false
+
 /// A view controller to pass camera inputs through a vision model
 class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, SFSpeechRecognizerDelegate {
     /// a local reference to time to update the framerate
@@ -139,6 +142,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     
     @IBAction func unwindToVC(_ sender: UIStoryboardSegue) {
     }
+    
     /// the model for the view controller to apss camera data through
     private var _model: VNCoreMLModel?
     /// the model for the view controller to apss camera data through
@@ -650,7 +654,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             case "길 안내":        //link to MapView
                 navigationMode.sendActions(for: .touchUpInside)
             case "설정":          //link to preferenceView
-    //          resetPreferences = true
+                resetPreferences = true
                 userSettings.sendActions(for: .touchUpInside)
             case "로봇":          //link to robotView
                 robotController.sendActions(for: .touchUpInside)

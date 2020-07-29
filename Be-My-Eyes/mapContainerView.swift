@@ -10,8 +10,6 @@ import UIKit
 import TMapSDK
 import CoreLocation
 
-var mapMode : Bool! = false
-
 class mapContainerView: UIViewController, TMapViewDelegate {
     @IBOutlet var mapContainerView:UIView!
     @IBOutlet var logLabel:UILabel!

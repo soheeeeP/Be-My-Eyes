@@ -588,12 +588,12 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zne-lO-ZC8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="t5g-sV-0lg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1155" y="-1260"/>
+            <point key="canvasLocation" x="-1037" y="-448"/>
         </scene>
         <!--Title-->
         <scene sceneID="mnW-8i-dTc">
             <objects>
-                <viewController id="ttJ-Uq-pA0" customClass="UserDefineControlView" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="preferencesView" id="ttJ-Uq-pA0" customClass="UserDefineControlView" customModule="Be_My_Eyes" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="g3v-g8-sR7">
                         <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -603,96 +603,106 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Preferences" id="M0g-oq-5S9">
-                                        <barButtonItem key="leftBarButtonItem" style="plain" systemItem="cancel" id="01V-VN-hjN">
+                                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="C1Z-ze-pFR">
                                             <color key="tintColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <connections>
-                                                <action selector="cancel" destination="ttJ-Uq-pA0" id="qaq-hm-FW6"/>
-                                                <segue destination="w00-o4-Ebl" kind="unwind" unwindAction="unwindToVC:" id="fBt-8n-u0T"/>
+                                                <action selector="cancel:" destination="ttJ-Uq-pA0" id="OTf-tf-IUh"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="done" id="bn1-9K-HsT">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="5oO-l8-fVj">
                                             <color key="tintColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <connections>
-                                                <action selector="done" destination="ttJ-Uq-pA0" id="p8S-wH-VxR"/>
+                                                <action selector="done:" destination="ttJ-Uq-pA0" id="dGl-Vf-3n0"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="cm" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="069-Se-JQa">
-                                <rect key="frame" x="310" y="203" width="203" height="34"/>
+                                <rect key="frame" x="411" y="220" width="203" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
                                 <connections>
-                                    <action selector="done" destination="ttJ-Uq-pA0" eventType="editingDidEndOnExit" id="ovT-BB-dpy"/>
                                     <outlet property="delegate" destination="ttJ-Uq-pA0" id="0Qf-Jr-HWf"/>
                                 </connections>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="latitude" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="i1V-xJ-OxG">
-                                <rect key="frame" x="310" y="256" width="99" height="34"/>
+                                <rect key="frame" x="411" y="273" width="99" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
                                 <connections>
-                                    <action selector="done" destination="ttJ-Uq-pA0" eventType="editingDidEndOnExit" id="8DM-Oc-yuB"/>
                                     <outlet property="delegate" destination="ttJ-Uq-pA0" id="ob0-Ve-cZl"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="abc123" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="0RZ-4i-PaC">
-                                <rect key="frame" x="310" y="150" width="203" height="34"/>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="username" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="0RZ-4i-PaC">
+                                <rect key="frame" x="411" y="167" width="203" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
                                 <connections>
-                                    <action selector="done" destination="ttJ-Uq-pA0" eventType="editingDidEndOnExit" id="Ji9-VL-T7X"/>
                                     <outlet property="delegate" destination="ttJ-Uq-pA0" id="uhA-Zd-DDG"/>
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="User Stride" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wmP-IG-1pc">
-                                <rect key="frame" x="154" y="210" width="86" height="21"/>
+                                <rect key="frame" x="255" y="227" width="86" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Home Address" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RMY-z5-0iP">
-                                <rect key="frame" x="154" y="263" width="113" height="21"/>
+                                <rect key="frame" x="255" y="280" width="113" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="User ID" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x4R-It-cmh">
-                                <rect key="frame" x="154" y="157" width="57" height="21"/>
+                                <rect key="frame" x="255" y="174" width="57" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Save Location" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ntn-Fw-paG">
-                                <rect key="frame" x="154" y="103" width="107" height="21"/>
+                                <rect key="frame" x="255" y="120" width="107" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="u0A-O8-2G2">
-                                <rect key="frame" x="311" y="98" width="49" height="31"/>
+                                <rect key="frame" x="412" y="115" width="49" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <action selector="actionTriggered:" destination="ttJ-Uq-pA0" eventType="valueChanged" id="Gxc-lU-M5L"/>
                                 </connections>
                             </switch>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="longitude" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Yug-DH-Fn5">
-                                <rect key="frame" x="414" y="256" width="99" height="34"/>
+                                <rect key="frame" x="515" y="273" width="99" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" enablesReturnKeyAutomatically="YES"/>
                                 <connections>
-                                    <action selector="done" destination="ttJ-Uq-pA0" eventType="editingDidEndOnExit" id="JgE-8w-Tbh"/>
                                     <outlet property="delegate" destination="ttJ-Uq-pA0" id="Gwi-Q0-ieh"/>
                                 </connections>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ivi-0D-uzt">
+                                <rect key="frame" x="558" y="319" width="20" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="checkmark.square" catalog="system"/>
+                                <state key="selected" image="checkmark.square.fill" catalog="system"/>
+                                <connections>
+                                    <action selector="autoSaveAction:" destination="ttJ-Uq-pA0" eventType="touchUpInside" id="9ys-bu-YcW"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Auto Save" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zS6-UX-BAA">
+                                <rect key="frame" x="584" y="319" width="58" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <textInputTraits key="textInputTraits"/>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -705,13 +715,18 @@
                         <outlet property="SaveLocation" destination="u0A-O8-2G2" id="Ea1-Hw-T5H"/>
                         <outlet property="UserID" destination="0RZ-4i-PaC" id="zoW-rJ-zYA"/>
                         <outlet property="UserStride" destination="069-Se-JQa" id="eWo-jl-CmE"/>
+                        <outlet property="autoSave" destination="Ivi-0D-uzt" id="W5a-oi-LTt"/>
+                        <outlet property="saveButton" destination="5oO-l8-fVj" id="PxG-4d-eUh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UT2-yr-X27" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="w00-o4-Ebl" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1155" y="-516"/>
+            <point key="canvasLocation" x="-1166.5178571428571" y="-1278.2608695652175"/>
         </scene>
     </scenes>
     <color key="tintColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+    <resources>
+        <image name="checkmark.square" catalog="system" width="128" height="114"/>
+        <image name="checkmark.square.fill" catalog="system" width="128" height="114"/>
+    </resources>
 </document>
