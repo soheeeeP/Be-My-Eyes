@@ -8,7 +8,9 @@
 
 import UIKit
 import TMapSDK
-//import CoreLocation
+import CoreLocation
+
+var mapMode : Bool! = false
 
 class mapContainerView: UIViewController, TMapViewDelegate {
     @IBOutlet var mapContainerView:UIView!
@@ -37,6 +39,10 @@ class mapContainerView: UIViewController, TMapViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mapMode = true
+        tts.pauseSpeaking(at: .immediate)
+        
         // Do any additional setup after loading the view.
         self.mapView = TMapView(frame: mapContainerView.frame)
         self.mapView?.delegate = self
@@ -48,6 +54,12 @@ class mapContainerView: UIViewController, TMapViewDelegate {
         self.initTableViewData()
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        mapMode = false
+        print("resume TTS of the mainViewController")
+    }
+    
     @IBAction func touchMenuButton(_ sender:AnyObject) {
         menuConstraints?.constant = 0
         self.initTableViewData()

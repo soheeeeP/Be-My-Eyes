@@ -59,7 +59,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cVb-RM-mR6">
-                                <rect key="frame" x="73" y="15" width="214" height="216"/>
+                                <rect key="frame" x="102" y="66" width="214" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemGray5Color" red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
@@ -83,7 +83,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="een-F0-TQU">
-                                <rect key="frame" x="299" y="15" width="230" height="216"/>
+                                <rect key="frame" x="333" y="66" width="230" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
@@ -125,7 +125,7 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bLn-en-eRl">
-                                <rect key="frame" x="552" y="15" width="214" height="216"/>
+                                <rect key="frame" x="580" y="66" width="214" height="216"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
@@ -140,6 +140,23 @@
                                 </state>
                                 <connections>
                                     <segue destination="ttJ-Uq-pA0" kind="show" id="eza-N4-YCJ"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WAK-ji-qZM">
+                                <rect key="frame" x="333" y="11" width="97" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yoU-1w-wdr">
+                                <rect key="frame" x="712" y="16" width="57" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <state key="normal" title="SPEAK">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="speechToText:" destination="muv-iN-7Kq" eventType="touchUpInside" id="hXE-db-zbC"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -160,11 +177,16 @@
                     </view>
                     <navigationItem key="navigationItem" id="iKC-4e-w3s"/>
                     <connections>
+                        <outlet property="STTbutton" destination="yoU-1w-wdr" id="eon-hu-7Gg"/>
                         <outlet property="depthPreview" destination="bLn-en-eRl" id="O7Z-Ez-XVq"/>
+                        <outlet property="executionMode" destination="WAK-ji-qZM" id="ivB-ak-6ez"/>
                         <outlet property="framerate" destination="ItP-uR-dE2" id="Ldc-fv-lZX"/>
+                        <outlet property="navigationMode" destination="Ov6-6X-Mam" id="pzL-C9-nlg"/>
                         <outlet property="preview" destination="cVb-RM-mR6" id="6yf-p7-OxR"/>
+                        <outlet property="robotController" destination="aPx-tz-QXZ" id="9Bb-iy-nh7"/>
                         <outlet property="segmentation" destination="een-F0-TQU" id="CnP-Jz-lRA"/>
                         <outlet property="textforspeech" destination="53w-Sg-PWT" id="6GY-76-W70"/>
+                        <outlet property="userSettings" destination="FIr-Sv-edK" id="KUF-dp-PQ5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oNs-fm-J2r" sceneMemberID="firstResponder"/>

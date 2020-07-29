@@ -115,19 +115,7 @@ extension depthViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         let displayImage = UIImage(ciImage: previewImage)
         DispatchQueue.main.async { [weak self] in
             self?.previewView.image = displayImage
-//            let convertedCGImage = self!.convertCIImageToCGImage(inputImage: previewImage)
-//
-//            let width = displayImage.size.width
-//            let height = displayImage.size.height
-                    
-            //obtain the color of a pixel from UIImage
-//            for y in stride(from: 0, to: height, by: (height/100)){
-//                for x in stride(from: 0, to: width, by: (width/100)){
-//                    var color = UIColor()
-//                    color = self!.getPixelColor(pos: CGPoint(x: x, y: y), width: width, height: height, image: convertedCGImage!)
-//                    print(color)
-//                }
-//            }
+
         }
     }
  
@@ -193,7 +181,7 @@ extension depthViewController {
 
             pixelValues = intensities
             
-            for i in stride(from: 0, to: 200, by: 1){
+            for i in stride(from: 50, to: 150, by: 1){
                 for j in stride(from: 0, to: width, by: 1){
                     minimizedPixelValues[i][j]=pixelValues![i*bytesPerRow + j]
                 }
