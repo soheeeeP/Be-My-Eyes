@@ -193,9 +193,11 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         }
         if i == 9 {
             text = "Go straight"
+
             print("Safe Area")
             minKey = 8
             safeArea = true
+
         }
     }
     
@@ -219,6 +221,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     }
     
     // debugging TTS message
+
     print(text + "cell : \(minKey)")
     
     // send message to MQTT
@@ -233,6 +236,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         con_count = 0
     }
     print("user stride : " + userStride)
+
     
     // return text to print and make TTS
     return text

@@ -591,10 +591,10 @@ extension mapContainerView {
         self.clearPolylines()
         
         let pathData = TMapPathData()
-        let startPoint = CLLocationCoordinate2D(latitude: 37.5562607, longitude: 127.0432408) //한양대
-        let endPoint = CLLocationCoordinate2D(latitude: 37.5061729, longitude: 127.06173) //오토웨이타워
+        let startPoint = CLLocationCoordinate2D(latitude: 37.5508, longitude: 126.9435) //한양대
+        let endPoint = CLLocationCoordinate2D(latitude: 37.549873, longitude: 126.943924) //오토웨이타워
 
-        pathData.findPathData(startPoint: startPoint, endPoint: endPoint) { (result, error)->Void in
+        pathData.findPathDataWithType(.PEDESTRIAN_PATH, startPoint: startPoint, endPoint: endPoint){ (result, error)->Void in
             if let polyline = result {
                 DispatchQueue.main.async {
                     let marker1 = TMapMarker(position: startPoint)
