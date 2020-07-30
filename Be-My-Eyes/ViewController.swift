@@ -27,6 +27,8 @@ var sttRecognizing : Bool! = false
 var resetPreferences: Bool! = false
 var mapMode : Bool! = false
 
+var pixelData : [[UInt8]]?
+
 /// A view controller to pass camera inputs through a vision model
 class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, SFSpeechRecognizerDelegate {
     /// a local reference to time to update the framerate
@@ -406,9 +408,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         let displayImage = UIImage(ciImage: previewImage)
         
         //ciimage나 uiimage를 rotate시킬 것
+        let rotatedImage = displayImage.rotate(radians: .pi/2*3)
         
         DispatchQueue.main.sync { [weak self] in
-            self?.depthPreview.image = displayImage
+            self?.depthPreview.image = rotatedImage
+//            self?.depthPreview.image = displayImage
         }
 
         // execute the request
@@ -726,13 +730,27 @@ extension ViewController: AVCaptureDepthDataOutputDelegate{
         let depthMap = CIImage(cvPixelBuffer: pixelBuffer)
         let displayImage = UIImage(ciImage: depthMap)
         
+        let rotatedImage = CIImage(image: displayImage.rotate(radians: .pi/2*3)!)
+        
+        let rotWidth = UIImage(ciImage: rotatedImage!).size.width
+        let rotHeight = UIImage(ciImage: rotatedImage!).size.height
+        
+        var pixelData = [[UInt8]](repeating: [UInt8](repeating: 0, count: Int(rotWidth)), count: Int(rotHeight))
+        
         DispatchQueue.main.async { [weak self] in
             self?.depthMap = depthMap
             
             let depthView = depthViewController()
-            print("-------------------")
-            depthView.pixelValues(fromCGImage: depthView.convertCIImageToCGImage(inputImage: depthMap), width: Int(displayImage.size.width), height: Int(displayImage.size.height))!
-            print("-------------------")
+            
+            //save pixel data in 2D array
+            pixelData = depthView.pixelValues(fromCGImage: depthView.convertCIImageToCGImage(inputImage: rotatedImage!), width: Int(rotWidth), height: Int(rotHeight))!
+//            for i in stride(from: 50, to: 150, by: 10) {
+//                for j in stride(from: 0, to: Int(rotWidth), by: 10){
+//                    print(pixelData[i][j], terminator:" ")
+//                }
+//                print("\n")
+//            }
+//            print("-------------------")
         }
         
     }

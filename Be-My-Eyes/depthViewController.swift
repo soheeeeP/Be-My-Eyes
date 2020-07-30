@@ -158,6 +158,15 @@ extension depthViewController {
 
     }
 }
+
+// MARK: -Convert UIImage to CGImage
+extension depthViewController {
+    func convertUIImageToCGImage(inputImage: UIImage) ->CGImage! {
+        let convertedImage = CIImage(image: inputImage)
+        return convertCIImageToCGImage(inputImage: convertedImage!)
+    }
+}
+
 // MARK: -Obtain Pixel Values from CGImage
 extension depthViewController {
     func pixelValues(fromCGImage imageRef: CGImage?, width: Int, height: Int) -> [[UInt8]]?
@@ -183,14 +192,6 @@ extension depthViewController {
                 for j in stride(from: 0, to: width, by: 1){
                     minimizedPixelValues[i][j]=pixelValues![i*bytesPerRow + j]
                 }
-            }
-            
-            //debugging
-            for i in stride(from: 50, to: 150, by: 1) {
-                for j in stride(from: 0, to: width, by: 10){
-                    print(minimizedPixelValues[i][j], terminator:" ")
-                }
-                print("\n")
             }
         }
         return minimizedPixelValues

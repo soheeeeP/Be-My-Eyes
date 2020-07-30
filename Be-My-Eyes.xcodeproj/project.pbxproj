@@ -28,6 +28,7 @@
 		40A3DD7824B4B542006FAB1C /* RobotControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A3DD7724B4B542006FAB1C /* RobotControlView.swift */; };
 		40D0DDB124C1646200BA974C /* CVPixelBufferExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D0DDB024C1646200BA974C /* CVPixelBufferExtension.swift */; };
 		40F1D5A824C9770E002945A9 /* UserDefineControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F1D5A724C9770E002945A9 /* UserDefineControlView.swift */; };
+		8D1F93B624D2D71F006A8C61 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1F93B524D2D71F006A8C61 /* UIImageExtension.swift */; };
 		8DCC832E24D1AFEE00447154 /* depthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DCC832D24D1AFEE00447154 /* depthViewController.swift */; };
 		E8223AAF247C152100755C43 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8223AAE247C152100755C43 /* StartViewController.swift */; };
 /* End PBXBuildFile section */
@@ -70,6 +71,7 @@
 		40D0DDB024C1646200BA974C /* CVPixelBufferExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CVPixelBufferExtension.swift; sourceTree = "<group>"; };
 		40F1D5A724C9770E002945A9 /* UserDefineControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefineControlView.swift; sourceTree = "<group>"; };
 		7FDE922ADB7604E1008AFA8B /* Pods-Be-My-Eyes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Be-My-Eyes.release.xcconfig"; path = "Target Support Files/Pods-Be-My-Eyes/Pods-Be-My-Eyes.release.xcconfig"; sourceTree = "<group>"; };
+		8D1F93B524D2D71F006A8C61 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		8DCC832D24D1AFEE00447154 /* depthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = depthViewController.swift; sourceTree = "<group>"; };
 		D37EAB4A6D6287B5F0652C4A /* Pods_Be_My_Eyes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Be_My_Eyes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8223AAE247C152100755C43 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				40D0DDB024C1646200BA974C /* CVPixelBufferExtension.swift */,
+				8D1F93B524D2D71F006A8C61 /* UIImageExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -322,6 +325,7 @@
 				09DC0B562175B4090044D811 /* Probs.swift in Sources */,
 				0945E3AA21755E6300B2AB60 /* AppDelegate.swift in Sources */,
 				0945E4172175811C00B2AB60 /* Math.swift in Sources */,
+				8D1F93B624D2D71F006A8C61 /* UIImageExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
