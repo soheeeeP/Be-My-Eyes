@@ -25,25 +25,17 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     
     var texts:Array<TMapText> = []
     var markers:Array<TMapMarker> = []
-    var circles:Array<TMapCircle> = []
-    var rectangles:Array<TMapRectangle> = []
     var polylines:Array<TMapPolyline> = []
-    var polygons:Array<TMapPolygon> = []
     
     // 추가
-    var startPointLocation: CLLocationCoordinate2D!
     var endPointLocation: CLLocationCoordinate2D!
     var currentLocation: CLLocationCoordinate2D!
-    var locationManager: CLLocationManager!
-    var start: CLLocationCoordinate2D!
     var path: [CLLocationCoordinate2D]!
     var count = 0
     var GetDirectionTimer: Timer?
     var flag = false
-    var index = 0
     var flag2 = false
-    var directionCode = [["직진", "좌회전", "우회전", "후진"], ["우회전", "직진", "후진", "좌회전"], ["좌회전", "후진", "직진", "우회전"], ["후진", "우회전", "좌회전", "직진"]]
-    var directionIndex = 0
+    var index = 0
     var angle: Double!
     var exAngle: Double!
     
@@ -56,11 +48,6 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         GetDirectionTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(Move), userInfo: nil, repeats: true)
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
         
         self.mapView = TMapView(frame: mapContainerView.frame)
         self.mapView?.delegate = self
@@ -77,6 +64,15 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     @objc func Move(){
         if flag == true {
             self.currentLocation = self.mapView?.getCenter()
+            for marker in self.markers {
+                marker.map = nil
+            }
+            self.markers.removeAll()
+            let marker1 = TMapMarker(position: currentLocation)
+            marker1.map = self.mapView
+            marker1.title = "출발지"
+            marker1.icon = UIImage(named: "image")
+            self.markers.append(marker1)
             //self.currentLocation = self.path[index]
             self.angle = self.mapView?.heading
             if index == count {
@@ -89,21 +85,27 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                 output1.text = "현재위치" + "  \(currentLocation.latitude)" + "   " + "\(currentLocation.longitude)" + "  " + "\(Double(self.angle!))"
                 output2.text = "가야할곳" + "  \(path[index].latitude)" + "   " + "\(path[index].longitude)" + "  " + "\(Double(self.exAngle!))"
                 
-                if fabs(currentLocation.latitude - self.path[index].latitude) > 0.00001 && fabs(currentLocation.longitude - self.path[index].longitude) > 0.000001 {
+                if sqrt(pow(currentLocation.latitude - self.path[index].latitude, 2) + pow(currentLocation.longitude - self.path[index].longitude, 2)) < 0.00001 {
                     index += 1
                     
                     if index != count{
                         let x = fabs(currentLocation.latitude - self.path[index].latitude)
                         let y = fabs(currentLocation.longitude - self.path[index].longitude)
-                        let a = atan(x/y)
-                        if a - self.exAngle > 0 {
+                        let a = atan(y/x) * 180 / Double.pi
+                        
+                        if a - self.exAngle > 5 {
                             output3.text = "\(a-self.exAngle)만큼 우회전 \(self.index)"
-                            print("\(a-self.exAngle)만큼 우회전 \(self.index)")
+                            //print("\(a-self.exAngle)만큼 우회전 \(self.index)")
                         }
-                        else if a - self.exAngle < 0 {
+                        else if a - self.exAngle < -5 {
                             output3.text = "\(self.exAngle - a)만큼 좌회전 \(self.index)"
-                            print("\(self.exAngle - a)만큼 좌회전 \(self.index)")
+                            //print("\(self.exAngle - a)만큼 좌회전 \(self.index)")
                         }
+                        else{
+                            output3.text = "\(fabs(self.exAngle - a))만큼 직진 \(self.index)"
+                            //print("\(self.exAngle - a)만큼 좌회전 \(self.index)")
+                        }
+                        print("\(Double(self.exAngle))   \(a)")
                         self.exAngle = a
                         
                     }
@@ -112,18 +114,6 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
         }
     }
     
-    // get direoction
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        self.startPointLocation = locValue
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        if (error as? CLError)?.code == .denied{
-            manager.stopUpdatingLocation()
-            manager.stopMonitoringSignificantLocationChanges()
-        }
-    }
     
     //search text
     @IBAction func search(_ sender: Any) {
@@ -244,6 +234,7 @@ extension mapContainerView {
     // 경로탐색
     public func objfunc56(){
         let pathData = TMapPathData()
+        self.mapView?.trackinMode = TrackingMode.followWithHeading
         pathData.requestFindAllPOI(self.searchText.text!, count: 20) { (result, error)->Void in
             if let result = result {
                 DispatchQueue.main.async {
@@ -268,18 +259,17 @@ extension mapContainerView {
         }
         self.polylines.removeAll()
      
-        self.mapView?.setCenter(self.startPointLocation)
+        let start = self.mapView?.getCenter()
         self.mapView?.isRotationEnable = true
-        self.mapView?.trackinMode = TrackingMode.followWithHeading
 
         let pathData = TMapPathData()
-        let startPoint = CLLocationCoordinate2D(latitude: self.startPointLocation!.latitude, longitude: self.startPointLocation!.longitude) //한양대
+        let startPoint = CLLocationCoordinate2D(latitude: start!.latitude, longitude: start!.longitude) //한양대
         let endPoint = CLLocationCoordinate2D(latitude: self.endPointLocation.latitude, longitude: self.endPointLocation.longitude) //오토웨이타워
         
         pathData.findPathDataWithType(.PEDESTRIAN_PATH, startPoint: startPoint, endPoint: endPoint){ (result, error)->Void in
             if let polyline = result {
                 DispatchQueue.main.async {
-                    let marker1 = TMapMarker(position: startPoint)
+                    /*let marker1 = TMapMarker(position: startPoint)
                     marker1.map = self.mapView
                     marker1.title = "출발지"
                     self.markers.append(marker1)
@@ -287,7 +277,7 @@ extension mapContainerView {
                     let marker2 = TMapMarker(position: endPoint)
                     marker2.map = self.mapView
                     marker2.title = "목적지"
-                    self.markers.append(marker2)
+                    self.markers.append(marker2)*/
 
                     polyline.map = self.mapView
                     self.polylines.append(polyline)
@@ -303,8 +293,8 @@ extension mapContainerView {
             }
             let x = fabs(self.path[0].latitude - self.path[1].latitude)
             let y = fabs(self.path[0].longitude - self.path[1].longitude)
-            self.exAngle = atan(x/y)
-            print(self.exAngle)
+            self.exAngle = atan(y/x) * 180 / Double.pi
+            //print(self.exAngle)
         }
     }
 }
