@@ -14,6 +14,7 @@ import MetalPerformanceShaders
 import CoreMotion
 import CoreLocation
 import Firebase
+import FirebaseDatabase
 import Speech
 
 // 사용자의 이동 경로를 저장할 배열
@@ -52,6 +53,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     
     @IBOutlet weak var executionMode: UITextField!
     
+    /// depth camera variables
     let depthSession = AVCaptureSession()
     let dataOutputQueue = DispatchQueue(label: "video data queue",
                                         qos: .userInitiated,
@@ -111,11 +113,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     }
     var _queue: MTLCommandQueue?
     
-    @IBAction func mapKit(_ sender: Any) {
-        /*let vcName = self.storyboard?.instantiateViewController(withIdentifier: "Mapkit")
-        vcName?.modalTransitionStyle = .coverVertical
-        self.present(vcName!, animated: true, completion: nil)*/
-    }
     @IBAction func asdasd(_ sender: Any) {
         Count = 0
         locationModeOn()
@@ -281,8 +278,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     override func viewDidLoad() {
         super.viewDidLoad()
         speechRecognizer?.delegate = self
-        configureCaptureSession()
-        depthSession.startRunning()
     }
     
     /// Handle the view appearing
@@ -291,12 +286,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         // setup the AV session
         captureSession = AVCaptureSession()
         captureSession.sessionPreset = .hd1280x720
-        // get a handle on the back camera
-        guard let camera = AVCaptureDevice.default(for: AVMediaType.video) else {
-            let message = "Unable to access the back camera!"
-            popup_alert(self, title: "Camera Error", message: message)
+        
+        // get a handle on the back depth camera
+        guard let camera = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) else {
+            let message = "No depth video camera available"
+            popup_alert(self, title: "Camera error", message: message)
             return
         }
+        // get a handle on the back camera
+//        guard let camera = AVCaptureDevice.default(for: AVMediaType.video) else {
+//            let message = "Unable to access the back camera!"
+//            popup_alert(self, title: "Camera Error", message: message)
+//            return
+//        }
         if Check == 0{
             locationModeOn()
             Check = 1
@@ -308,11 +310,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             let input = try AVCaptureDeviceInput(device: camera)
             let videoOutput = AVCaptureVideoDataOutput()
             videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
+//            videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32RGBA]
             // add the inputs and ouptuts to the sessionr and start the preview
             if captureSession.canAddInput(input) && captureSession.canAddOutput(videoOutput) {
                 captureSession.addInput(input)
                 captureSession.addOutput(videoOutput)
-                setupCameraPreview()
+                setupCameraPreview(videoOutput: videoOutput, camera: camera)
             }
         }
         catch let error  {
@@ -320,18 +323,50 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             popup_alert(self, title: "Camera Error", message: message)
             return
         }
-//        configureCaptureSession()
-//        depthSession.startRunning()
+
         
     }
           
     /// Setup the live preview from the camera
-    func setupCameraPreview() {
+    func setupCameraPreview(videoOutput: AVCaptureVideoDataOutput, camera: AVCaptureDevice) {
         // create a video preview layer for the view controller
         videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         // set the metadata of the video preview
         videoPreviewLayer.videoGravity = .resizeAspect
-        videoPreviewLayer.connection?.videoOrientation = .landscapeRight //==.portrait
+        videoPreviewLayer.connection?.videoOrientation = .landscapeRight
+        
+        let depthOutput = AVCaptureDepthDataOutput()
+        depthOutput.setDelegate(self, callbackQueue: DispatchQueue(label: "videoQueue"))
+        depthOutput.isFilteringEnabled = true
+        captureSession.addOutput(depthOutput)
+
+        let depthConnection = depthOutput.connection(with: .depthData)
+        depthConnection?.videoOrientation = .landscapeRight
+        
+        let outputRect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let videoRect = videoOutput
+          .outputRectConverted(fromMetadataOutputRect: outputRect)
+        let depthRect = depthOutput
+          .outputRectConverted(fromMetadataOutputRect: outputRect)
+        
+        scale =
+          max(videoRect.width, videoRect.height) /
+          max(depthRect.width, depthRect.height)
+
+        do {
+          try camera.lockForConfiguration()
+
+          if let format = camera.activeDepthDataFormat,
+            let range = format.videoSupportedFrameRateRanges.first  {
+            camera.activeVideoMinFrameDuration = range.minFrameDuration
+          }
+
+          camera.unlockForConfiguration()
+        } catch {
+          fatalError(error.localizedDescription)
+        }
+
+        
         // add the preview layer as a sublayer of the preview view
         preview.layer.addSublayer(videoPreviewLayer)
         // start the capture session asyncrhonously
@@ -369,6 +404,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         let previewImage = depthMap ?? image
         
         let displayImage = UIImage(ciImage: previewImage)
+        
+        //ciimage나 uiimage를 rotate시킬 것
         
         DispatchQueue.main.sync { [weak self] in
             self?.depthPreview.image = displayImage
@@ -670,60 +707,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     }
 }
 
-extension ViewController {
-    func configureCaptureSession() {
-        guard let camera = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) else {
-            //.builtInDualWideCamera /builtInWideAngleCamera
-            fatalError("No depth video camera available")
-        }
-
-        depthSession.sessionPreset = .photo
-        
-        do{
-            let cameraInput = try AVCaptureDeviceInput(device: camera)
-            depthSession.addInput(cameraInput)
-        } catch {
-            fatalError(error.localizedDescription)
-        }
-        
-        let videoOutput = AVCaptureVideoDataOutput()
-        videoOutput.setSampleBufferDelegate(self, queue: dataOutputQueue)
-        videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
-        depthSession.addOutput(videoOutput)
-        
-        let videoConnection = videoOutput.connection(with: .video)
-        videoConnection?.videoOrientation = .landscapeRight
-        
-        let depthOutput = AVCaptureDepthDataOutput()
-        depthOutput.setDelegate(self, callbackQueue: dataOutputQueue)
-        depthOutput.isFilteringEnabled = true
-        depthSession.addOutput(depthOutput)
-        
-        let outputRect = CGRect(x: 0, y: 0, width: 1, height: 1)
-        let videoRect = videoOutput
-          .outputRectConverted(fromMetadataOutputRect: outputRect)
-        let depthRect = depthOutput
-          .outputRectConverted(fromMetadataOutputRect: outputRect)
-
-        scale =
-          max(videoRect.width, videoRect.height) /
-          max(depthRect.width, depthRect.height)
-
-        do {
-          try camera.lockForConfiguration()
-
-          if let format = camera.activeDepthDataFormat,
-            let range = format.videoSupportedFrameRateRanges.first  {
-            camera.activeVideoMinFrameDuration = range.minFrameDuration
-          }
-
-          camera.unlockForConfiguration()
-        } catch {
-          fatalError(error.localizedDescription)
-        }
-    }
-}
-
 // MARK: -Capture Depth Data Delegate Methods
 extension ViewController: AVCaptureDepthDataOutputDelegate{
     func depthDataOutput(_ output: AVCaptureDepthDataOutput, didOutput depthData: AVDepthData, timestamp: CMTime, connection: AVCaptureConnection) {
@@ -741,9 +724,15 @@ extension ViewController: AVCaptureDepthDataOutputDelegate{
         pixelBuffer.clamp()
         
         let depthMap = CIImage(cvPixelBuffer: pixelBuffer)
+        let displayImage = UIImage(ciImage: depthMap)
         
         DispatchQueue.main.async { [weak self] in
-          self?.depthMap = depthMap
+            self?.depthMap = depthMap
+            
+            let depthView = depthViewController()
+            print("-------------------")
+            depthView.pixelValues(fromCGImage: depthView.convertCIImageToCGImage(inputImage: depthMap), width: Int(displayImage.size.width), height: Int(displayImage.size.height))!
+            print("-------------------")
         }
         
     }

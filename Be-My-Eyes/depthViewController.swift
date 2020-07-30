@@ -154,10 +154,8 @@ extension depthViewController: AVCaptureDepthDataOutputDelegate{
 extension depthViewController {
     func convertCIImageToCGImage(inputImage: CIImage) -> CGImage! {
         let context = CIContext(options: nil)
-        if context != nil {
-            return context.createCGImage(inputImage, from: inputImage.extent)
-        }
-        return nil
+        return context.createCGImage(inputImage, from: inputImage.extent)
+
     }
 }
 // MARK: -Obtain Pixel Values from CGImage
@@ -189,7 +187,7 @@ extension depthViewController {
             
             //debugging
             for i in stride(from: 50, to: 150, by: 1) {
-                for j in stride(from: 0, to: width, by: 2){
+                for j in stride(from: 0, to: width, by: 10){
                     print(minimizedPixelValues[i][j], terminator:" ")
                 }
                 print("\n")
