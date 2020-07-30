@@ -50,9 +50,11 @@ class UserDefineControlView: UIViewController, UINavigationControllerDelegate, U
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        //앱을 켰을 때, 사용자 정보가 저장되어 있는 경우(초기화면), 바로 mainview를 호출
         if state == true && resetPreferences == false {
-            UIApplication.shared.sendAction(saveButton
-                .action!, to: saveButton.target, from: self, for: nil)
+            callingMainView()
+//            UIApplication.shared.sendAction(saveButton
+//                .action!, to: saveButton.target, from: self, for: nil)
         }
     }
     
@@ -97,12 +99,16 @@ class UserDefineControlView: UIViewController, UINavigationControllerDelegate, U
         isUser = true
         Firecount = 0
         
-//        self.dismiss(animated: true, completion: nil)
-        guard let uvc = self.storyboard?.instantiateViewController(withIdentifier: "MainView") else {
-            return
+        resetPreferences = false
+        
+        //앱을 처음 실행하는 경우(사용자 정보가 저장되어 있지 않은 상태) mainview를 호출
+        if state == false {
+            callingMainView()
         }
-        uvc.modalTransitionStyle = UIModalTransitionStyle.coverVertical
-        self.present(uvc, animated: true)
+        //앱 사용 중에 사용자 정보를 변경하는 경우, preference view를 dismiss시켜서 직전의 mainview로 되돌아감
+        else {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     
@@ -118,6 +124,13 @@ class UserDefineControlView: UIViewController, UINavigationControllerDelegate, U
         }
     }
     
+    func callingMainView() {
+        guard let uvc = self.storyboard?.instantiateViewController(withIdentifier: "MainView") else {
+                    return
+                }
+        uvc.modalTransitionStyle = UIModalTransitionStyle.coverVertical
+        self.present(uvc, animated: true)
+    }
     
     func defaultState(){
         // default setting

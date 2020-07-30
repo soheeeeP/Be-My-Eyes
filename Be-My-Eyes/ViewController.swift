@@ -126,6 +126,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
 //        locationManager.desiredAccuracy = kCLLocationAccuracyBest
 //        locationManager.startUpdatingLocation()
     }
+    @IBAction func settings(_ sender: Any) {
+        resetPreferences = true
+    }
+    
     var queue: MTLCommandQueue! {
         get {
             // try to unwrap the private queue instance

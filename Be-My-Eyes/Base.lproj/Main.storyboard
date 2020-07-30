@@ -139,6 +139,7 @@
                                     <color key="titleColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
+                                    <action selector="settings:" destination="muv-iN-7Kq" eventType="touchUpInside" id="Lf6-Lf-O8N"/>
                                     <segue destination="ttJ-Uq-pA0" kind="show" id="eza-N4-YCJ"/>
                                 </connections>
                             </button>
@@ -302,7 +303,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0wT-jE-dS9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-893" y="266"/>
+            <point key="canvasLocation" x="-834" y="393"/>
         </scene>
         <!--Robot Control View-->
         <scene sceneID="TSR-7i-vgh">
@@ -415,7 +416,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f0P-Cr-2SM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="ML2-gl-hO9" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1519" y="425"/>
+            <point key="canvasLocation" x="-1508" y="393"/>
         </scene>
         <!--Map Container View-->
         <scene sceneID="kfZ-ly-lCm">
@@ -544,7 +545,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gG6-kK-Wdx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="DkT-aM-n6p" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2406" y="425"/>
+            <point key="canvasLocation" x="-2341" y="393"/>
         </scene>
         <!--Depth View Controller-->
         <scene sceneID="qfg-ue-7CF">
@@ -588,7 +589,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zne-lO-ZC8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="t5g-sV-0lg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1013" y="-484"/>
+            <point key="canvasLocation" x="-1135" y="-519"/>
         </scene>
         <!--Title-->
         <scene sceneID="mnW-8i-dTc">
@@ -721,7 +722,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UT2-yr-X27" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1201" y="-1412"/>
+            <point key="canvasLocation" x="-1220" y="-1370"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
