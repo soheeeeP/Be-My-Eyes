@@ -84,15 +84,14 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
             else{
                 output1.text = "현재위치" + "  \(currentLocation.latitude)" + "   " + "\(currentLocation.longitude)" + "  " + "\(Double(self.angle!))"
                 output2.text = "가야할곳" + "  \(path[index].latitude)" + "   " + "\(path[index].longitude)" + "  " + "\(Double(self.exAngle!))"
-                
-                if sqrt(pow(currentLocation.latitude - self.path[index].latitude, 2) + pow(currentLocation.longitude - self.path[index].longitude, 2)) <  0.00001 {
+             
+                if sqrt(pow(currentLocation.latitude - self.path[index].latitude, 2) + pow(currentLocation.longitude - self.path[index].longitude, 2)) < 0.00001 {
                     index += 1
-                    
                     if index != count{
-                        let x = fabs(currentLocation.latitude - self.path[index].latitude)
+                        let d = sqrt(pow(currentLocation.latitude - self.path[index].latitude, 2) + pow(currentLocation.longitude - self.path[index].longitude, 2))
                         let y = fabs(currentLocation.longitude - self.path[index].longitude)
-                        let a = atan(y/x) * 180 / Double.pi
-                        
+                        let a = asin(y/d) * 180 / Double.pi
+                        print(a)
                         if a - self.exAngle > 15 {
                             output3.text = "\(a-self.exAngle)만큼 우회전 \(self.index)"
                             print("\(a-self.exAngle)만큼 우회전 \(self.index)")
@@ -291,9 +290,10 @@ extension mapContainerView {
                 print(x)
                 self.count += 1
             }
-            let x = fabs(self.path[0].latitude - self.path[1].latitude)
+            let d = sqrt(pow(self.path[0].latitude - self.path[1].latitude, 2) + pow(self.path[0].longitude - self.path[1].longitude, 2))
+            //let x = fabs(self.path[0].latitude - self.path[1].latitude)
             let y = fabs(self.path[0].longitude - self.path[1].longitude)
-            self.exAngle = atan(y/x) * 180 / Double.pi
+            self.exAngle = asin(y/d) * 180 / Double.pi
             //print(self.exAngle)
         }
     }
