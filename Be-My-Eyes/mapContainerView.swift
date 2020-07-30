@@ -20,18 +20,17 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     @IBOutlet weak var searchText: UITextField!
     
     var mapView:TMapView?
-
+    
     var leftArray:Array<LeftMenuData>?
-
+    
     var texts:Array<TMapText> = []
     var markers:Array<TMapMarker> = []
     var circles:Array<TMapCircle> = []
     var rectangles:Array<TMapRectangle> = []
     var polylines:Array<TMapPolyline> = []
     var polygons:Array<TMapPolygon> = []
-
+    
     // 추가
-    var matchingItems: [MKMapItem] = [MKMapItem]()
     var startPointLocation: CLLocationCoordinate2D!
     var endPointLocation: CLLocationCoordinate2D!
     var currentLocation: CLLocationCoordinate2D!
@@ -43,8 +42,10 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     var flag = false
     var index = 0
     var flag2 = false
-    var directionCode = [["up", "left", "right", "down"], ["right", "up", "down", "left"], ["left", "down", "up", "right"], ["down", "right", "left", "up"]]
+    var directionCode = [["직진", "좌회전", "우회전", "후진"], ["우회전", "직진", "후진", "좌회전"], ["좌회전", "후진", "직진", "우회전"], ["후진", "우회전", "좌회전", "직진"]]
     var directionIndex = 0
+    var angle: Double!
+    var exAngle: Double!
     
     @IBOutlet weak var output1: UITextField!
     @IBOutlet weak var output2: UITextField!
@@ -64,30 +65,20 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
         self.mapView = TMapView(frame: mapContainerView.frame)
         self.mapView?.delegate = self
         self.mapView?.setApiKey("l7xxf8cfdf8de7494065a7a4f2d71d12a412")
-
+        
+        
         mapContainerView.addSubview(self.mapView!)
         
         //setting leftmenu
         self.initTableViewData()
     }
-
+    
     // Move
     @objc func Move(){
         if flag == true {
-            locationManager = CLLocationManager()
-            locationManager.delegate = self
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.startUpdatingLocation()
-        }
-    }
-    
-    // get direoction
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-
-        if flag == true{
-            self.currentLocation = locValue
+            self.currentLocation = self.mapView?.getCenter()
+            //self.currentLocation = self.path[index]
+            self.angle = self.mapView?.heading
             if index == count {
                 self.GetDirectionTimer!.invalidate()
                 flag = false
@@ -95,48 +86,36 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                 output2.text = ""
             }
             else{
-                //self.currentLocation = self.path[index]
-                output1.text = "현재위치" + "  \(currentLocation.latitude)" + "   " + "\(currentLocation.longitude)"
-                output2.text = "가야할곳" + "  \(path[index].latitude)" + "   " + "\(path[index].longitude)"
-                if fabs(currentLocation.latitude - self.path[index].latitude) < 0.00005 && fabs(currentLocation.longitude - self.path[index].longitude) < 0.00005 {
+                output1.text = "현재위치" + "  \(currentLocation.latitude)" + "   " + "\(currentLocation.longitude)" + "  " + "\(Double(self.angle!))"
+                output2.text = "가야할곳" + "  \(path[index].latitude)" + "   " + "\(path[index].longitude)" + "  " + "\(Double(self.exAngle!))"
+                
+                if fabs(currentLocation.latitude - self.path[index].latitude) > 0.00001 && fabs(currentLocation.longitude - self.path[index].longitude) > 0.000001 {
                     index += 1
                     
                     if index != count{
-                        if fabs(currentLocation.latitude - self.path[index].latitude) < 0.00001 || fabs(currentLocation.longitude - self.path[index].longitude) < 0.00001 {
-                            output3.text = "up \(index) \(directionIndex)"
-                            print("up \(index) \(directionIndex)")
+                        let x = fabs(currentLocation.latitude - self.path[index].latitude)
+                        let y = fabs(currentLocation.longitude - self.path[index].longitude)
+                        let a = atan(x/y)
+                        if a - self.exAngle > 0 {
+                            output3.text = "\(a-self.exAngle)만큼 우회전 \(self.index)"
+                            print("\(a-self.exAngle)만큼 우회전 \(self.index)")
                         }
-                        else if currentLocation.latitude - self.path[index].latitude > 0 && currentLocation.longitude - self.path[index].longitude > 0 {
-                            output3.text = directionCode[directionIndex][0] + " \(index) " + "\(directionIndex)"
-                            print("\(directionCode[directionIndex][0])" + " \(index) " + "\(directionIndex)")
-                            directionIndex = 0
+                        else if a - self.exAngle < 0 {
+                            output3.text = "\(self.exAngle - a)만큼 좌회전 \(self.index)"
+                            print("\(self.exAngle - a)만큼 좌회전 \(self.index)")
                         }
-                        else if currentLocation.latitude - self.path[index].latitude > 0 && currentLocation.longitude - self.path[index].longitude < 0 {
-                            output3.text = directionCode[directionIndex][1] + " \(index) " + "\(directionIndex)"
-                            print("\(directionCode[directionIndex][1])" + " \(index) " + "\(directionIndex)")
-                            directionIndex = 1
-                        }
-                        else if currentLocation.latitude - self.path[index].latitude < 0 && currentLocation.longitude - self.path[index].longitude > 0 {
-                            output3.text = directionCode[directionIndex][2] + " \(index) " + "\(directionIndex)"
-                            print("\(directionCode[directionIndex][2])" + " \(index) " + "\(directionIndex)")
-                            directionIndex = 2
-                        }
-                        else if currentLocation.latitude - self.path[index].latitude < 0 && currentLocation.longitude - self.path[index].longitude < 0{
-                            output3.text = directionCode[directionIndex][3] + " \(index) " + "\(directionIndex)"
-                            print("\(directionCode[directionIndex][3])" + " \(index) " + "\(directionIndex)")
-                            directionIndex = 3
-                        }
-                        else{
-                            output3.text = "up \(index) \(directionIndex)"
-                            print("up \(index) \(directionIndex)")
-                        }
+                        self.exAngle = a
+                        
                     }
                 }
             }
         }
-        else{
-            self.startPointLocation = locValue
-        }
+    }
+    
+    // get direoction
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        self.startPointLocation = locValue
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -169,7 +148,6 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
         
         
         self.leftArray?.append(LeftMenuData(title: "경로탐색", onClick: objFunc57))
-        
         self.tableView.reloadData()
         
     }
@@ -214,6 +192,7 @@ extension mapContainerView {
         self.mapView?.setApiKey("l7xxf8cfdf8de7494065a7a4f2d71d12a412")
         self.mapView?.isRotationEnable = true
         self.mapView?.heading = 0
+        self.mapView?.trackinMode = TrackingMode.followWithHeading
         self.flag2 = false
         self.count = 0
         self.index = 0
@@ -289,16 +268,13 @@ extension mapContainerView {
         }
         self.polylines.removeAll()
      
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
+        self.mapView?.setCenter(self.startPointLocation)
+        self.mapView?.isRotationEnable = true
+        self.mapView?.trackinMode = TrackingMode.followWithHeading
 
         let pathData = TMapPathData()
-        let startPoint = CLLocationCoordinate2D(latitude: self.startPointLocation.latitude, longitude: self.startPointLocation.longitude) //한양대
+        let startPoint = CLLocationCoordinate2D(latitude: self.startPointLocation!.latitude, longitude: self.startPointLocation!.longitude) //한양대
         let endPoint = CLLocationCoordinate2D(latitude: self.endPointLocation.latitude, longitude: self.endPointLocation.longitude) //오토웨이타워
-        self.mapView?.setCenter(startPoint)
         
         pathData.findPathDataWithType(.PEDESTRIAN_PATH, startPoint: startPoint, endPoint: endPoint){ (result, error)->Void in
             if let polyline = result {
@@ -325,18 +301,10 @@ extension mapContainerView {
                 print(x)
                 self.count += 1
             }
-            if self.path[0].latitude - self.path[1].latitude > 0 && self.path[0].longitude - self.path[1].longitude > 0 {
-                self.directionIndex = 0
-            }
-            else if self.path[0].latitude - self.path[1].latitude > 0 && self.path[0].longitude - self.path[1].longitude < 0 {
-                self.directionIndex = 1
-            }
-            else if self.path[0].latitude - self.path[1].latitude < 0 && self.path[0].longitude - self.path[1].longitude > 0 {
-                self.directionIndex = 2
-            }
-            else if self.path[0].latitude - self.path[1].latitude < 0 && self.path[0].longitude - self.path[1].longitude < 0 {
-                self.directionIndex = 3
-            }
+            let x = fabs(self.path[0].latitude - self.path[1].latitude)
+            let y = fabs(self.path[0].longitude - self.path[1].longitude)
+            self.exAngle = atan(x/y)
+            print(self.exAngle)
         }
     }
 }
