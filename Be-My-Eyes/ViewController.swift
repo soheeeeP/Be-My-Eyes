@@ -680,12 +680,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
             location = getCurrentGeolocation(currentCLLocation: coordinate) //좌표 변환 location
             
             /// Firebase DB location에 정보 저장
-            let userRef = self.ref.child("\(userID)_\(Firecount)")
+            //let userRef = self.ref.child("\(userID)_\(Firecount)")
+            Firecount+=1
+            let userRef = self.ref.child("\(userID)/\(Firecount)")
             userRef.setValue(["location" : String(location),
                               "x" : coordinate.coordinate.latitude, //String(locValue.latitude),
                               "y": coordinate.coordinate.longitude,
                               "time": currentDateString])
-            Firecount+=1
             
             //debugging
             print(CurrentLocation)
