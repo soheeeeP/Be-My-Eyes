@@ -13,7 +13,6 @@ var userID = ""
 var userStride = ""
 var homeLatitude = ""
 var homeLongitude = ""
-var isUser = false
 
 class UserDefineControlView: UIViewController, UINavigationControllerDelegate, UINavigationBarDelegate {
     
@@ -96,7 +95,6 @@ class UserDefineControlView: UIViewController, UINavigationControllerDelegate, U
         homeLatitude = HomeLatitude.text!
         homeLongitude = HomeLongitude.text!
                 
-        isUser = true
         Firecount = 0
         
         resetPreferences = false

@@ -168,7 +168,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 if didAppeared[PrevFrame.totalCnt[i]] == 0 {
                     didAppeared[PrevFrame.totalCnt[i]] = 1
                     // obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
-                    if isUser == false {
+//                    if isUser == false {
+//                        userStride = "35"
+//                    }
+                    if userStride == "" {
                         userStride = "35"
                     }
                     obstacleDistance = DistObstacle(height: PrevFrame.height[i], stride: Int(userStride)!)
