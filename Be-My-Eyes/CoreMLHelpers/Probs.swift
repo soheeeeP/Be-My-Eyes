@@ -107,7 +107,11 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     */
     
     // connect to MQTT
-    MQTTconnect()
+    // MQTTconnect()
+    if mqttflag == false {
+        mqttClient.connect()
+        mqttflag = true
+    }
     
     // convert the MLMultiArray to a MultiArray
     let codes = MultiArray<Float32>(_probs)
@@ -235,7 +239,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         print("Send message to MQTT")
         mqttClient.publish("robot/move", withString:text) // for robot
         mqttClient.publish("robot/key", withString:String(minKey)) // for robot
-        mqttClient.publish("user/vibr", withString:text) // for vibration motor
+        //mqttClient.publish("user/vibr", withString:text) // for vibration motor
         con_count = 0
     }
     print("user stride : " + userStride)
