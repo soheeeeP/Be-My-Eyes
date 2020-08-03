@@ -84,27 +84,57 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
             else{
                 output1.text = "현재위치" + "  \(currentLocation.latitude)" + "   " + "\(currentLocation.longitude)" + "  " + "\(Double(self.angle!))"
                 output2.text = "가야할곳" + "  \(path[index].latitude)" + "   " + "\(path[index].longitude)" + "  " + "\(Double(self.exAngle!))"
-             
+                
                 if sqrt(pow(currentLocation.latitude - self.path[index].latitude, 2) + pow(currentLocation.longitude - self.path[index].longitude, 2)) < 0.00001 {
                     index += 1
                     if index != count{
                         let d = sqrt(pow(currentLocation.latitude - self.path[index].latitude, 2) + pow(currentLocation.longitude - self.path[index].longitude, 2))
-                        let y = fabs(currentLocation.longitude - self.path[index].longitude)
-                        let a = asin(y/d) * 180 / Double.pi
-                        print(a)
-                        if a - self.exAngle > 15 {
-                            output3.text = "\(a-self.exAngle)만큼 우회전 \(self.index)"
-                            print("\(a-self.exAngle)만큼 우회전 \(self.index)")
+                        let x = (self.path[index].latitude - currentLocation.latitude)
+                        let y = (self.path[index].longitude - currentLocation.longitude)
+                        var a = asin(fabs(y/d)) * 180 / Double.pi
+                        if x > 0 && y > 0{
+                            
                         }
-                        else if a - self.exAngle < -15 {
-                            output3.text = "\(self.exAngle - a)만큼 좌회전 \(self.index)"
-                            print("\(self.exAngle - a)만큼 좌회전 \(self.index)")
+                        else if x > 0 && y < 0{
+                            a = 360 - a
+                        }
+                        else if x < 0 && y > 0 {
+                            a = 180 - a
+                            //a = 360 - a
+                        }
+                        else if x < 0 && y < 0{
+                            a = 180 + a
+                        }
+                        print(a)
+                        print(self.angle)
+                        if self.angle <= 180{
+                            if 0 < a && a <= self.angle {
+                                output3.text = "\(self.angle - a)만큼 좌회전 \(self.index)"
+                                print("\(self.angle - a)만큼 좌회전 \(self.index)")
+                            }
+                            else if self.angle + 180 < a && a <= 360{
+                                output3.text = "\(self.angle - (a - 360))만큼 좌회전 \(self.index)"
+                                print("\(self.angle - (a - 360))만큼 좌회전 \(self.index)")
+                            }
+                            else if self.angle < a && a < 180 + self.angle {
+                                output3.text = "\(a - self.angle)만큼 우회전 \(self.index)"
+                                print("\(a - self.angle)만큼 우회전 \(self.index)")
+                            }
                         }
                         else{
-                            output3.text = "\(fabs(self.exAngle - a))만큼 직진 \(self.index)"
-                            print("\(self.exAngle - a)만큼 직진 \(self.index)")
+                            if self.exAngle < a && a < 360{
+                                output3.text = "\(a - self.angle)만큼 우회전 \(self.index)"
+                                print("\(a - self.angle)만큼 우회전 \(self.index)")
+                            }
+                            else if 0 <= a && a < self.angle - 180 {
+                                output3.text = "\(a - (self.angle - 360))만큼 우회전 \(self.index)"
+                                print("\(a - (self.angle - 360))만큼 우회전 \(self.index)")
+                            }
+                            else if self.exAngle - 180 < a && a < self.exAngle{
+                                output3.text = "\(self.angle - a)만큼 좌회전 \(self.index)"
+                                print("\(self.angle - a)만큼 좌회전 \(self.index)")
+                            }
                         }
-                        //print("\(Double(self.exAngle))   \(a)")
                         self.exAngle = a
                         
                     }
