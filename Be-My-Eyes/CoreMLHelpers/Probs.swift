@@ -84,7 +84,8 @@ var idxAppeared = Array(repeating: 0, count: 12)
 var safeArea = false
 
 /// for MQTT
-let mqttClient = CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
+var mqttClient : CocoaMQTT!
+    //CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
 var conflag = false
 var con_count = 0
 var mqttflag = false
@@ -108,10 +109,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     
     // connect to MQTT
     // MQTTconnect()
-    if mqttflag == false {
-        mqttClient.connect()
-        mqttflag = true
-    }
     
     // convert the MLMultiArray to a MultiArray
     let codes = MultiArray<Float32>(_probs)
@@ -307,4 +304,14 @@ func MQTTconnect() {
         mqttClient.connect()
         mqttflag = true
     }
+}
+
+//CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
+
+func setUpMQTT() {
+    mqttClient = CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
+    mqttClient.username = "test"
+    mqttClient.password = "public"
+    mqttClient.keepAlive = 60
+    mqttClient.connect()
 }
