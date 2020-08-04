@@ -41,11 +41,14 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     let rigth = ["1시방향", "2시방향", "3시방향", "4시방향", "5시방향"]
     let left = ["11시방향", "10시방향", "9시방향", "8시방향", "7시방향"]
     var clockAngle: Int!
+    var landMark: String!
     
     @IBOutlet weak var output1: UITextField!
     @IBOutlet weak var output2: UITextField!
     @IBOutlet weak var output3: UITextField!
     
+    //임시
+    @IBOutlet weak var around: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,7 +81,9 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
             self.markers.append(marker1)
             //self.currentLocation = self.path[index]
             self.angle = self.mapView?.heading
+            objFunc54()
             if index == count {
+                output3.text = "도착했습니다."
                 self.GetDirectionTimer!.invalidate()
                 flag = false
                 output1.text = ""
@@ -88,8 +93,10 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                 output1.text = "현재위치" + "  \(currentLocation.latitude)" + "   " + "\(currentLocation.longitude)" + "  " + "\(Double(self.angle!))"
                 output2.text = "가야할곳" + "  \(path[index].latitude)" + "   " + "\(path[index].longitude)" + "  " + "\(Double(self.exAngle!))"
                 
-                if sqrt(pow(currentLocation.latitude - self.path[index].latitude, 2) + pow(currentLocation.longitude - self.path[index].longitude, 2)) < 0.00001 {
+                if sqrt(pow(currentLocation.latitude - self.path[index].latitude, 2) + pow(currentLocation.longitude - self.path[index].longitude, 2)) < 0.00003 {
                     index += 1
+                    //주변 검색
+                    
                     if index != count{
                         let d = sqrt(pow(currentLocation.latitude - self.path[index].latitude, 2) + pow(currentLocation.longitude - self.path[index].longitude, 2))
                         let x = (self.path[index].latitude - currentLocation.latitude)
@@ -195,7 +202,6 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
         self.leftArray?.append(LeftMenuData(title: "마커영역 이동", onClick: objFunc02))
         self.leftArray?.append(LeftMenuData(title: "마커 제거", onClick: objFunc03))
         
-        
         self.leftArray?.append(LeftMenuData(title: "경로탐색", onClick: objFunc57))
         self.tableView.reloadData()
         
@@ -290,6 +296,33 @@ extension mapContainerView {
 // MARK: - Map api functions -
 
 extension mapContainerView {
+    // api
+    
+    public func objFunc54() {
+        guard let center = self.mapView?.getCenter() else { return }
+        
+        let pathData = TMapPathData()
+        var fflag = 0
+        
+        pathData.requestFindAroundKeywordPOI(center, keywordName: "LG", radius: 500, count: 20, completion: { (result, error)->Void in
+            if let result = result {
+                DispatchQueue.main.async {
+                    for poi in result {
+                        if fflag == 0{
+                            if poi.name != self.landMark{
+                                self.around.text = poi.name
+                                self.landMark = poi.name
+                                print("--------------------")
+                                print(poi.name)
+                            }
+                            fflag = 1
+                        }
+                    }
+                }
+            }
+        })
+    }
+    
     // 경로탐색
     public func objfunc56(){
         let pathData = TMapPathData()
@@ -317,10 +350,10 @@ extension mapContainerView {
             polyline.map = nil
         }
         self.polylines.removeAll()
-     
+        
         let start = self.mapView?.getCenter()
         self.mapView?.isRotationEnable = true
-
+        
         let pathData = TMapPathData()
         let startPoint = CLLocationCoordinate2D(latitude: start!.latitude, longitude: start!.longitude) //한양대
         let endPoint = CLLocationCoordinate2D(latitude: self.endPointLocation.latitude, longitude: self.endPointLocation.longitude) //오토웨이타워
@@ -329,15 +362,15 @@ extension mapContainerView {
             if let polyline = result {
                 DispatchQueue.main.async {
                     /*let marker1 = TMapMarker(position: startPoint)
-                    marker1.map = self.mapView
-                    marker1.title = "출발지"
-                    self.markers.append(marker1)
-
-                    let marker2 = TMapMarker(position: endPoint)
-                    marker2.map = self.mapView
-                    marker2.title = "목적지"
-                    self.markers.append(marker2)*/
-
+                     marker1.map = self.mapView
+                     marker1.title = "출발지"
+                     self.markers.append(marker1)
+                     
+                     let marker2 = TMapMarker(position: endPoint)
+                     marker2.map = self.mapView
+                     marker2.title = "목적지"
+                     self.markers.append(marker2)*/
+                    
                     polyline.map = self.mapView
                     self.polylines.append(polyline)
                 }

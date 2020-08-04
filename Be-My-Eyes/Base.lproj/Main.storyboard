@@ -436,12 +436,19 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bqd-te-OhV">
+                                <rect key="frame" x="18" y="489" width="674" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="MCa-ER-gzU"/>
                     </view>
                     <navigationItem key="navigationItem" id="P82-7m-ICn"/>
                     <connections>
+                        <outlet property="around" destination="Bqd-te-OhV" id="mjo-oM-lXy"/>
                         <outlet property="mapContainerView" destination="HCK-sy-WY6" id="oaU-mG-86n"/>
                         <outlet property="output1" destination="b9M-L3-EtA" id="nei-TF-rpF"/>
                         <outlet property="output2" destination="B84-Tn-IJq" id="xv7-8h-v8Y"/>
