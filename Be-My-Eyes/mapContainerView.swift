@@ -38,6 +38,9 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     var index = 0
     var angle: Double!
     var exAngle: Double!
+    let rigth = ["1시방향", "2시방향", "3시방향", "4시방향", "5시방향"]
+    let left = ["11시방향", "10시방향", "9시방향", "8시방향", "7시방향"]
+    var clockAngle: Int!
     
     @IBOutlet weak var output1: UITextField!
     @IBOutlet weak var output2: UITextField!
@@ -100,39 +103,66 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                         }
                         else if x < 0 && y > 0 {
                             a = 180 - a
-                            //a = 360 - a
                         }
                         else if x < 0 && y < 0{
                             a = 180 + a
                         }
-                        print(a)
-                        print(self.angle)
                         if self.angle <= 180{
                             if 0 < a && a <= self.angle {
-                                output3.text = "\(self.angle - a)만큼 좌회전 \(self.index)"
-                                print("\(self.angle - a)만큼 좌회전 \(self.index)")
+                                self.clockAngle = Int((self.angle - a) / 30)
+                                if self.clockAngle < 1{
+                                    output3.text = "직진하세요"
+                                }
+                                else{
+                                    output3.text = "\(left[self.clockAngle])시 방향으로 좌회전하세요"
+                                }
                             }
                             else if self.angle + 180 < a && a <= 360{
-                                output3.text = "\(self.angle - (a - 360))만큼 좌회전 \(self.index)"
-                                print("\(self.angle - (a - 360))만큼 좌회전 \(self.index)")
+                                self.clockAngle = Int((self.angle - (a - 360)) / 30)
+                                if self.clockAngle < 1{
+                                    output3.text = "직진하세요"
+                                }
+                                else{
+                                    output3.text = "\(left[self.clockAngle])시 방향으로 좌회전하세요"
+                                }
                             }
                             else if self.angle < a && a < 180 + self.angle {
-                                output3.text = "\(a - self.angle)만큼 우회전 \(self.index)"
-                                print("\(a - self.angle)만큼 우회전 \(self.index)")
+                                self.clockAngle = Int((a - self.angle) / 30)
+                                if self.clockAngle < 1{
+                                    output3.text = "직진하세요"
+                                }
+                                else{
+                                    output3.text = "\(rigth[self.clockAngle])시 방향으로 우회전하세요"
+                                }
                             }
                         }
                         else{
                             if self.exAngle < a && a < 360{
-                                output3.text = "\(a - self.angle)만큼 우회전 \(self.index)"
-                                print("\(a - self.angle)만큼 우회전 \(self.index)")
+                                self.clockAngle = Int((a - self.angle) / 30)
+                                if self.clockAngle < 1{
+                                    output3.text = "직진하세요"
+                                }
+                                else{
+                                    output3.text = "\(rigth[self.clockAngle])시 방향으로 우회전하세요"
+                                }
                             }
                             else if 0 <= a && a < self.angle - 180 {
-                                output3.text = "\(a - (self.angle - 360))만큼 우회전 \(self.index)"
-                                print("\(a - (self.angle - 360))만큼 우회전 \(self.index)")
+                                self.clockAngle = Int((a - (self.angle - 360)) / 30)
+                                if self.clockAngle < 1{
+                                    output3.text = "직진하세요"
+                                }
+                                else{
+                                    output3.text = "\(rigth[self.clockAngle])시 방향으로 우회전하세요"
+                                }
                             }
                             else if self.exAngle - 180 < a && a < self.exAngle{
-                                output3.text = "\(self.angle - a)만큼 좌회전 \(self.index)"
-                                print("\(self.angle - a)만큼 좌회전 \(self.index)")
+                                self.clockAngle = Int((self.angle - a) / 30)
+                                if self.clockAngle < 1{
+                                    output3.text = "직진하세요"
+                                }
+                                else{
+                                    output3.text = "\(left[self.clockAngle])시 방향으로 좌회전하세요"
+                                }
                             }
                         }
                         self.exAngle = a
