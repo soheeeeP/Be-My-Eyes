@@ -47,7 +47,7 @@ extension depthViewController {
     func configureCaptureSession() {
     
         /// iPhone11 : builtInDualWideCamera   iPhoneX : builtInDualCamera   iPhone8 : builtInWideAngleCamera
-        guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
+        guard let camera = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) else {
             fatalError("No depth video camera available")
         }
 

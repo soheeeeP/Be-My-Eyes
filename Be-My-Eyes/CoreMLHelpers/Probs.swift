@@ -309,7 +309,7 @@ func MQTTconnect() {
 //CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
 
 func setUpMQTT() {
-    mqttClient = CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
+    mqttClient = CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.1.13", port:1883)
     mqttClient.username = "test"
     mqttClient.password = "public"
     mqttClient.keepAlive = 60
