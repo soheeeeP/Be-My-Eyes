@@ -19,8 +19,11 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchText: UITextField!
     
-    /// 내 Firebase DB 주소 저장
+    /// Firebase DB
     var ref : DatabaseReference! = Database.database().reference()
+    var pastCoordinate : CLLocationCoordinate2D! = CLLocationCoordinate2D()
+    var nextCoordinate : CLLocationCoordinate2D! = CLLocationCoordinate2D()
+    var childrenCount : Int!
     
     var mapView:TMapView?
     
@@ -399,75 +402,75 @@ extension mapContainerView {
         }
     }
     
+    
     // 사용자 경로 추적
     public func objFunc_userLoc() {
         //let userRef = self.ref.child("\(userID)").child("\(Firecount)")
-        let userRef = self.ref.child("\(userID)/\(Firecount)")
-        userRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            // Get user value
-            let value = snapshot.value as? NSDictionary
-            let location = value?["location"] as? String ?? ""
-            let time = value?["time"] as? String ?? ""
-            let latitude = value?["x"] as? CLLocationDegrees ?? 0.0
-            let longitude = value?["y"] as? CLLocationDegrees ?? 0.0
-            
-            //let longitude = value?["y"] as? CLLocationDegrees
-            print("**********************************")
-            print(location)
-            print(time)
-            print(latitude)
-            print(longitude)
-            print("**********************************")
-          }) { (error) in
+        //let userRef = self.ref.child("\(userID)/\(Firecount)")
+        
+        let userIDref = self.ref.child("\(userID)")
+        userIDref.observeSingleEvent(of: .value, with: { (snapshot) in
+            self.childrenCount = Int(snapshot.childrenCount)
+            print("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            print(self.childrenCount!)
+        }) { (error) in
             print(error.localizedDescription)
         }
         
-//        self.clearMarkers()
-//        self.clearPolylines()
-//
-//        if self.isPublicTrasit2 {
-//            self.pt2View.isHidden = true
-//        }
-//        self.isPublicTrasit2 = !self.isPublicTrasit2
-//
-//        if self.isPublicTrasit2 == false {
-//            return
-//        }
+        if self.childrenCount != nil {
+            self.pastCoordinate.latitude = 37.556452
+            self.pastCoordinate.longitude = 127.045446
+            
+            for i in 0..<self.childrenCount {
+                let count = String(i)
+                let userRef = self.ref.child("\(userID)/\(count)")
+                userRef.observeSingleEvent(of: .value, with: { (snapshot) in
 
-        let pathData = TMapPathData()
-        //let startPoint = CLLocationCoordinate2D(latitude: latitude, longitude: longitude) //한양대
-        let startPoint = CLLocationCoordinate2D(latitude: 37.5061729, longitude: 127.06173) //오토웨이타워
-        let endPoint = CLLocationCoordinate2D(latitude: 37.5061729, longitude: 127.06173) //오토웨이타워
-        let via1Point = CLLocationCoordinate2D(latitude: 37.557822, longitude: 126.925119)
-        let via2Point = CLLocationCoordinate2D(latitude: 37.510537, longitude: 127.062002)
+                    // Get user value
+                    let value = snapshot.value as? NSDictionary
+                    let location = value?["location"] as? String ?? ""
+                    let time = value?["time"] as? String ?? ""
+                    let latitude = value?["x"] as! Double
+                    let longitude = value?["y"] as! Double
 
-        pathData.findPathDataWithType(.CAR_PATH, startPoint: startPoint, endPoint: endPoint, passPoints: [via1Point, via2Point], searchOption: 1) { (result, error)->Void in
-            if let polyline = result {
-                DispatchQueue.main.async {
-                    let marker1 = TMapMarker(position: startPoint)
-                    marker1.map = self.mapView
-                    marker1.title = "출발지"
-                    self.markers.append(marker1)
-
-                    let marker2 = TMapMarker(position: endPoint)
-                    marker2.map = self.mapView
-                    marker2.title = "목적지"
-                    self.markers.append(marker2)
-
-                    let marker3 = TMapMarker(position: via1Point)
-                    marker3.map = self.mapView
-                    self.markers.append(marker3)
-
-                    let marker4 = TMapMarker(position: via2Point)
-                    marker4.map = self.mapView
-                    self.markers.append(marker4)
-
-                    polyline.map = self.mapView
-                    self.polylines.append(polyline)
-                    self.mapView?.fitMapBoundsWithPolylines(self.polylines)
-                    
-//                    self.pt2View.isHidden = false
+                    self.nextCoordinate.latitude = value?["x"] as! Double
+                    self.nextCoordinate.longitude = value?["y"] as! Double
+                        
+                    print("**********************************")
+                    print(location)
+                    print(time)
+                    print(latitude)
+                    print(longitude)
+                    print("**********************************")
+                  }) { (error) in
+                    print(error.localizedDescription)
                 }
+
+                let pathData = TMapPathData()
+                let startPoint = CLLocationCoordinate2D(latitude: self.pastCoordinate.latitude, longitude: self.pastCoordinate.longitude) //한양대
+                let endPoint = CLLocationCoordinate2D(latitude: self.nextCoordinate.latitude, longitude: self.nextCoordinate.longitude) //오토웨이타워
+
+                pathData.findPathDataWithType(.PEDESTRIAN_PATH, startPoint: startPoint, endPoint: endPoint){ (result, error)->Void in
+                    if let polyline = result {
+                        DispatchQueue.main.async {
+                            let marker1 = TMapMarker(position: startPoint)
+                            marker1.map = self.mapView
+                            marker1.title = "\(String(describing: time))"
+                            self.markers.append(marker1)
+
+                            let marker2 = TMapMarker(position: endPoint)
+                            marker2.map = self.mapView
+                            //marker2.title = "\(String(i+1))"
+                            self.markers.append(marker2)
+
+                            polyline.map = self.mapView
+                            self.polylines.append(polyline)
+                            self.mapView?.fitMapBoundsWithPolylines(self.polylines)
+                        }
+                    }
+                }
+                self.pastCoordinate.latitude = self.nextCoordinate.latitude
+                self.pastCoordinate.longitude = self.nextCoordinate.longitude
             }
         }
     }
