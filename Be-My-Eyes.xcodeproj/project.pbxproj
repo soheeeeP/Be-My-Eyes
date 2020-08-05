@@ -18,7 +18,6 @@
 		09A102052176932300220459 /* Tiramisu45.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 09A102042176932300220459 /* Tiramisu45.mlmodel */; };
 		09DC0B562175B4090044D811 /* Probs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DC0B552175B4090044D811 /* Probs.swift */; };
 		09DC0B592175B5690044D811 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DC0B582175B5690044D811 /* Popup.swift */; };
-		4047C08924BF034A00A7069F /* MapkitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4047C08824BF034A00A7069F /* MapkitViewController.swift */; };
 		40576AB624B1F4770046EBF4 /* mapContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40576AB524B1F4770046EBF4 /* mapContainerView.swift */; };
 		40576AB924B1F6280046EBF4 /* TMapSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40576AB724B1F5800046EBF4 /* TMapSDK.framework */; };
 		40576ABA24B1F6280046EBF4 /* TMapSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 40576AB724B1F5800046EBF4 /* TMapSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -56,7 +55,6 @@
 		09A102042176932300220459 /* Tiramisu45.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = Tiramisu45.mlmodel; sourceTree = "<group>"; };
 		09DC0B552175B4090044D811 /* Probs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Probs.swift; sourceTree = "<group>"; };
 		09DC0B582175B5690044D811 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
-		4047C08824BF034A00A7069F /* MapkitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapkitViewController.swift; sourceTree = "<group>"; };
 		40576AB524B1F4770046EBF4 /* mapContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mapContainerView.swift; sourceTree = "<group>"; };
 		40576AB724B1F5800046EBF4 /* TMapSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TMapSDK.framework; path = "Be-My-Eyes/TMapSDK.framework"; sourceTree = "<group>"; };
 		40A3DD7724B4B542006FAB1C /* RobotControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobotControlView.swift; sourceTree = "<group>"; };
@@ -107,7 +105,6 @@
 				0945E3BB21755EF500B2AB60 /* Models */,
 				0945E3A921755E6300B2AB60 /* AppDelegate.swift */,
 				0945E3AB21755E6300B2AB60 /* ViewController.swift */,
-				4047C08824BF034A00A7069F /* MapkitViewController.swift */,
 				E8223AAE247C152100755C43 /* StartViewController.swift */,
 				40576AB524B1F4770046EBF4 /* mapContainerView.swift */,
 				40A3DD7724B4B542006FAB1C /* RobotControlView.swift */,
@@ -270,7 +267,6 @@
 				0945E4182175811C00B2AB60 /* UIImage+CVPixelBuffer.swift in Sources */,
 				40576AB624B1F4770046EBF4 /* mapContainerView.swift in Sources */,
 				09DC0B592175B5690044D811 /* Popup.swift in Sources */,
-				4047C08924BF034A00A7069F /* MapkitViewController.swift in Sources */,
 				0945E41B2175811C00B2AB60 /* MultiArray.swift in Sources */,
 				E8223AAF247C152100755C43 /* StartViewController.swift in Sources */,
 				09DC0B562175B4090044D811 /* Probs.swift in Sources */,
