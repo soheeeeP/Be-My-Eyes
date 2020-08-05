@@ -293,7 +293,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         
         // get a handle on the back depth camera
         /// iPhone11 : builtInDualWideCamera   iPhoneX : builtInDualCamera   iPhone8 : builtInWideAngleCamera
-        guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
+        guard let camera = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) else {
             let message = "No depth video camera available"
             popup_alert(self, title: "Camera error", message: message)
             return
