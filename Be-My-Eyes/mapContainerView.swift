@@ -185,6 +185,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     @IBAction func search(_ sender: Any) {
         resignFirstResponder()
         self.objfunc56()
+        Move()
     }
     
     // Go back
