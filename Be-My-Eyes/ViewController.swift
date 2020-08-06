@@ -27,7 +27,8 @@ var sttRecognizing : Bool! = false
 var resetPreferences: Bool! = false
 var mapMode : Bool! = false
 
-var pixelData : [[UInt8]]?
+//var pixelData : [[UInt8]]?
+var pixelData = [[UInt8]](repeating: [UInt8](repeating: 0, count: 180), count: 320)
 
 /// A view controller to pass camera inputs through a vision model
 class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate, SFSpeechRecognizerDelegate {
@@ -257,6 +258,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
                         }
                         
                         self.savingLocation()
+                        
+                        //pixel
+                        obtainPixelData()
                     }
                     self.ready = true
                 })
@@ -293,7 +297,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         
         // get a handle on the back depth camera
         /// iPhone11 : builtInDualWideCamera   iPhoneX : builtInDualCamera   iPhone8 : builtInWideAngleCamera
-        guard let camera = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) else {
+        guard let camera = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) else {
             let message = "No depth video camera available"
             popup_alert(self, title: "Camera error", message: message)
             return
@@ -739,7 +743,7 @@ extension ViewController: AVCaptureDepthDataOutputDelegate{
         let rotWidth = UIImage(ciImage: rotatedImage!).size.width
         let rotHeight = UIImage(ciImage: rotatedImage!).size.height
         
-        var pixelData = [[UInt8]](repeating: [UInt8](repeating: 0, count: Int(rotWidth)), count: Int(rotHeight))
+//        var pixelData = [[UInt8]](repeating: [UInt8](repeating: 0, count: Int(rotWidth)), count: Int(rotHeight))
         
         DispatchQueue.main.async { [weak self] in
             self?.depthMap = depthMap

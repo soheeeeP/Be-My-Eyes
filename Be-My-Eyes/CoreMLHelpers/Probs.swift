@@ -67,12 +67,14 @@ struct PrevFrame{
     static var obstacle = Array(repeating: 6, count: 16)  //initialize to road (no obstacle)
     static var height = Array(repeating: 0, count: 16)
     static var totalCnt = Array(repeating: 0, count: 16)
+    static var depthHeight = Array(repeating: 0.0, count: 16)
 }
 
 /// Obstacle information of current frame
 struct CurFrame{
     static var obstacle = Array(repeating: 6, count: 16)  //initialize to road (no obstacle)
     static var height = Array(repeating: 0, count: 16)
+    static var depthHeight = Array(repeating: 0.0, count: 16)
 }
 
 var obstacle = ""
@@ -124,6 +126,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     var cellDistance = 0  // distance between each cell's obstacle and the user
     var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // most far distance
     var minKey = 0  // most far cell index
+    
+    let wwPixel = Int(180/16)
+    var hhPixel = 0
+    var normalizedPixelValue = 0.0
 
     // calculate obstacle distance for each cell
     for i in 0...15 {
@@ -297,6 +303,30 @@ func DistObstacle(height: Int, stride: Int) -> Int { // (10 - PrevFrame.height[i
             foot = 495/stride //45*11
     }
     return foot
+}
+
+func obtainPixelData() {
+    
+    //pixel height = 320
+    for h in stride(from: 50, to: 320, by: 2) {
+        for j in stride(from: 0, to: 180, by: 12) {
+            //normalized pixel data
+            print(normalizeByteData(byte: pixelData[h][j]), terminator: " ")
+//            print(round(Double(pixelData[h][j]) / pixelDepth * multiplier) / multiplier, terminator:" ")
+        }
+        print("\n")
+    }
+    print("------------------------------------")
+//
+}
+
+func normalizeByteData(byte: UInt8) -> Double {
+    
+    let pixelDepth = 255.0
+    let numberofPlaces = 3.0
+    let multiplier = pow(10.0, numberofPlaces)
+    
+    return round(Double(byte) / pixelDepth * multiplier) / multiplier
 }
 
 func MQTTconnect() {

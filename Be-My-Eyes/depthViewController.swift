@@ -189,7 +189,7 @@ extension depthViewController {
 
             pixelValues = intensities
             
-            for i in stride(from: 50, to: 150, by: 1){
+            for i in stride(from: 0, to: 320, by: 1){
                 for j in stride(from: 0, to: width, by: 1){
                     minimizedPixelValues[i][j]=pixelValues![i*bytesPerRow + j]
                 }
