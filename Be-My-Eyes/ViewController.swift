@@ -231,6 +231,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     
                     // unmap the discrete segmentation to RGB pixels
                     let image = codesToImage(argmax)
+                    
+                    //generate black-and-white image
+//                    let image = codesToBlackAndWhiteImage(argmax)
+                    
                     // update the image on the UI thread
                     DispatchQueue.main.async {
                         self.segmentation.image = image
