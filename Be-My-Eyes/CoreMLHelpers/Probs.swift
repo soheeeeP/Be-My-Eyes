@@ -11,6 +11,8 @@ import UIKit
 import CoreML
 import CocoaMQTT
 
+let depthView = depthViewController()
+
 /// Convert probability tensor into an image
 func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
     // TODO: dynamically load a label map instead of hard coding
@@ -129,8 +131,9 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     
     let wwPixel = Int(180/16)
     var hhPixel = 0
-    var normalizedPixelValue = 0.0
-
+    var nValue = 0.0
+    var depthDetected = Array(repeating: false, count: 16)  //한 cell에서 한 번씩만 확인하도록 flag 설정
+    
     // calculate obstacle distance for each cell
     for i in 0...15 {
         for h in stride(from: 50, to: height, by: 2) { // for speed  // for h in 50 ..< height {
@@ -141,6 +144,24 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
                 break
             }
+            else {
+                if depthDetected[i] == false {
+                    
+                    //label에서는 인도나 도로라고 인식되지만, depth값의 장애물 임계치를 넘는 pixel값을 가지는 경우
+                    hhPixel = Int(Double(height-1-h) * 0.9)
+                    nValue = depthView.normalizeByteData(byte: pixelData[hhPixel][wwPixel*i])
+                    if nValue > 0.75 {
+                        print("cell[\(i)] : depth detected at pixelData[\(hhPixel)][\(wwPixel*i)]")
+                        
+                        //normalize된 값이 0.75이상(pixel값 192이상)이면, 해당 cell을 obstacle이 존재하는 cell이라고 인지하도록 설정
+                        cell[i] = height-51                             //blocked cell처리
+                        CurFrame.height[i] = height-51
+                        CurFrame.depthHeight[i] = Double(cell[i]) * sqrt(nValue*nValue + 1)
+                        
+                        depthDetected[i] = true
+                    }
+                }
+            }
         }
     }
     
@@ -150,6 +171,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     for i in 0...15 {
         // cellDistance = Int(sqrt((pow(Double(cell[i]), 2) + pow(Double((ww*i)-(width/2)),2))))
         cellDistance = cell[i]
+        
+        if depthDetected[i] == true {
+            continue
+        }
         if minDistance > cellDistance {
             if (i>0 && cell[i-1] <= height*3/4) || (i<15 && cell[i+1] <= height*3/4) {
                 minDistance = cellDistance
@@ -311,7 +336,7 @@ func obtainPixelData() {
     for h in stride(from: 50, to: 320, by: 2) {
         for j in stride(from: 0, to: 180, by: 12) {
             //normalized pixel data
-            print(normalizeByteData(byte: pixelData[h][j]), terminator: " ")
+            print(depthView.normalizeByteData(byte: pixelData[h][j]), terminator: " ")
 //            print(round(Double(pixelData[h][j]) / pixelDepth * multiplier) / multiplier, terminator:" ")
         }
         print("\n")
@@ -320,14 +345,6 @@ func obtainPixelData() {
 //
 }
 
-func normalizeByteData(byte: UInt8) -> Double {
-    
-    let pixelDepth = 255.0
-    let numberofPlaces = 3.0
-    let multiplier = pow(10.0, numberofPlaces)
-    
-    return round(Double(byte) / pixelDepth * multiplier) / multiplier
-}
 
 func MQTTconnect() {
     if mqttflag == false {

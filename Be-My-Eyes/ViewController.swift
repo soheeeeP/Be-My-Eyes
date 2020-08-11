@@ -258,9 +258,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
                         }
                         
                         self.savingLocation()
-                        
-                        //pixel
-                        obtainPixelData()
                     }
                     self.ready = true
                 })
@@ -297,7 +294,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
         
         // get a handle on the back depth camera
         /// iPhone11 : builtInDualWideCamera   iPhoneX : builtInDualCamera   iPhone8 : builtInWideAngleCamera
-        guard let camera = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) else {
+        guard let camera = AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back) else {
             let message = "No depth video camera available"
             popup_alert(self, title: "Camera error", message: message)
             return
@@ -752,13 +749,6 @@ extension ViewController: AVCaptureDepthDataOutputDelegate{
             
             //save pixel data in 2D array
             pixelData = depthView.pixelValues(fromCGImage: depthView.convertCIImageToCGImage(inputImage: rotatedImage!), width: Int(rotWidth), height: Int(rotHeight))!
-//            for i in stride(from: 50, to: 150, by: 10) {
-//                for j in stride(from: 0, to: Int(rotWidth), by: 10){
-//                    print(pixelData[i][j], terminator:" ")
-//                }
-//                print("\n")
-//            }
-//            print("-------------------")
         }
         
     }
