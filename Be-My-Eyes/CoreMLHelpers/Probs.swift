@@ -11,25 +11,26 @@ import UIKit
 import CoreML
 import CocoaMQTT
 
+let depthView = depthViewController()
+
+let label_map = [
+    0:  [255, 0, 0],        //0 : rider
+    1:  [70, 70, 70],       //1 : building
+    2:  [0, 0, 142],        //2 : car
+    3:  [153, 153, 153],    //3 : pole
+    4:  [190, 153, 153],    //4 : fence
+    5:  [220, 20, 60],      //5 : person
+    6:  [128, 64, 128],     //6 : road
+    7:  [244, 35, 232],     //7 : sidewalk
+    8:  [220, 220, 0],      //8 : traffic sign
+    9:  [70, 130, 180],     //9 : sky
+    10: [107, 142, 35],     //10 : vegetation
+    11: [0, 0, 0]           //11 :
+]
+
 /// Convert probability tensor into an image
 func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
     // TODO: dynamically load a label map instead of hard coding
-    // can this bonus data be included in the model file?
-    let label_map = [
-        0:  [255, 0, 0],        //0 : rider
-        1:  [70, 70, 70],       //1 : building
-        2:  [0, 0, 142],        //2 : car
-        3:  [153, 153, 153],    //3 : pole
-        4:  [190, 153, 153],    //4 : fence
-        5:  [220, 20, 60],      //5 : person
-        6:  [128, 64, 128],     //6 : road
-        7:  [244, 35, 232],     //7 : sidewalk
-        8:  [220, 220, 0],      //8 : traffic sign
-        9:  [70, 130, 180],     //9 : sky
-        10: [107, 142, 35],     //10 : vegetation
-        11: [0, 0, 0]           //11 :
-    ]
-    
     // convert the MLMultiArray to a MultiArray
     let codes = MultiArray<Float32>(_probs)
     // get the shape information from the probs
@@ -37,11 +38,11 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
     let width = codes.shape[2]
     // initialize some bytes to store the image in
     var bytes = [UInt8](repeating: 255, count: height * width * 4)
-    // iterate over the pixels in the output probs
-
     
     // print(label_map[Int(codes[0, 20, 20])]) //출력 형식 : Optional([128, 64, 128])
     // print(Int(codes[0, 20, 20])) //출력 형식 : key값 int 숫자
+    
+    // iterate over the pixels in the output probs
     for h in 0 ..< height {
         for w in 0 ..< width {
             // get the array offset for this word
@@ -52,6 +53,44 @@ func codesToImage(_ _probs: MLMultiArray) -> UIImage? {
             bytes[offset + 0] = UInt8(rgb![0])
             bytes[offset + 1] = UInt8(rgb![1])
             bytes[offset + 2] = UInt8(rgb![2])
+        }
+    }
+    // create a UIImage from the byte array
+    return UIImage.fromByteArray(bytes, width: width, height: height,
+                                 scale: 0, orientation: .up,
+                                 bytesPerRow: width * 4,
+                                 colorSpace: CGColorSpaceCreateDeviceRGB(),
+                                 alphaInfo: .premultipliedLast)
+}
+/// Gererate Black-and-White image as a visual aid
+func codesToBlackAndWhiteImage(_ _probs: MLMultiArray) -> UIImage? {
+    // convert the MLMultiArray to a MultiArray
+    let codes = MultiArray<Float32>(_probs)
+    // get the shape information from the probs
+    let height = codes.shape[1]
+    let width = codes.shape[2]
+    // initialize some bytes to store the image in
+    var bytes = [UInt8](repeating: 255, count: height * width * 4)
+    
+    // iterate over the pixels in the output probs
+    for h in 0 ..< height {
+        for w in 0 ..< width {
+            // get the array offset for this word
+            let offset = h * width * 4 + w * 4
+            // get the RGB value for the highest probability class
+            let object = Int(codes[0, h ,w])
+    
+            if object != 6 && object != 7 { //인도, 또는 도로가 아닌 경우 검은색
+                bytes[offset + 0] = UInt8(0)
+                bytes[offset + 1] = UInt8(0)
+                bytes[offset + 2] = UInt8(0)
+            } else {
+                //인도, 또는 도로인 경우 흰색
+                bytes[offset + 0] = UInt8(255)
+                bytes[offset + 1] = UInt8(255)
+                bytes[offset + 2] = UInt8(255)
+            }
+
         }
     }
     // create a UIImage from the byte array
@@ -129,8 +168,9 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     
     let wwPixel = Int(180/16)
     var hhPixel = 0
-    var normalizedPixelValue = 0.0
-
+    var nValue = 0.0
+    var depthDetected = Array(repeating: false, count: 16)  //한 cell에서 한 번씩만 확인하도록 flag 설정
+    
     // calculate obstacle distance for each cell
     for i in 0...15 {
         for h in stride(from: 50, to: height, by: 2) { // for speed  // for h in 50 ..< height {
@@ -141,6 +181,24 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
                 break
             }
+            else {
+                if depthDetected[i] == false {
+                    
+                    //label에서는 인도나 도로라고 인식되지만, depth값의 장애물 임계치를 넘는 pixel값을 가지는 경우
+                    hhPixel = Int(Double(height-1-h) * 0.9)
+                    nValue = depthView.normalizeByteData(byte: pixelData[hhPixel][wwPixel*i])
+                    if nValue > 0.75 {
+                        print("cell[\(i)] : depth detected at pixelData[\(hhPixel)][\(wwPixel*i)]")
+                        
+                        //normalize된 값이 0.75이상(pixel값 192이상)이면, 해당 cell을 obstacle이 존재하는 cell이라고 인지하도록 설정
+                        cell[i] = height-51                             //blocked cell처리
+                        CurFrame.height[i] = height-51
+                        CurFrame.depthHeight[i] = Double(cell[i]) * sqrt(nValue*nValue + 1)
+                        
+                        depthDetected[i] = true
+                    }
+                }
+            }
         }
     }
     
@@ -150,6 +208,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     for i in 0...15 {
         // cellDistance = Int(sqrt((pow(Double(cell[i]), 2) + pow(Double((ww*i)-(width/2)),2))))
         cellDistance = cell[i]
+        
+        if depthDetected[i] == true {
+            continue
+        }
         if minDistance > cellDistance {
             if (i>0 && cell[i-1] <= height*3/4) || (i<15 && cell[i+1] <= height*3/4) {
                 minDistance = cellDistance
@@ -311,7 +373,7 @@ func obtainPixelData() {
     for h in stride(from: 50, to: 320, by: 2) {
         for j in stride(from: 0, to: 180, by: 12) {
             //normalized pixel data
-            print(normalizeByteData(byte: pixelData[h][j]), terminator: " ")
+            print(depthView.normalizeByteData(byte: pixelData[h][j]), terminator: " ")
 //            print(round(Double(pixelData[h][j]) / pixelDepth * multiplier) / multiplier, terminator:" ")
         }
         print("\n")
@@ -320,14 +382,6 @@ func obtainPixelData() {
 //
 }
 
-func normalizeByteData(byte: UInt8) -> Double {
-    
-    let pixelDepth = 255.0
-    let numberofPlaces = 3.0
-    let multiplier = pow(10.0, numberofPlaces)
-    
-    return round(Double(byte) / pixelDepth * multiplier) / multiplier
-}
 
 func MQTTconnect() {
     if mqttflag == false {
