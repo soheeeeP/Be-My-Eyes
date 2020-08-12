@@ -13,11 +13,12 @@ import MapKit
 import CoreLocation
 import AVFoundation
 import Firebase
+import Speech
+import FirebaseDatabase
 
 class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, CLLocationManagerDelegate {
     @IBOutlet var mapContainerView:UIView!
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var searchText: UITextField!
     
     /// Firebase DB
     var ref : DatabaseReference! = Database.database().reference()
@@ -55,7 +56,18 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     @IBOutlet weak var output2: UITextField!
     
     
-    //임시
+    //STT
+    @IBOutlet weak var STTbutton: UIButton!
+    @IBOutlet weak var executionMode: UITextField!
+    
+    private let speechRecognizer = SFSpeechRecognizer(locale: Locale.init(identifier: "Ko-kr"))
+    private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    private var recognitionTask: SFSpeechRecognitionTask?
+
+    private let audioEngine = AVAudioEngine()
+    
+    //TTS
+     var islocation = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,6 +85,145 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
         self.initTableViewData()
     }
     
+    // Implement TTS
+    func speak(_ string: String) {
+        setAudioSessionForTTS()
+        
+        if islocation == false {
+            let utterance = AVSpeechUtterance(string: string)
+            utterance.voice = AVSpeechSynthesisVoice(language: "ko-KR")
+            utterance.rate = 0.5
+            StopandResumingTTS(utterance: utterance)
+        }
+    }
+    func setAudioSessionForTTS() {
+        let audioSession = AVAudioSession.sharedInstance()
+        do{
+            try audioSession.setCategory(AVAudioSession.Category.playback)
+            try audioSession.setMode(AVAudioSession.Mode.default)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("audio session error")
+        }
+    }
+    
+    //STT
+    @IBAction func SpeechToText(_ sender: Any) {
+        if audioEngine.isRunning {
+            //self.mapView?.trackinMode = TrackingMode.followWithHeading
+            audioEngine.stop()
+            recognitionRequest?.endAudio()
+            
+            STTbutton.isEnabled = false
+            STTbutton.setTitle("SPEAK",for: .normal)
+            
+            sttRecognizing = false
+            
+            //debugging
+            print(mode)
+            //switching the execution mode according to the voice recognition input'
+            if(executionMode.text != " "){
+                self.objfunc56()
+            }
+
+
+        } else {
+            //start recognition tasks
+            self.mapView?.trackinMode = TrackingMode.followWithHeading
+            sttRecognizing = true
+            StopandResumingTTS(utterance: setUtterance(language: "ko-KR"))
+            
+            startRecording()
+            STTbutton.setTitle("DONE", for: .normal)
+        }
+    }
+    func startRecording() {
+        if recognitionTask != nil {
+            recognitionTask?.cancel()
+            recognitionTask = nil
+        }
+        
+        //create AVAudioSession for recording
+        setAudioSessionForSTT()
+
+        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+        
+        //check whether the device can operate voice recognition or not
+        let inputNode = audioEngine.inputNode
+        
+        guard let recognitionRequest = recognitionRequest else {
+            fatalError("Unable to create an SFSpeechAudioBufferRecognitionRequest object")
+        }
+        //report partial recognition result
+        recognitionRequest.shouldReportPartialResults = true
+        
+        //start audio recognition
+        recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest, resultHandler: { (result, error) in
+            
+            var isFinal = false
+            //인식 결과가 nil이 아니면, textview의 속성을 최상의 텍스트로 설정
+            if result != nil{
+                self.executionMode.text = result?.bestTranscription.formattedString
+                mode = self.executionMode.text!
+                isFinal = (result?.isFinal)!
+            }
+            //오류가 없거나, 최종 결과가 나오면 audioEngine과 인식 작업을 중지
+            //녹음 버튼 활성화
+            if error != nil || isFinal {
+                self.audioEngine.stop()
+                
+                inputNode.removeTap(onBus: 0)
+                
+                self.recognitionRequest = nil
+                self.recognitionTask = nil
+                self.STTbutton.isEnabled = true
+            }
+        })
+        
+        //recognitionRequest에 오디오 입력 추가
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat){ (buffer, when) in
+            self.recognitionRequest?.append(buffer)
+        }
+        
+        audioEngine.prepare()
+        
+        do{
+            try audioEngine.start()
+        } catch {
+            print("audio engine start error")
+        }
+        
+        executionMode.text = " "
+    }
+    
+    func setUtterance(language :String) -> AVSpeechUtterance {
+        let utterance = AVSpeechUtterance(string: "")
+        utterance.voice = AVSpeechSynthesisVoice(language: language)
+        utterance.rate = 0.5
+        
+        return utterance
+    }
+    
+    func StopandResumingTTS(utterance: AVSpeechUtterance){
+        if mapMode == true || sttRecognizing == true {
+            tts.stopSpeaking(at: .immediate)
+        } else{
+            tts.speak(utterance)
+        }
+    }
+    
+    func setAudioSessionForSTT(){
+        let audioSession = AVAudioSession.sharedInstance()
+        do{
+            try audioSession.setCategory(AVAudioSession.Category.record)
+            try audioSession.setMode(AVAudioSession.Mode.measurement)
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("audio session error")
+        }
+    }
+    
     // Move
     @objc func Move(){
         if flag == true {
@@ -86,11 +237,12 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
             marker1.title = "출발지"
             marker1.icon = UIImage(named: "image")
             self.markers.append(marker1)
-            //self.currentLocation = self.path[index]
+            
             self.angle = self.mapView?.heading
             objFunc54()
             if index == count {
                 output3.text = "도착했습니다."
+                speak("도착했습니다.")
                 self.GetDirectionTimer!.invalidate()
                 flag = false
                 output1.text = ""
@@ -128,7 +280,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                                     output3.text = "직진하세요"
                                 }
                                 else{
-                                    output3.text = "\(left[self.clockAngle])시 방향으로 좌회전하세요"
+                                    output3.text = "\(left[self.clockAngle])으로 좌회전하세요"
                                 }
                             }
                             else if self.angle + 180 < a && a <= 360{
@@ -137,7 +289,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                                     output3.text = "직진하세요"
                                 }
                                 else{
-                                    output3.text = "\(left[self.clockAngle])시 방향으로 좌회전하세요"
+                                    output3.text = "\(left[self.clockAngle])으로 좌회전하세요"
                                 }
                             }
                             else if self.angle < a && a < 180 + self.angle {
@@ -146,9 +298,10 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                                     output3.text = "직진하세요"
                                 }
                                 else{
-                                    output3.text = "\(rigth[self.clockAngle])시 방향으로 우회전하세요"
+                                    output3.text = "\(rigth[self.clockAngle])으로 우회전하세요"
                                 }
                             }
+                            self.speak(output3.text!)
                         }
                         else{
                             if self.exAngle < a && a < 360{
@@ -157,7 +310,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                                     output3.text = "직진하세요"
                                 }
                                 else{
-                                    output3.text = "\(rigth[self.clockAngle])시 방향으로 우회전하세요"
+                                    output3.text = "\(rigth[self.clockAngle])으로 우회전하세요"
                                 }
                             }
                             else if 0 <= a && a < self.angle - 180 {
@@ -166,7 +319,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                                     output3.text = "직진하세요"
                                 }
                                 else{
-                                    output3.text = "\(rigth[self.clockAngle])시 방향으로 우회전하세요"
+                                    output3.text = "\(rigth[self.clockAngle])으로 우회전하세요"
                                 }
                             }
                             else if self.exAngle - 180 < a && a < self.exAngle{
@@ -175,9 +328,10 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                                     output3.text = "직진하세요"
                                 }
                                 else{
-                                    output3.text = "\(left[self.clockAngle])시 방향으로 좌회전하세요"
+                                    output3.text = "\(left[self.clockAngle])으로 좌회전하세요"
                                 }
                             }
+                            self.speak(output3.text!)
                         }
                         self.exAngle = a
                         
@@ -185,14 +339,6 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                 }
             }
         }
-    }
-    
-    
-    //search text
-
-    @IBAction func search(_ sender: Any) {
-        resignFirstResponder()
-        self.objfunc56()
     }
     
     @IBAction func Back(_ sender: Any) {
@@ -323,6 +469,7 @@ extension mapContainerView {
                             if poi.name != self.landMark{
                                 self.around.text = poi.name
                                 self.landMark = poi.name
+                                self.speak(poi.name!)
                                 print("--------------------")
                                 print(poi.name)
                             }
@@ -338,13 +485,15 @@ extension mapContainerView {
     public func objfunc56(){
         let pathData = TMapPathData()
         self.mapView?.trackinMode = TrackingMode.followWithHeading
-        pathData.requestFindAllPOI(self.searchText.text!, count: 20) { (result, error)->Void in
+        pathData.requestFindAllPOI(self.executionMode.text!, count: 20) { (result, error)->Void in
             if let result = result {
                 DispatchQueue.main.async {
                     for poi in result {
                         if self.flag2 == false{
                             self.endPointLocation = poi.coordinate
                             self.flag2 = true
+                            self.objFunc57()
+                            break
                         }
                     }
                 }
@@ -372,33 +521,17 @@ extension mapContainerView {
         pathData.findPathDataWithType(.PEDESTRIAN_PATH, startPoint: startPoint, endPoint: endPoint){ (result, error)->Void in
             if let polyline = result {
                 DispatchQueue.main.async {
-                    /*let marker1 = TMapMarker(position: startPoint)
-                     marker1.map = self.mapView
-                     marker1.title = "출발지"
-                     self.markers.append(marker1)
-                     
-                     let marker2 = TMapMarker(position: endPoint)
-                     marker2.map = self.mapView
-                     marker2.title = "목적지"
-                     self.markers.append(marker2)*/
-                    
                     polyline.map = self.mapView
                     self.polylines.append(polyline)
                 }
             }
             self.path = result?.path
-            //self.count = self.path.count
+            self.count = self.path.count
             self.flag = true
-            for x in self.path{
-                print("--------------\(self.count)----------------")
-                print(x)
-                self.count += 1
-            }
+
             let d = sqrt(pow(self.path[0].latitude - self.path[1].latitude, 2) + pow(self.path[0].longitude - self.path[1].longitude, 2))
-            //let x = fabs(self.path[0].latitude - self.path[1].latitude)
             let y = fabs(self.path[0].longitude - self.path[1].longitude)
             self.exAngle = asin(y/d) * 180 / Double.pi
-            //print(self.exAngle)
         }
     }
     
