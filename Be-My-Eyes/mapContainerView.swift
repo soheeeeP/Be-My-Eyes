@@ -110,6 +110,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
     //STT
     @IBAction func SpeechToText(_ sender: Any) {
         if audioEngine.isRunning {
+            //self.mapView?.trackinMode = TrackingMode.followWithHeading
             audioEngine.stop()
             recognitionRequest?.endAudio()
             
@@ -123,12 +124,12 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
             //switching the execution mode according to the voice recognition input'
             if(executionMode.text != " "){
                 self.objfunc56()
-                //self.objFunc57()
             }
-            //switchingView(mode: mode)
+
 
         } else {
             //start recognition tasks
+            self.mapView?.trackinMode = TrackingMode.followWithHeading
             sttRecognizing = true
             StopandResumingTTS(utterance: setUtterance(language: "ko-KR"))
             
@@ -222,6 +223,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
             print("audio session error")
         }
     }
+    
     // Move
     @objc func Move(){
         if flag == true {
@@ -235,7 +237,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
             marker1.title = "출발지"
             marker1.icon = UIImage(named: "image")
             self.markers.append(marker1)
-            //self.currentLocation = self.path[index]
+            
             self.angle = self.mapView?.heading
             objFunc54()
             if index == count {
@@ -337,14 +339,6 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
                 }
             }
         }
-    }
-    
-    
-    //search text
-
-    @IBAction func search(_ sender: Any) {
-        resignFirstResponder()
-        self.objfunc56()
     }
     
     @IBAction func Back(_ sender: Any) {
@@ -498,6 +492,8 @@ extension mapContainerView {
                         if self.flag2 == false{
                             self.endPointLocation = poi.coordinate
                             self.flag2 = true
+                            self.objFunc57()
+                            break
                         }
                     }
                 }
@@ -525,33 +521,17 @@ extension mapContainerView {
         pathData.findPathDataWithType(.PEDESTRIAN_PATH, startPoint: startPoint, endPoint: endPoint){ (result, error)->Void in
             if let polyline = result {
                 DispatchQueue.main.async {
-                    /*let marker1 = TMapMarker(position: startPoint)
-                     marker1.map = self.mapView
-                     marker1.title = "출발지"
-                     self.markers.append(marker1)
-                     
-                     let marker2 = TMapMarker(position: endPoint)
-                     marker2.map = self.mapView
-                     marker2.title = "목적지"
-                     self.markers.append(marker2)*/
-                    
                     polyline.map = self.mapView
                     self.polylines.append(polyline)
                 }
             }
             self.path = result?.path
-            //self.count = self.path.count
+            self.count = self.path.count
             self.flag = true
-            for x in self.path{
-                print("--------------\(self.count)----------------")
-                print(x)
-                self.count += 1
-            }
+
             let d = sqrt(pow(self.path[0].latitude - self.path[1].latitude, 2) + pow(self.path[0].longitude - self.path[1].longitude, 2))
-            //let x = fabs(self.path[0].latitude - self.path[1].latitude)
             let y = fabs(self.path[0].longitude - self.path[1].longitude)
             self.exAngle = asin(y/d) * 180 / Double.pi
-            //print(self.exAngle)
         }
     }
     
