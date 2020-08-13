@@ -76,7 +76,7 @@ class mapContainerView: UIViewController, TMapViewDelegate, MKMapViewDelegate, C
         
         self.mapView = TMapView(frame: mapContainerView.frame)
         self.mapView?.delegate = self
-        self.mapView?.setApiKey("l7xxf8cfdf8de7494065a7a4f2d71d12a412")
+        self.mapView?.setApiKey("l7xx793773624c4f4730b2be78a6062c9f36")
         
         
         mapContainerView.addSubview(self.mapView!)
