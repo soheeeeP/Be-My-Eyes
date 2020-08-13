@@ -51,7 +51,7 @@
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1904.1871921182267" y="-1282.4000000000001"/>
+            <point key="canvasLocation" x="-1903" y="-1297"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="xH9-bj-AVy">
@@ -748,7 +748,7 @@
                                         </connections>
                                     </button>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Auto Save" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zS6-UX-BAA">
-                                        <rect key="frame" x="19.333333333333311" y="0.0" width="48.666666666666657" height="22"/>
+                                        <rect key="frame" x="19.333333333333314" y="0.0" width="48.666666666666657" height="22"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
