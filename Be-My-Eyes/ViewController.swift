@@ -288,9 +288,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, AVCaptureVide
     }
     
     /// Handle the view appearing
-    override func viewDidAppear(_ animated: Bool) {
-        setUpMQTT()
-        
+    override func viewDidAppear(_ animated: Bool) {        
         super.viewDidAppear(animated)
         // setup the AV session
         captureSession = AVCaptureSession()

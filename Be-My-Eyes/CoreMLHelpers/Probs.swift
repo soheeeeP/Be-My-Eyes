@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import CoreML
-import CocoaMQTT
 
 let depthView = depthViewController()
 
@@ -124,13 +123,6 @@ var didAppeared = Array(repeating: 0, count: 16)
 var idxAppeared = Array(repeating: 0, count: 12)
 var safeArea = false
 
-/// for MQTT
-var mqttClient : CocoaMQTT!
-    //CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
-var conflag = false
-var con_count = 0
-var mqttflag = false
-
 /// Locate the obstacle & Return in text
 func FindObject(_ _probs: MLMultiArray) -> String {
     /* Label map
@@ -147,9 +139,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
      10: vegetation  green
      11: unlabeled   black
     */
-    
-    // connect to MQTT
-    // MQTTconnect()
     
     // convert the MLMultiArray to a MultiArray
     let codes = MultiArray<Float32>(_probs)
@@ -237,9 +226,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 if didAppeared[PrevFrame.totalCnt[i]] == 0 {
                     didAppeared[PrevFrame.totalCnt[i]] = 1
                     // obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
-//                    if isUser == false {
-//                        userStride = "35"
-//                    }
                     if userStride == "" {
                         userStride = "35"
                     }
@@ -292,21 +278,8 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     }
     // debugging TTS message
     print(text + " cell : \(minKey)")
-    
-    // send message to MQTT
-    con_count+=1
-    print("count \(con_count)")
-    // MQTTclient()
-    if con_count == 3 {
-        print("Send message to MQTT")
-        mqttClient.publish("robot/move", withString:text) // for robot
-        mqttClient.publish("robot/key", withString:String(minKey)) // for robot
-        //mqttClient.publish("user/vibr", withString:text) // for vibration motor
-        con_count = 0
-    } 
     print("user stride : " + userStride)
 
-    
     // return text to print and make TTS
     return text
 }
@@ -380,22 +353,4 @@ func obtainPixelData() {
     }
     print("------------------------------------")
 //
-}
-
-
-func MQTTconnect() {
-    if mqttflag == false {
-        mqttClient.connect()
-        mqttflag = true
-    }
-}
-
-//CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
-
-func setUpMQTT() {
-    mqttClient = CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.1.13", port:1883)
-    mqttClient.username = "test"
-    mqttClient.password = "public"
-    mqttClient.keepAlive = 60
-    mqttClient.connect()
 }
