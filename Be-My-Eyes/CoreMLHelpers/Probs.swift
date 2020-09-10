@@ -211,11 +211,11 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     
     // straight 영역의 장애물이 limit보다 멀리 있는 경우 straight부터 가도록 알림
     safeArea = false
-    for i in 7...12 {
+    for i in 8...11 {
         if cell[i] > height/4 {  // limit == height/4
             break
         }
-        if i == 12 {
+        if i == 11 {
             text = "Go straight."
             print("Safe Area")
             minKey = 10
@@ -227,14 +227,10 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         // Navigation message
         if minDistance > Int(height-40) {
             text = "It's blocked. Go back."
-        } else if minKey < 7 {
-            text = "Move left."
-        } else if minKey > 12 {
-            text = "Move right."
         } else {
-            text = "Go straight."
+            text = setClockWiseDirection(cell: minKey)
         }
-        
+
         // Obstacle detecting message
         if obstacleFlag {
             PrevFrame.totalCnt = Array(repeating: 0, count: 20)  // initialize totalCnt
@@ -348,7 +344,7 @@ func DetectingObjectsbyCell(codes: MultiArray<Float32>) {
                     //label에서는 인도나 도로라고 인식되지만, depth값의 장애물 임계치를 넘는 pixel값을 가지는 경우
                     hhPixel = Int(Double(height-1-h) * 0.9)
                     nValue = depthView.normalizeByteData(byte: pixelData[hhPixel][wwPixel*i])
-                    if nValue > 0.75 {
+                    if nValue > 0.9 {
                         //print("cell[\(i)] : depth detected at pixelData[\(hhPixel)][\(wwPixel*i)]")
                         
                         //normalize된 값이 0.75이상(pixel값 192이상)이면, 해당 cell을 obstacle이 존재하는 cell이라고 인지하도록 설정
@@ -362,4 +358,30 @@ func DetectingObjectsbyCell(codes: MultiArray<Float32>) {
             }
         }
     }
+}
+
+func setClockWiseDirection(cell: Int) -> String {
+    
+    var text = ""
+    
+    if cell <= 7 {
+        if cell < 4 {
+            text = "Go towards 10"
+        }
+        else {
+            text = "Go towards 11"
+        }
+    }
+    else if cell >= 12 {
+        if cell > 16 {
+            text = "Go towards 2"
+        } else {
+            text = "Go towards 1"
+        }
+    } else {
+        text = "Go Straight"
+    }
+
+    
+    return text
 }
