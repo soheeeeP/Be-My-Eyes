@@ -123,6 +123,9 @@ var didAppeared = Array(repeating: 0, count: 20)
 var idxAppeared = Array(repeating: 0, count: 12)
 var safeArea = false
 
+var cell = Array(repeating: 0, count: 20)  //road가 아닌 장애물이 발견되는 height 저장
+var depthDetected = Array(repeating: false, count: 20)  //한 cell에서 한 번씩만 확인하도록 flag 설정
+
 /// Locate the obstacle & Return in text
 func FindObject(_ _probs: MLMultiArray) -> String {
     /* Label map
@@ -147,45 +150,12 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     let width = codes.shape[2]
     var text = ""
     
-    // 00 is Left Up
-    let ww = Int(width/20)
-    var cell = Array(repeating: 0, count: 20)  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
-    
     var cellDistance = 0  // distance between each cell's obstacle and the user
     var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // most far distance
     var minKey = 0  // most far cell index
     
-    let wwPixel = Int(180/20)
-    var hhPixel = 0
-    var nValue = 0.0
-    var depthDetected = Array(repeating: false, count: 20)  //한 cell에서 한 번씩만 확인하도록 flag 설정
     
-    // calculate obstacle distance for each cell
-    for i in 0...19 {
-        for h in stride(from: 50, to: height, by: 2) { // for speed   // for h in 50 ..< height {
-            if Int(codes[0, height-1-h, ww*i]) != 6 && Int(codes[0, height-1-h, ww*i]) != 7 {  // 인도 또는 도로가 아닌 경우
-                cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장 (위를 0으로 계산)
-                CurFrame.obstacle[i] = Int(codes[0,height-1-h,ww*i])
-                CurFrame.height[i] = height-1-h
-                break
-            }
-            else {
-                if depthDetected[i] == false {
-                    //label에서는 인도나 도로라고 인식되지만, depth값의 장애물 임계치를 넘는 pixel값을 가지는 경우
-                    hhPixel = Int(Double(height-1-h) * 0.9)
-                    nValue = depthView.normalizeByteData(byte: pixelData[hhPixel][wwPixel*i])
-                    if nValue > 0.75 {
-                        print("cell[\(i)] : depth detected at pixelData[\(hhPixel)][\(wwPixel*i)]")
-                        //normalize된 값이 0.75이상(pixel값 192이상)이면, 해당 cell을 obstacle이 존재하는 cell이라고 인지하도록 설정
-                        cell[i] = height-51 //blocked cell처리
-                        CurFrame.height[i] = height-51
-                        CurFrame.depthHeight[i] = Double(cell[i]) * sqrt(nValue*nValue + 1)
-                        depthDetected[i] = true
-                    }
-                }
-            }
-        }
-    }
+    DetectingObjectsbyCell(codes: codes)
     
     // find a distance between each cell's obstacle and user
     // user location :       (0, width/2)
@@ -267,13 +237,13 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         
         // Obstacle detecting message
         if obstacleFlag {
-            PrevFrame.totalCnt = Array(repeating: 0, count: 16)  // initialize totalCnt
-            didAppeared = Array(repeating: 0, count: 16)  // initialize didAppeared
+            PrevFrame.totalCnt = Array(repeating: 0, count: 20)  // initialize totalCnt
+            didAppeared = Array(repeating: 0, count: 20)  // initialize didAppeared
         }
     }
     // debugging TTS message
-    print(text + " cell : \(minKey)")
-    print("user stride : " + userStride)
+    print(" cell : \(minKey)")
+//    print("user stride : " + userStride)
 
     // return text to print and make TTS
     return text
@@ -346,4 +316,50 @@ func obtainPixelData() {
         print("\n")
     }
     print("------------------------------------")
+}
+
+func DetectingObjectsbyCell(codes: MultiArray<Float32>) {
+    // get the shape information from the probs
+    let height = codes.shape[1]
+    let width = codes.shape[2]
+    
+    // 00 is Left Up
+    let ww = Int(width/20)
+    
+    let wwPixel = Int(180/20)
+    var hhPixel = 0
+    var nValue = 0.0
+    
+//    var depthDetected = Array(repeating: false, count: 20)  //한 cell에서 한 번씩만 확인하도록 flag 설정
+    
+    // calculate obstacle distance for each cell
+    for i in 0...19 {
+        for h in stride(from: 50, to: height, by: 2) { // for speed  // for h in 50 ..< height {
+            if Int(codes[0, height-1-h, ww*i]) != 6 && Int(codes[0, height-1-h, ww*i]) != 7 {  // 인도 또는 도로가 아닌 경우
+                cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장 (위를 0으로 계산)
+                CurFrame.obstacle[i] = Int(codes[0,height-1-h,ww*i])
+                CurFrame.height[i] = height-1-h
+                //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
+                break
+            }
+            else {
+                if depthDetected[i] == false {
+                    
+                    //label에서는 인도나 도로라고 인식되지만, depth값의 장애물 임계치를 넘는 pixel값을 가지는 경우
+                    hhPixel = Int(Double(height-1-h) * 0.9)
+                    nValue = depthView.normalizeByteData(byte: pixelData[hhPixel][wwPixel*i])
+                    if nValue > 0.75 {
+                        //print("cell[\(i)] : depth detected at pixelData[\(hhPixel)][\(wwPixel*i)]")
+                        
+                        //normalize된 값이 0.75이상(pixel값 192이상)이면, 해당 cell을 obstacle이 존재하는 cell이라고 인지하도록 설정
+                        cell[i] = height-51                             //blocked cell처리
+                        CurFrame.height[i] = height-51
+                        CurFrame.depthHeight[i] = Double(cell[i]) * sqrt(nValue*nValue + 1)
+                        
+                        depthDetected[i] = true
+                    }
+                }
+            }
+        }
+    }
 }
