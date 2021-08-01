@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import CoreML
-import CocoaMQTT
 
 let depthView = depthViewController()
 
@@ -103,33 +102,26 @@ func codesToBlackAndWhiteImage(_ _probs: MLMultiArray) -> UIImage? {
 
 /// Obstacle information of previous frame
 struct PrevFrame{
-    static var obstacle = Array(repeating: 6, count: 16)  //initialize to road (no obstacle)
-    static var height = Array(repeating: 0, count: 16)
-    static var totalCnt = Array(repeating: 0, count: 16)
-    static var depthHeight = Array(repeating: 0.0, count: 16)
+    static var obstacle = Array(repeating: 6, count: 20)  //initialize to road (no obstacle)
+    static var height = Array(repeating: 0, count: 20)
+    static var totalCnt = Array(repeating: 0, count: 20)
+    static var depthHeight = Array(repeating: 0.0, count: 20)
 }
 
 /// Obstacle information of current frame
 struct CurFrame{
-    static var obstacle = Array(repeating: 6, count: 16)  //initialize to road (no obstacle)
-    static var height = Array(repeating: 0, count: 16)
-    static var depthHeight = Array(repeating: 0.0, count: 16)
+    static var obstacle = Array(repeating: 6, count: 20)  //initialize to road (no obstacle)
+    static var height = Array(repeating: 0, count: 20)
+    static var depthHeight = Array(repeating: 0.0, count: 20)
 }
 
 var obstacle = ""
 var obstacleFlag = false
 var obstacleDistance = 0
 var obstacle_idx = 6;
-var didAppeared = Array(repeating: 0, count: 16)
+var didAppeared = Array(repeating: 0, count: 20)
 var idxAppeared = Array(repeating: 0, count: 12)
 var safeArea = false
-
-/// for MQTT
-var mqttClient : CocoaMQTT!
-    //CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
-var conflag = false
-var con_count = 0
-var mqttflag = false
 
 /// Locate the obstacle & Return in text
 func FindObject(_ _probs: MLMultiArray) -> String {
@@ -148,9 +140,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
      11: unlabeled   black
     */
     
-    // connect to MQTT
-    // MQTTconnect()
-    
     // convert the MLMultiArray to a MultiArray
     let codes = MultiArray<Float32>(_probs)
     // get the shape information from the probs
@@ -159,42 +148,38 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     var text = ""
     
     // 00 is Left Up
-    let ww = Int(width/16)
-    var cell = Array(repeating: 0, count: 16)  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
+    let ww = Int(width/20)
+    var cell = Array(repeating: 0, count: 20)  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장
     
     var cellDistance = 0  // distance between each cell's obstacle and the user
     var minDistance = Int(sqrt((pow(352,2) + pow(Double(width/2), 2))))  // most far distance
     var minKey = 0  // most far cell index
     
-    let wwPixel = Int(180/16)
+    let wwPixel = Int(180/20)
     var hhPixel = 0
     var nValue = 0.0
-    var depthDetected = Array(repeating: false, count: 16)  //한 cell에서 한 번씩만 확인하도록 flag 설정
+    var depthDetected = Array(repeating: false, count: 20)  //한 cell에서 한 번씩만 확인하도록 flag 설정
     
     // calculate obstacle distance for each cell
-    for i in 0...15 {
-        for h in stride(from: 50, to: height, by: 2) { // for speed  // for h in 50 ..< height {
+    for i in 0...19 {
+        for h in stride(from: 50, to: height, by: 2) { // for speed   // for h in 50 ..< height {
             if Int(codes[0, height-1-h, ww*i]) != 6 && Int(codes[0, height-1-h, ww*i]) != 7 {  // 인도 또는 도로가 아닌 경우
                 cell[i] = height-1-h  //w=ww*i 일 때, road가 아닌 장애물이 발견되는 height 저장 (위를 0으로 계산)
                 CurFrame.obstacle[i] = Int(codes[0,height-1-h,ww*i])
                 CurFrame.height[i] = height-1-h
-                //print("cell[\(i)]: \(cell[i]), codes: \(Int(codes[0, cell[i], ww*i]))")
                 break
             }
             else {
                 if depthDetected[i] == false {
-                    
                     //label에서는 인도나 도로라고 인식되지만, depth값의 장애물 임계치를 넘는 pixel값을 가지는 경우
                     hhPixel = Int(Double(height-1-h) * 0.9)
                     nValue = depthView.normalizeByteData(byte: pixelData[hhPixel][wwPixel*i])
                     if nValue > 0.75 {
                         print("cell[\(i)] : depth detected at pixelData[\(hhPixel)][\(wwPixel*i)]")
-                        
                         //normalize된 값이 0.75이상(pixel값 192이상)이면, 해당 cell을 obstacle이 존재하는 cell이라고 인지하도록 설정
-                        cell[i] = height-51                             //blocked cell처리
+                        cell[i] = height-51 //blocked cell처리
                         CurFrame.height[i] = height-51
                         CurFrame.depthHeight[i] = Double(cell[i]) * sqrt(nValue*nValue + 1)
-                        
                         depthDetected[i] = true
                     }
                 }
@@ -205,7 +190,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     // find a distance between each cell's obstacle and user
     // user location :       (0, width/2)
     // obstacle location:    (cell[i], ww*i)
-    for i in 0...15 {
+    for i in 0...19 {
         // cellDistance = Int(sqrt((pow(Double(cell[i]), 2) + pow(Double((ww*i)-(width/2)),2))))
         cellDistance = cell[i]
         
@@ -219,7 +204,7 @@ func FindObject(_ _probs: MLMultiArray) -> String {
             }
         }
         
-        if i>5 && i<10 {
+        if i>6 && i<13 { // straight 영역 : 7...12
             if CurFrame.obstacle[i] == PrevFrame.obstacle[i] {
                 if CurFrame.height[i] > PrevFrame.height[i] {  // 장애물이 다가오는 경우
                     PrevFrame.totalCnt[i]+=1
@@ -237,9 +222,6 @@ func FindObject(_ _probs: MLMultiArray) -> String {
                 if didAppeared[PrevFrame.totalCnt[i]] == 0 {
                     didAppeared[PrevFrame.totalCnt[i]] = 1
                     // obstacleDistance = (10 - PrevFrame.height[i] / 35) * 2
-//                    if isUser == false {
-//                        userStride = "35"
-//                    }
                     if userStride == "" {
                         userStride = "35"
                     }
@@ -259,16 +241,15 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     
     // straight 영역의 장애물이 limit보다 멀리 있는 경우 straight부터 가도록 알림
     safeArea = false
-    for i in 6...9 {
+    for i in 7...12 {
         if cell[i] > height/4 {  // limit == height/4
             break
         }
-        if i == 9 {
+        if i == 12 {
             text = "Go straight."
             print("Safe Area")
-            minKey = 8
+            minKey = 10
             safeArea = true
-
         }
     }
     
@@ -276,9 +257,9 @@ func FindObject(_ _probs: MLMultiArray) -> String {
         // Navigation message
         if minDistance > Int(height-40) {
             text = "It's blocked. Go back."
-        } else if minKey < 6 {
+        } else if minKey < 7 {
             text = "Move left."
-        } else if minKey > 9 {
+        } else if minKey > 12 {
             text = "Move right."
         } else {
             text = "Go straight."
@@ -292,21 +273,8 @@ func FindObject(_ _probs: MLMultiArray) -> String {
     }
     // debugging TTS message
     print(text + " cell : \(minKey)")
-    
-    // send message to MQTT
-    con_count+=1
-    print("count \(con_count)")
-    // MQTTclient()
-    if con_count == 3 {
-        print("Send message to MQTT")
-        mqttClient.publish("robot/move", withString:text) // for robot
-        mqttClient.publish("robot/key", withString:String(minKey)) // for robot
-        //mqttClient.publish("user/vibr", withString:text) // for vibration motor
-        con_count = 0
-    } 
     print("user stride : " + userStride)
 
-    
     // return text to print and make TTS
     return text
 }
@@ -368,7 +336,6 @@ func DistObstacle(height: Int, stride: Int) -> Int { // (10 - PrevFrame.height[i
 }
 
 func obtainPixelData() {
-    
     //pixel height = 320
     for h in stride(from: 50, to: 320, by: 2) {
         for j in stride(from: 0, to: 180, by: 12) {
@@ -379,23 +346,4 @@ func obtainPixelData() {
         print("\n")
     }
     print("------------------------------------")
-//
-}
-
-
-func MQTTconnect() {
-    if mqttflag == false {
-        mqttClient.connect()
-        mqttflag = true
-    }
-}
-
-//CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.137.118", port:1883)
-
-func setUpMQTT() {
-    mqttClient = CocoaMQTT(clientID: "BME_ROBOT", host:"192.168.1.13", port:1883)
-    mqttClient.username = "test"
-    mqttClient.password = "public"
-    mqttClient.keepAlive = 60
-    mqttClient.connect()
 }
